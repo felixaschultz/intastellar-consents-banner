@@ -5395,6 +5395,31 @@ function intaRunUcCoreIntegrations() {
     };
     oaiq('consent', false);
 
+    // Amazon Ads consent signal (ACS) — writes the first-party amzn_consent cookie that
+    // Amazon's ad tags read passively (no API call required on their side).
+    // https://advertising.amazon.com/resources/ad-policy/consent-signal-requirements
+    function intaSetAmazonConsentSignal(granted) {
+        try {
+            var status = granted ? 'GRANTED' : 'DENIED';
+            var payload = {
+                amazonConsentFormat: {
+                    amznAdStorage: status,
+                    amznUserData: status,
+                },
+                timestamp: new Date().toISOString(),
+                version: '1',
+            };
+            var country = window._intaGeo && window._intaGeo.country;
+            if (country) {
+                payload.geo = { countryCode: country };
+            }
+            document.cookie = 'amzn_consent=' + encodeURIComponent(JSON.stringify(payload)) +
+                '; max-age=24192000; path=/; ' + intCookieDomain +
+                'SameSite=Strict' + (window.location.protocol === 'https:' ? '; Secure' : '');
+        } catch (e) { /* ignore */ }
+    }
+    intaSetAmazonConsentSignal(false);
+
     updateVwoConsent(window.intaCookieConsents);
 
     intaWpEnsureConsentTypeOptinAnnouncedOnce();
@@ -5432,6 +5457,7 @@ function intaRunUcCoreIntegrations() {
                 oaiq('consent', true);
             } catch (e) { /* ignore */ }
         }
+        intaSetAmazonConsentSignal(true);
         window.uetq.push('consent', 'update', {
             'ad_storage': 'granted'
         });
