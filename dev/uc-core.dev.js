@@ -3690,7 +3690,21 @@ function intaRunUcCoreIntegrations() {
     // Amazon Ads consent signal (ACS) — writes the first-party amzn_consent cookie that
     // Amazon's ad tags read passively (no API call required on their side).
     // https://advertising.amazon.com/resources/ad-policy/consent-signal-requirements
+    // Only fires when an Amazon Ads tag is actually present — checks both live <script src>
+    // and our own pre-consent-blocked scripts (real URL lives in data-inta-pending-src, see
+    // intaNeutralizeScriptNode) so the cookie isn't planted on sites that don't use Amazon Ads.
+    function intaIsAmazonAdsContext() {
+        if (typeof window.apstag !== "undefined" || typeof window.amzn_aax !== "undefined") {
+            return true;
+        }
+        return !!document.querySelector(
+            'script[src*="amazon-adsystem"], script[data-inta-pending-src*="amazon-adsystem"], script[data-src*="amazon-adsystem"]'
+        );
+    }
     function intaSetAmazonConsentSignal(granted) {
+        if (!intaIsAmazonAdsContext()) {
+            return;
+        }
         try {
             var status = granted ? 'GRANTED' : 'DENIED';
             var payload = {
