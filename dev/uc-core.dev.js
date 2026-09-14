@@ -3687,12 +3687,14 @@ function intaRunUcCoreIntegrations() {
     };
     oaiq('consent', false);
 
-    // Amazon Ads consent signal (ACS) — writes the first-party amzn_consent cookie that
-    // Amazon's ad tags read passively (no API call required on their side).
-    // https://advertising.amazon.com/resources/ad-policy/consent-signal-requirements
+    // Amazon Ads consent signal (ACS) — loads Amazon's own amzn-consent.js library and drives
+    // it via the (Amazon-recommended) Builder Pattern; the library itself writes the 1P
+    // amzn_consent cookie and fires the amznConsentChange event for amzn.js to pick up, so we
+    // never hand-roll the cookie's wire format ourselves.
+    // https://advertising.amazon.com/help/GKJQ7E8SE9BRG73Q
     // Only fires when an Amazon Ads tag is actually present — checks both live <script src>
     // and our own pre-consent-blocked scripts (real URL lives in data-inta-pending-src, see
-    // intaNeutralizeScriptNode) so the cookie isn't planted on sites that don't use Amazon Ads.
+    // intaNeutralizeScriptNode) so nothing Amazon-related loads on sites that don't use Amazon Ads.
     function intaIsAmazonAdsContext() {
         if (typeof window.apstag !== "undefined" || typeof window.amzn_aax !== "undefined") {
             return true;
@@ -3701,28 +3703,46 @@ function intaRunUcCoreIntegrations() {
             'script[src*="amazon-adsystem"], script[data-inta-pending-src*="amazon-adsystem"], script[data-src*="amazon-adsystem"]'
         );
     }
+    function intaApplyAmazonConsentSignal(granted) {
+        try {
+            // setEnableAdStorage/setEnableUserData require an actual boolean (the shipped
+            // amzn-consent.js throws a TypeError otherwise, despite Amazon's own doc example
+            // showing 'GRANTED'/'DENIED' strings — verified against the live script).
+            var g = !!granted;
+            var builder = window.amznConsent().setEnableAdStorage(g).setEnableUserData(g);
+            var country = window._intaGeo && window._intaGeo.country;
+            if (country && /^[A-Za-z]{2}$/.test(country)) {
+                builder.setCountryCode(country);
+            }
+            builder.build();
+        } catch (e) { /* ignore */ }
+    }
     function intaSetAmazonConsentSignal(granted) {
         if (!intaIsAmazonAdsContext()) {
             return;
         }
-        try {
-            var status = granted ? 'GRANTED' : 'DENIED';
-            var payload = {
-                amazonConsentFormat: {
-                    amznAdStorage: status,
-                    amznUserData: status,
-                },
-                timestamp: new Date().toISOString(),
-                version: '1',
-            };
-            var country = window._intaGeo && window._intaGeo.country;
-            if (country) {
-                payload.geo = { countryCode: country };
+        if (typeof window.amznConsent === 'function') {
+            intaApplyAmazonConsentSignal(granted);
+            return;
+        }
+        if (window.__intaAmznConsentLoading) {
+            window.__intaAmznConsentQueue = window.__intaAmznConsentQueue || [];
+            window.__intaAmznConsentQueue.push(granted);
+            return;
+        }
+        window.__intaAmznConsentLoading = true;
+        var s = document.createElement('script');
+        s.src = 'https://c.amazon-adsystem.com/aat/amzn-consent.js';
+        s.async = true;
+        s.onload = function () {
+            intaApplyAmazonConsentSignal(granted);
+            var queued = window.__intaAmznConsentQueue || [];
+            for (var i = 0; i < queued.length; i++) {
+                intaApplyAmazonConsentSignal(queued[i]);
             }
-            document.cookie = 'amzn_consent=' + encodeURIComponent(JSON.stringify(payload)) +
-                '; max-age=24192000; path=/; ' + intCookieDomain +
-                'SameSite=Strict' + (window.location.protocol === 'https:' ? '; Secure' : '');
-        } catch (e) { /* ignore */ }
+            window.__intaAmznConsentQueue = [];
+        };
+        intaAppendToDocumentHead(s);
     }
     intaSetAmazonConsentSignal(false);
 
