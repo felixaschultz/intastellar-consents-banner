@@ -2189,6 +2189,12 @@ moreSettings.setAttribute("class", "intastellarCookieConstents");
 moreSettingsContent.setAttribute("class", "intastellarCookieConstents__content");
 moreintHeader.setAttribute("class", "intastellarCookieConstents__content-intHeader");
 moreFooter.setAttribute("class", "intastellarCookieConstents__content-footer");
+moreFooter.addEventListener("click", (e) => {
+    const btn = e.target.closest(".intaExpandCookieList");
+    if (!btn || !moreFooter.contains(btn)) return;
+    btn.querySelector(".intastellar__arrow")?.classList.toggle("open");
+    btn.parentElement.querySelector(".intaCookieListOverview")?.classList.toggle("view");
+});
 
 moreContentText.setAttribute("class", "intastellarCookieConstents__content-main");;
 
@@ -2486,12 +2492,6 @@ if (window.intaCmpUiState) {
 }
 
 moreContentText.innerHTML = settingsMessage;
-moreContentText.querySelectorAll(".intaExpandCookieList").forEach((btn) => {
-    btn.onclick = () => {
-        btn.querySelector(".intastellar__arrow").classList.toggle("open");
-        btn.parentElement.querySelector(".intaCookieListOverview").classList.toggle("view");
-    };
-});
 moreFooter.appendChild(vendorListContainer);
 
 let ccpa = window?.INTA?.settings === undefined || window?.INTA?.settings.ccpa === undefined ? false : window?.INTA?.settings.ccpa;
@@ -5156,9 +5156,6 @@ function updateConsents(consent, type = null) {
 
 function saveINTCookieSettings(consent, type = null) {
     recordTimeToDecision(type || 'save_settings');
-    document.querySelector("html").classList.remove("noScroll");
-    window._IntastellarConsentsBanner.classList.remove("--active");
-    intaApplyCmpVisibilityFromCookie();
     const FunctionalCheckbox = document.querySelector("#functional");
     const StaticsCheckBox = document.querySelector("#statics");
     const MarketingCheckBox = document.querySelector("#marketing");
@@ -5345,6 +5342,7 @@ function saveINTCookieSettings(consent, type = null) {
         "; path=/; " +
         intCookieDomain +
         "";
+    intaApplyCmpVisibilityFromCookie();
     /*window.location.reload();*/
     updateConsents(consent, type);
     setTimeout(() => {
