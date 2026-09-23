@@ -2189,6 +2189,12 @@ moreSettings.setAttribute("class", "intastellarCookieConstents");
 moreSettingsContent.setAttribute("class", "intastellarCookieConstents__content");
 moreintHeader.setAttribute("class", "intastellarCookieConstents__content-intHeader");
 moreFooter.setAttribute("class", "intastellarCookieConstents__content-footer");
+moreFooter.addEventListener("click", (e) => {
+    const btn = e.target.closest(".intaExpandCookieList");
+    if (!btn || !moreFooter.contains(btn)) return;
+    btn.querySelector(".intastellar__arrow")?.classList.toggle("open");
+    btn.parentElement.querySelector(".intaCookieListOverview")?.classList.toggle("view");
+});
 
 moreContentText.setAttribute("class", "intastellarCookieConstents__content-main");;
 
@@ -2726,12 +2732,6 @@ const intaCbSettingsMessageBaseHtml = settingsMessage;
 function intaCbApplyMainBannerDomAndInitialize() {
     message = intaGetTextOverride("bannerMessageHtml", intaCbBannerMessageBaseHtml);
     moreContentText.innerHTML = intaGetTextOverride("bannerMessageHtml", intaCbSettingsMessageBaseHtml);
-    moreContentText.querySelectorAll(".intaExpandCookieList").forEach((btn) => {
-        btn.onclick = () => {
-            btn.querySelector(".intastellar__arrow").classList.toggle("open");
-            btn.parentElement.querySelector(".intaCookieListOverview").classList.toggle("view");
-        };
-    });
 
     let intCookieIconSmallClass = cookieLogo == intCookieIcon ? " intastellarIcon" : "";
     let CompanyLogoName = cookieLogo == intCookieIcon ? "Cookie Icon" : `${document.domain} logo`;
