@@ -2486,12 +2486,6 @@ if (window.intaCmpUiState) {
 }
 
 moreContentText.innerHTML = settingsMessage;
-moreContentText.querySelectorAll(".intaExpandCookieList").forEach((btn) => {
-    btn.onclick = () => {
-        btn.querySelector(".intastellar__arrow").classList.toggle("open");
-        btn.parentElement.querySelector(".intaCookieListOverview").classList.toggle("view");
-    };
-});
 moreFooter.appendChild(vendorListContainer);
 
 let ccpa = window?.INTA?.settings === undefined || window?.INTA?.settings.ccpa === undefined ? false : window?.INTA?.settings.ccpa;
@@ -2732,6 +2726,12 @@ const intaCbSettingsMessageBaseHtml = settingsMessage;
 function intaCbApplyMainBannerDomAndInitialize() {
     message = intaGetTextOverride("bannerMessageHtml", intaCbBannerMessageBaseHtml);
     moreContentText.innerHTML = intaGetTextOverride("bannerMessageHtml", intaCbSettingsMessageBaseHtml);
+    moreContentText.querySelectorAll(".intaExpandCookieList").forEach((btn) => {
+        btn.onclick = () => {
+            btn.querySelector(".intastellar__arrow").classList.toggle("open");
+            btn.parentElement.querySelector(".intaCookieListOverview").classList.toggle("view");
+        };
+    });
 
     let intCookieIconSmallClass = cookieLogo == intCookieIcon ? " intastellarIcon" : "";
     let CompanyLogoName = cookieLogo == intCookieIcon ? "Cookie Icon" : `${document.domain} logo`;
