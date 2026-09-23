@@ -5153,9 +5153,6 @@ function updateConsents(consent, type = null) {
 
 function saveINTCookieSettings(consent, type = null) {
     recordTimeToDecision(type || 'save_settings');
-    document.querySelector("html").classList.remove("noScroll");
-    window._IntastellarConsentsBanner.classList.remove("--active");
-    intaApplyCmpVisibilityFromCookie();
     const FunctionalCheckbox = document.querySelector("#functional");
     const StaticsCheckBox = document.querySelector("#statics");
     const MarketingCheckBox = document.querySelector("#marketing");
@@ -5342,6 +5339,7 @@ function saveINTCookieSettings(consent, type = null) {
         "; path=/; " +
         intCookieDomain +
         "";
+    intaApplyCmpVisibilityFromCookie();
     /*window.location.reload();*/
     updateConsents(consent, type);
     setTimeout(() => {
