@@ -3598,45 +3598,6 @@ function listAllCookies(cookieList) {
                     <section class="intaCookieList-left">
                         <h3 class="intaCookieListOverview-heading">Udbyder</h3>
                         <p class="intaCookieListOverview-vendor">${vendor}</p>
-                        <p class="intaCookieListOverview-heading">Privat Politik</p>
-                        <p>${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`Privatslivs politik`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Privatslivs politik</a>`}</p>
-                        <h4 class="intaCookieList-CookieName">Domæne</h4>
-                        ${cookie.domains.map((cookie) => {
-                if (cookie == undefined) return;
-                if (cookie.indexOf("intastellar") > -1 || cookie.indexOf("intastellarconsents") > -1) {
-                    return `
-                                                <a href="https://${cookie}" target="_blank" rel="noopener">${cookie}</a>
-                                            `
-                } else {
-                    return `
-                                                <p>${cookie}</p>
-                                            `;
-                }
-            }).join(" ")}
-                    </section>
-                    <section>
-                        <h3 class="intaCookieListOverview-heading">Cookies</h3>
-                        <section>
-                            ${cookie.cookies.map((cookie) => {
-                if (cookie.cookie == undefined) return;
-                return `
-                                    <article class="intaCookieList-cookie">
-                                        <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
-                                        <p>${cookie.purpose}</p>
-                                    </article>
-                                `
-            }).join(" ")}
-                        </section>
-                    </section>
-                </section>
-                `
-        } else if (intastellarCookieLanguage != null && intastellarCookieLanguage === "de-DE" || intastellarCookieLanguage === "de") {
-            return `
-            <section class="intaCookieListOverview-grid">
-                <section class="intaCookieList-left">
-                    <h3 class="intaCookieListOverview-heading">Anbieter</h3>
-                    <p class="intaCookieListOverview-vendor">${vendor}</p>
-                    <p class="intaCookieListOverview-heading">Datenschutzerklährung</p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`Datenschutzerklährung`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Datenschutzerklährung</a>`}
                     <h4 class="intaCookieList-CookieName">Domain</h4>
                     ${cookie.domains.map((cookie) => {
@@ -3674,7 +3635,6 @@ function listAllCookies(cookieList) {
                 <section class="intaCookieList-left">
                     <h3 class="intaCookieListOverview-heading">Vendor</h3>
                     <p class="intaCookieListOverview-vendor">${vendor}</p>
-                    <p class="intaCookieListOverview-heading">Privacy policy</p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`Privacy policy`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Privacy policy</a>`}
                     <h4 class="intaCookieList-CookieName">Domains</h4>
                     ${cookie.domains.map((cookie) => {
@@ -3713,7 +3673,6 @@ function listAllCookies(cookieList) {
                 <section class="intaCookieList-left">
                     <h3 class="intaCookieListOverview-heading">Proveedor</h3>
                     <p class="intaCookieListOverview-vendor">${vendor}</p>
-                    <p class="intaCookieListOverview-heading">Política de privacidad</p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`Política de privacidad`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Política de privacidad</a>`}
                     <h4 class="intaCookieList-CookieName">Dominios</h4>
                     ${cookie.domains.map((cookie) => {
@@ -3752,9 +3711,6 @@ function listAllCookies(cookieList) {
                 <section class="intaCookieList-left">
                     <h3 class="intaCookieListOverview-heading">Leverantör</h3>
                     <p class="intaCookieListOverview-vendor">${vendor}</p>
-                    <p class="intaCookieListOverview-heading">
-                        Integritetspolicy
-                    </p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`Integritetspolicy`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Integritetspolicy</a>`}
                     <h4 class="intaCookieList-CookieName">Domäner</h4>
                     ${cookie.domains.map((cookie) => {
@@ -3794,9 +3750,6 @@ function listAllCookies(cookieList) {
                         Fournisseur
                     </h3>
                     <p class="intaCookieListOverview-vendor">${vendor}</p>
-                    <p class="intaCookieListOverview-heading">
-                        Politique de confidentialité
-                    </p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`Politique de confidentialité`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Politique de confidentialité</a>`}
                     <h4 class="intaCookieList-CookieName">
                         Domaines
@@ -3838,9 +3791,6 @@ function listAllCookies(cookieList) {
                         Fornecedor
                     </h3>
                     <p class="intaCookieListOverview-vendor">${vendor}</p>
-                    <p class="intaCookieListOverview-heading">
-                        Política de privacidade
-                    </p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`Política de privacidade`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Política de privacidade</a>`}
                     <h4 class="intaCookieList-CookieName">
                         Domaines
@@ -3882,9 +3832,6 @@ function listAllCookies(cookieList) {
                         Fornitore
                     </h3>
                     <p class="intaCookieListOverview-vendor">${vendor}</p>
-                    <p class="intaCookieListOverview-heading">
-                        Informativa sulla privacy
-                    </p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`Informativa sulla privacy`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">
                         Informativa sulla privacy
                         </a>`}
@@ -3928,9 +3875,6 @@ function listAllCookies(cookieList) {
                         Поставщик
                     </h3>
                     <p class="intaCookieListOverview-vendor">${vendor}</p>
-                    <p class="intaCookieListOverview-heading">
-                        Политика конфиденциальности
-                    </p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`Политика конфиденциальности`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Политика конфиденциальности</a>`}
                     <h4 class="intaCookieList-CookieName">
                         Домены
@@ -3974,9 +3918,6 @@ function listAllCookies(cookieList) {
                         Toimittaja
                     </h3>
                     <p class="intaCookieListOverview-vendor">${vendor}</p>
-                    <p class="intaCookieListOverview-heading">
-                        Tietosuojakäytäntö
-                    </p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`
                         Tietosuojakäytäntö`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Tietosuojakäytäntö</a>`}
                     <h4 class="intaCookieList-CookieName">
@@ -4021,9 +3962,6 @@ function listAllCookies(cookieList) {
                         Leverandør
                     </h3>
                     <p class="intaCookieListOverview-vendor">${vendor}</p>
-                    <p class="intaCookieListOverview-heading">
-                        Personvernerklæring
-                    </p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`
                         Personvernerklæring`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Personvernerklæring</a>`}
                     <h4 class="intaCookieList-CookieName">
@@ -4068,9 +4006,6 @@ function listAllCookies(cookieList) {
                         Leverancier
                     </h3>
                     <p class="intaCookieListOverview-vendor">${vendor}</p>
-                    <p class="intaCookieListOverview-heading">
-                        Privacybeleid
-                    </p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`
                         Privacybeleid`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Privacybeleid</a>`}
                     <h4 class="intaCookieList-CookieName">
@@ -4115,9 +4050,6 @@ function listAllCookies(cookieList) {
                         Dostawca
                     </h3>
                     <p class="intaCookieListOverview-vendor">${vendor}</p>
-                    <p class="intaCookieListOverview-heading">
-                        Polityka prywatności
-                    </p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`
                         Polityka prywatności`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Polityka prywatności</a>`}
                     <h4 class="intaCookieList-CookieName">
@@ -4162,9 +4094,6 @@ function listAllCookies(cookieList) {
                         Verskaffer
                     </h3>
                     <p class="intaCookieListOverview-vendor">${vendor}</p>
-                    <p class="intaCookieListOverview-heading">
-                        Privaatheidsbeleid
-                    </p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`
                         Privaatheidsbeleid`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Privaatheidsbeleid</a>`}
                     <h4 class="intaCookieList-CookieName">
@@ -4210,9 +4139,6 @@ function listAllCookies(cookieList) {
                         공급자
                     </h3>
                     <p class="intaCookieListOverview-vendor">${vendor}</p>
-                    <p class="intaCookieListOverview-heading">
-                        개인정보 처리방침
-                    </p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`
                         개인정보 처리방침`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">개인정보 처리방침</a>`}
                     <h4 class="intaCookieList-CookieName">
@@ -4255,7 +4181,6 @@ function listAllCookies(cookieList) {
                 <section class="intaCookieList-left">
                     <h3 class="intaCookieListOverview-heading">Udbyder</h3>
                     <p class="intaCookieListOverview-vendor">${vendor}</p>
-                    <p class="intaCookieListOverview-heading">Privat Politik</p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`Privatslivs politik`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Privatslivs politik</a>`}
                     <h4 class="intaCookieList-CookieName">Domæne</h4>
                     ${cookie.domains.map((cookie) => {

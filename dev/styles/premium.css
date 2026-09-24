@@ -182,6 +182,83 @@
     text-align: left;
 }
 
+/* Per-vendor cookie detail grid (the "Anbieter/Domain/Cookies" breakdown shown
+   inside an expanded category) — was plain unstyled browser defaults (h3/p/h4
+   all different, unrelated sizes, no label/value distinction, no separation
+   between vendors). Restyled as a compact label + value list matching the
+   rest of the premium card, with a divider between each vendor entry. */
+.intastellarCookieConstents__content-footer .intaCookieListOverview-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 0;
+    border-top: 1px solid var(--inta-premium-border);
+}
+
+.intastellarCookieConstents__content-footer .intaCookieListOverview-grid:first-of-type {
+    padding-top: 4px;
+    border-top: none;
+}
+
+.intastellarCookieConstents__content-footer .intaCookieListOverview-heading,
+.intastellarCookieConstents__content-footer .intaCookieList-left .intaCookieList-CookieName {
+    margin: 10px 0 0;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--inta-premium-fg-muted);
+}
+
+.intastellarCookieConstents__content-footer .intaCookieListOverview-grid > .intaCookieList-left > .intaCookieListOverview-heading:first-child,
+.intastellarCookieConstents__content-footer .intaCookieListOverview-grid > section > .intaCookieListOverview-heading:first-child {
+    margin-top: 0;
+}
+
+.intastellarCookieConstents__content-footer .intaCookieListOverview-vendor,
+.intastellarCookieConstents__content-footer .intaCookieList-left p,
+.intastellarCookieConstents__content-footer .intaCookieList-left a {
+    margin: 2px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--inta-premium-fg);
+}
+
+.intastellarCookieConstents__content-footer .intaCookieList-left a {
+    display: inline-block;
+    color: var(--inta-premium-fg);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.intastellarCookieConstents__content-footer .intaCookieList-cookie {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--inta-premium-border);
+}
+
+.intastellarCookieConstents__content-footer .intaCookieList-cookie:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+.intastellarCookieConstents__content-footer .intaCookieList-cookie .intaCookieList-CookieName {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: normal;
+    color: var(--inta-premium-fg);
+}
+
+.intastellarCookieConstents__content-footer .intaCookieList-cookie p {
+    margin: 3px 0 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--inta-premium-fg-muted);
+}
+
 .intastellarCookieConstents__content-footer .intReadMore > section > p {
     font-size: 13px;
     line-height: 1.55;
