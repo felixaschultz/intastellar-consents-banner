@@ -51,20 +51,48 @@ With this project I wanted to build my own cookie banner witch is free to use. I
 As an indie webdev and front-end developer I´ve decided to start building my own little banner and it evolved to this project.
 This cookie banner is also available in diffrent language:
 
-Available languages:
+Available languages (38 total):
 
-- German
+- Afrikaans
+- Arabic
+- Bulgarian
+- Chinese
+- Croatian
+- Czech
 - Danish
-- English
-- Spanish
-- French
-- Swedish
-- Norwegian
-- Finnish
-- Italian
-- Russian
 - Dutch
+- English
+- Estonian
+- Filipino
+- Finnish
+- French
+- German
+- Greek
+- Hebrew
+- Hindi
+- Hungarian
+- Indonesian
+- Italian
+- Japanese
+- Korean
+- Latvian
+- Lithuanian
+- Malay
+- Norwegian
+- Polish
 - Portuguese
+- Romanian
+- Russian
+- Slovak
+- Slovenian
+- Spanish
+- Swedish
+- Thai
+- Turkish
+- Ukrainian
+- Vietnamese
+
+Newly added: Bulgarian, Croatian, Czech, Filipino, Hebrew, Hindi, Hungarian, Indonesian, Latvian, Lithuanian, Malay, Romanian, Slovak, Slovenian, Turkish, Ukrainian, Vietnamese.
 
 You can read more about the cookie banner under: https://www.intastellarsolutions.com/solutions/cookie-consents.
 This banner is free to use as long as the powered by logo is not removed. We are glad if you want to contribuate to this project so we can develop it further and we can make it secure.
