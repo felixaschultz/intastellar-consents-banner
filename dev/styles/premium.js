@@ -2591,7 +2591,7 @@ cookieSettings.appendChild(cookieSettingsContent);
 
 banner.setAttribute("class", "intastellarCookie-settings");
 
-bannerContent.innerHTML = '<img class="intCookieIcon-openSettings" style="filter: brightness(' + (darkLightCheck(window.INTA.settings.color) === "light" ? "0" : "100") + ') !important" src="' + intCookieIcon + '" alt="Cookie Icon">' + IntastellarToolTip + ' ' + text;
+bannerContent.innerHTML = '<img class="intCookieIcon-openSettings" src="' + intCookieIcon + '" alt="Cookie Icon">' + IntastellarToolTip + ' ' + text;
 
 banner.appendChild(bannerContent);
 /* moreFooter (settings checkboxes + category list) must live inside the card, not as a
