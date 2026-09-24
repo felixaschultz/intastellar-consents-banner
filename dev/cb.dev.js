@@ -2530,12 +2530,13 @@ let withText = `
     border-radius: 50%;
 }
 
+${window.INTA.settings.design === "premium" ? "" : `
 .intastellarCookieConstents__content-main p,
 .intastellarCookieConstents__content-main h3,
 .intastellarCookieConstents__content-main ol li,
 .intastellarCookieConstents__content-main .intastellarCookie-settings__privacyLink{
     color: ${(darkLightCheck(window.INTA.settings.color) === "light") ? "#000" : "#fff"} !important;
-}
+}`}
 
 .intaGDPR-content p{
     color: #000 !important;
