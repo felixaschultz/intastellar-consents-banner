@@ -2870,7 +2870,7 @@ onWindowLoad(function () {
             });
         });
 
-        document.querySelector(".--save").addEventListener("click", () => {
+        /* document.querySelector(".--save").addEventListener("click", () => {
             const accepted = [];
             if (FunctionalCheckbox?.checked) {
                 gtag('consent', 'update', {
@@ -2950,7 +2950,7 @@ onWindowLoad(function () {
                 }
             }
             saveINTCookieSettings("changePermission", accepted);
-        });
+        }); */
 
         if (window?.INTA?.settings.ccpa !== undefined && window?.INTA?.settings.ccpa.on) {
             const closeCCPAButton = document.querySelector(".intastellarCCPA__popupClose");

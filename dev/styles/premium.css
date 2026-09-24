@@ -748,7 +748,7 @@ button.intastellarCookie-settings__privacyLink {
     box-shadow: var(--inta-premium-shadow);
     font-family: var(--inta-premium-font);
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.4;
     text-align: left;
     cursor: pointer;
@@ -767,16 +767,19 @@ button.intastellarCookie-settings__privacyLink {
     font-size: inherit;
 }
 
-/* The icon's fill is hardcoded on the inline SVG markup (#fff for the tab, #000 for the
-   popup heading) — both assume a fixed-color background. currentColor lets it follow the
-   premium card's light/dark theme instead of disappearing against it. */
 .intastellarCCPA__icon {
     flex: 0 0 auto;
     display: inline-block;
 }
 
-.intastellarCCPA__icon path {
-    fill: currentColor !important;
+/* premium.js's own CCPA icon (no built-in <style>, viewBox=".2 0 19.4 20") is a single
+   flat path with the fill hardcoded on the markup (#fff for the tab, #000 for the popup
+   heading) — both assume a fixed-color background, so let it follow the card's theme
+   instead of disappearing against it. The official CPRA opt-out icon (cb.dev.js,
+   viewBox="0 0 30 14") ships its own two-tone blue/white <style> block and must keep
+   those exact brand colors — deliberately left untouched here. */
+.intastellarCCPA__icon[viewBox=".2 0 19.4 20"] path {
+    fill: currentColor;
 }
 
 .intastellarCCPApopup {
