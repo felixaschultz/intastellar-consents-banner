@@ -1162,7 +1162,7 @@ function decodeIntaConsentsObject(number) {
 function ConsentsBlock(logo, textLanguage, btnText, datatype, img) {
     let p = "";
     if (window.location.host.indexOf("intastellarsolutions.com") == -1) {
-        p = `<a class="inta-poweredBy" href='https://www.intastellarsolutions.com' target='_blank' rel='noopener' style="align-items: center; text-decoration: none;font-size: 11.5px; color: #000 !important; display: flex; justify-content: center;">powered by <img width="90px" height="40px" style="width: 170px !important; height: 40px !important;margin-left: 10px;" src="https://www.intastellarsolutions.com/assets/logos/intastellar-consents-logo.svg" alt="Intastellar Consents"></a>`;
+        p = `<a class="inta-poweredBy" href='https://www.intastellarsolutions.com' target='_blank' rel='noopener' style="align-items: center; text-decoration: none; font-size: 11.5px; display: flex; justify-content: center;">powered by <img class="inta-poweredByImg" src="https://www.intastellarsolutions.com/assets/logos/intastellar-consents-logo.svg" alt="Intastellar Consents"></a>`;
     }
     if (img !== undefined && img != "") {
         return `
