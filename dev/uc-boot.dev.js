@@ -697,7 +697,7 @@ function intaGuessIntastellarScriptSrc() {
         if (!src) {
             continue;
         }
-        if (/uc\.js|\/uc\.js|consents\.cdn|intastellar-consents|gdpr\.dev|\/cb\.js|\/cb\.dev|floating\.js/i.test(src)) {
+        if (/uc\.js|\/uc\.js|consents\.cdn|intastellar-consents|gdpr\.dev|\/cb\.js|\/cb\.dev|premium\.js/i.test(src)) {
             return src;
         }
     }

@@ -1778,7 +1778,7 @@ function intaApplyCmpVisibilityFromCookie() {
     var overlay = window._IntastellarConsentsBanner;
     var root = window.intaconsents;
     var hasConsent = intaHasStoredConsentCookie();
-    var isFloating = window.INTA && window.INTA.settings && window.INTA.settings.design === 'floating';
+    var isFloating = window.INTA && window.INTA.settings && window.INTA.settings.design === 'premium';
     var design = window.INTA && window.INTA.settings && window.INTA.settings.design;
 
     if (hasConsent) {

@@ -38,7 +38,7 @@ You can implement the cookie banner by loading the following script into your we
       logo: "Link to your logo",
       rootDomain: "example.com",
       arrange: "ltr or rtl",
-      design: "banner | bannerV2 | overlay"
+      design: "banner | bannerV2 | overlay | premium"
     }
   }
 </script>
@@ -158,7 +158,7 @@ You can add and load it direct via loading https://consents.cdn.intastellarsolut
       logo: "Link to your logo",
       rootDomain: "example.com",
       arrange: "ltr or rtl",
-      design: "banner | bannerV2 | overlay"
+      design: "banner | bannerV2 | overlay | premium"
     }
   }
 </script>
