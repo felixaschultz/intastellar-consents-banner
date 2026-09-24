@@ -4430,9 +4430,13 @@ function generateCookieButtons(allCookiesText, necessaryCookiesText, cookieSetti
     var acceptAllText = intaGetTextOverride("acceptAllButton", allCookiesText);
     var necessaryOnlyText = intaGetNecessaryButtonText(necessaryCookiesText);
     var settingsText = intaGetTextOverride("settingsButton", cookieSettingsText);
-    return '<button class="intastellarCookie-settings__btn --bg intastellarCookieSettings--acceptAll" onclick="javascript:IntaAcceptAll();">' + acceptAllText + '</button>'
-        + '<button class="intastellarCookie-settings__btn intastellarCookieBanner__accpetNecssery" onclick="javascript:IntaSaveNeccessary();">' + necessaryOnlyText + '</button>'
-        + '<button class="intastellarCookie-settings__btn intastellarCookieBanner__settings" onclick="javascript:IntaSaveSettings();">' + settingsText + '</button>';
+    /* Accept-all/necessary-only/open-settings are already wired via addEventListener
+       further down (on .intastellarCookieSettings--acceptAll / .intastellarCookieBanner__accpetNecssery
+       / .intastellarCookieBanner__settings respectively) — no onclick needed here, and
+       IntaAcceptAll()/IntaSaveNeccessary() aren't defined in this file (they're cb.dev.js-only). */
+    return '<button class="intastellarCookie-settings__btn --bg intastellarCookieSettings--acceptAll">' + acceptAllText + '</button>'
+        + '<button class="intastellarCookie-settings__btn intastellarCookieBanner__accpetNecssery">' + necessaryOnlyText + '</button>'
+        + '<button class="intastellarCookie-settings__btn intastellarCookieBanner__settings">' + settingsText + '</button>';
 }
 
 function generateCookieSettingsButton(settingsText, allCookiesText) {
@@ -4944,4 +4948,11 @@ function saveINTCookieSettings(consent, type = null) {
     }, 1000);
     document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
         .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+}
+
+/* Bound via onclick on the ".--save" button (generateCookieSettingsButton) — saveINTCookieSettings
+   already reads the checkbox states straight from the DOM and does the full save/persist/dispatch
+   flow, so there's nothing else for this to do. */
+function IntaSaveSettings() {
+    saveINTCookieSettings("save_settings");
 }
