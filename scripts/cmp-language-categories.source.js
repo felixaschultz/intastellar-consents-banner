@@ -722,5 +722,176 @@ module.exports = {
             title: "Mārketings",
             description: "Mēs izmantojam uzticamu partneru tīmekļa tehnoloģijas (tostarp sīkfailus), lai piedāvātu jums īpaši pielāgotu saturu un reklāmas tīmekļa vietnēs un sociālo mediju platformās. Šis saturs tiek atlasīts un rādīts, pamatojoties uz jūsu pārlūkošanas paradumiem. Reklāmas un mārketinga sīkfaili tiek izmantoti, lai rādītu atbilstošas reklāmas un kampaņas, izsekotu apmeklētājiem dažādās vietnēs un vāktu informāciju, lai piedāvātu personalizētas reklāmas."
         }
+    },
+    irish: {
+        saveSettings: "Diúltaigh do Chách",
+        necessary: {
+            title: "Riachtanach",
+            description: "Tá teicneolaíochtaí gréasáin agus fianáin riachtanacha ríthábhachtach chun ár suíomh gréasáin a dhéanamh inrochtana agus feidhmiúil duitse. Cumasaíonn siad gnéithe lárnacha, mar shampla nascleanúint, taispeáint chruinn i do bhrabhsálaí, agus bainistiú do roghanna toilithe. Gan na teicneolaíochtaí agus na fianáin seo, ní féidir lenár suíomh gréasáin feidhmiú i gceart."
+        },
+        functional: {
+            title: "Feidhmiúil",
+            description: "Ligeann fianáin fheidhmiúla dúinn faisnéis a stóráil a athraíonn cuma nó iompar an tsuímh ghréasáin, cosúil le do rogha teanga nó réigiún."
+        },
+        statisic: {
+            title: "Anailísíocht",
+            description: "Táimid ag iarraidh eispéireas an úsáideora agus feidhmíocht ár suímh ghréasáin a fheabhsú go leanúnach. Chun é seo a bhaint amach, úsáidimid teicneolaíochtaí anailísíochta (lena n-áirítear fianáin) a thomhaiseann agus a mheasúnaíonn go anaithnid cé na gnéithe agus an t-ábhar dár suíomh gréasáin a úsáidtear, conas, agus cé chomh minic. Cuidíonn na sonraí seo linn ár suíomh a fheabhsú do na húsáideoirí."
+        },
+        marketing: {
+            title: "Margaíocht",
+            description: "Úsáidimid teicneolaíochtaí gréasáin (lena n-áirítear fianáin) ó chomhpháirtithe iontaofa chun ábhar agus fógraí atá curtha in oiriúint go sonrach duitse a sholáthar ar shuímh ghréasáin agus ar ardáin na meán sóisialta. Roghnaítear agus taispeántar an t-ábhar seo bunaithe ar d'iompar brabhsála. Úsáidtear fianáin fógraíochta agus margaíochta chun fógraí agus feachtais ábhartha a thaispeáint, chun cuairteoirí a rianú thar shuímh éagsúla, agus chun faisnéis a bhailiú chun fógraí pearsantaithe a chur i láthair."
+        }
+    },
+    maltese: {
+        saveSettings: "Irrifjuta Kollox",
+        necessary: {
+            title: "Meħtieġa",
+            description: "It-teknoloġiji tal-web u l-cookies meħtieġa huma essenzjali biex il-websajt tagħna tkun aċċessibbli u funzjonali għalik. Dawn jippermettu funzjonijiet ewlenin, bħan-navigazzjoni, wiri korrett fil-browser tiegħek, u l-ġestjoni tal-preferenzi tal-kunsens tiegħek. Mingħajr dawn it-teknoloġiji u l-cookies, il-websajt tagħna ma tistax taħdem sew."
+        },
+        functional: {
+            title: "Funzjonali",
+            description: "Il-cookies funzjonali jippermettulna naħżnu informazzjoni li tibdel kif tidher jew taħdem il-websajt, bħal-lingwa jew ir-reġjun ippreferut tiegħek."
+        },
+        statisic: {
+            title: "Analitika",
+            description: "Aħna nfittxu li ntejbu b'mod kontinwu l-esperjenza tal-utent u l-prestazzjoni tal-websajt tagħna. Biex nagħmlu dan, nużaw teknoloġiji analitiċi (inklużi cookies) li kejlu u jevalwaw b'mod anonimu liema funzjonijiet u kontenut tal-websajt tagħna jintużaw, kif, u kemm-il darba. Din id-data tgħinna ntejbu s-sit tagħna għall-utenti."
+        },
+        marketing: {
+            title: "Marketing",
+            description: "Nużaw teknoloġiji tal-web (inklużi cookies) minn sħab affidabbli biex nagħtu kontenut u riklami mfassla apposta għalik fuq websajts u pjattaformi tal-midja soċjali. Dan il-kontenut jintgħażel u jintwera abbażi tal-imġieba tal-browsing tiegħek. Il-cookies tar-riklamar u tal-marketing jintużaw biex juru riklami u kampanji rilevanti, jissorveljaw viżitaturi minn sit għal ieħor, u jiġbru informazzjoni biex jippreżentaw riklami personalizzati."
+        }
+    },
+    icelandic: {
+        saveSettings: "Hafna öllu",
+        necessary: {
+            title: "Nauðsynlegt",
+            description: "Nauðsynleg vaftækni og vafrakökur eru mikilvæg til að gera vefsíðuna okkar aðgengilega og virka fyrir þig. Þær gera lykilaðgerðir mögulegar, svo sem flakk, rétta birtingu í vafranum þínum og stjórnun á samþykkisstillingum þínum. Án þessarar tækni og vafrakaka getur vefsíðan okkar ekki virkað sem skyldi."
+        },
+        functional: {
+            title: "Virkni",
+            description: "Virknivafrakökur gera okkur kleift að vista upplýsingar sem breyta útliti eða hegðun vefsíðunnar, svo sem æskilegt tungumál þitt eða svæði."
+        },
+        statisic: {
+            title: "Greiningar",
+            description: "Við leitumst stöðugt við að bæta notendaupplifun og afköst vefsíðunnar okkar. Til að ná því notum við greiningartækni (þar á meðal vafrakökur) sem mælir og metur, undir dulnefni, hvaða eiginleikar og efni vefsíðunnar okkar eru notuð, hvernig og hversu oft. Þessi gögn hjálpa okkur að bæta síðuna fyrir notendur."
+        },
+        marketing: {
+            title: "Markaðssetning",
+            description: "Við notum vaftækni (þar á meðal vafrakökur) frá traustum samstarfsaðilum til að birta þér efni og auglýsingar sem eru sérsniðnar fyrir þig á vefsíðum og samfélagsmiðlum. Þetta efni er valið og birt út frá vafrahegðun þinni. Auglýsinga- og markaðsvafrakökur eru notaðar til að sýna viðeigandi auglýsingar og herferðir, rekja gesti milli vefsvæða og safna upplýsingum til að birta persónusniðnar auglýsingar."
+        }
+    },
+    serbian: {
+        saveSettings: "Одбиј све",
+        necessary: {
+            title: "Неопходни",
+            description: "Неопходне веб технологије и колачићи су неопходни да би наш сајт био доступан и функционалан за вас. Они омогућавају кључне функције, као што су навигација, исправан приказ у вашем прегледачу и управљање вашим подешавањима сагласности. Без ових технологија и колачића, наш сајт не може исправно да функционише."
+        },
+        functional: {
+            title: "Функционални",
+            description: "Функционални колачићи нам омогућавају да чувамо информације које мењају изглед или понашање сајта, као што су ваш жељени језик или регион."
+        },
+        statisic: {
+            title: "Аналитика",
+            description: "Стално настојимо да побољшамо корисничко искуство и перформансе нашег сајта. Да бисмо то постигли, користимо аналитичке технологије (укључујући колачиће) које псеудонимно мере и процењују које функције и садржај нашег сајта се користе, како и колико често. Ови подаци нам помажу да побољшамо сајт за кориснике."
+        },
+        marketing: {
+            title: "Маркетинг",
+            description: "Користимо веб технологије (укључујући колачиће) од поузданих партнера да бисмо вам приказали садржај и рекламе прилагођене посебно вама на веб сајтовима и платформама друштвених медија. Овај садржај се бира и приказује на основу вашег понашања приликом прегледања. Рекламни и маркетиншки колачићи се користе за приказивање релевантних реклама и кампања, праћење посетилаца на различитим сајтовима и прикупљање информација за приказивање персонализованих реклама."
+        }
+    },
+    persian: {
+        saveSettings: "رد همه",
+        necessary: {
+            title: "ضروری",
+            description: "فناوری‌های وب و کوکی‌های ضروری برای در دسترس و کاربردی بودن وب‌سایت ما برای شما اساسی هستند. این موارد امکانات کلیدی مانند پیمایش، نمایش صحیح در مرورگر شما و مدیریت تنظیمات رضایت شما را فراهم می‌کنند. بدون این فناوری‌ها و کوکی‌ها، وب‌سایت ما نمی‌تواند به درستی کار کند."
+        },
+        functional: {
+            title: "کارکردی",
+            description: "کوکی‌های کارکردی به ما امکان می‌دهند اطلاعاتی را ذخیره کنیم که ظاهر یا رفتار وب‌سایت را تغییر می‌دهد، مانند زبان یا منطقه مورد نظر شما."
+        },
+        statisic: {
+            title: "تحلیلی",
+            description: "ما تلاش می‌کنیم تجربه کاربری و عملکرد وب‌سایت خود را به‌طور مداوم بهبود بخشیم. برای این منظور، از فناوری‌های تحلیلی (از جمله کوکی‌ها) استفاده می‌کنیم که به‌صورت ناشناس اندازه‌گیری و ارزیابی می‌کنند کدام ویژگی‌ها و محتوای وب‌سایت ما، چگونه و چند بار استفاده می‌شوند. این داده‌ها به ما کمک می‌کند سایت را برای کاربران بهبود بخشیم."
+        },
+        marketing: {
+            title: "بازاریابی",
+            description: "ما از فناوری‌های وب (از جمله کوکی‌ها) از شرکای مورد اعتماد استفاده می‌کنیم تا محتوا و تبلیغاتی متناسب با شما را در وب‌سایت‌ها و پلتفرم‌های رسانه‌های اجتماعی ارائه دهیم. این محتوا بر اساس رفتار مرور شما انتخاب و نمایش داده می‌شود. کوکی‌های تبلیغاتی و بازاریابی برای نمایش تبلیغات و کمپین‌های مرتبط، ردیابی بازدیدکنندگان در سایت‌های مختلف و جمع‌آوری اطلاعات برای ارائه تبلیغات شخصی‌سازی‌شده استفاده می‌شوند."
+        }
+    },
+    urdu: {
+        saveSettings: "سب مسترد کریں",
+        necessary: {
+            title: "ضروری",
+            description: "ضروری ویب ٹیکنالوجیز اور کوکیز ہماری ویب سائٹ کو آپ کے لیے قابل رسائی اور فعال بنانے کے لیے ضروری ہیں۔ یہ نیویگیشن، آپ کے براؤزر میں درست ڈسپلے، اور آپ کی رضامندی کی ترجیحات کے انتظام جیسی اہم خصوصیات کو ممکن بناتی ہیں۔ ان ٹیکنالوجیز اور کوکیز کے بغیر، ہماری ویب سائٹ صحیح طریقے سے کام نہیں کر سکتی۔"
+        },
+        functional: {
+            title: "فعالیتی",
+            description: "فعالیتی کوکیز ہمیں ایسی معلومات محفوظ کرنے دیتی ہیں جو ویب سائٹ کی ظاہری شکل یا رویے کو تبدیل کرتی ہیں، جیسے آپ کی پسندیدہ زبان یا علاقہ۔"
+        },
+        statisic: {
+            title: "تجزیات",
+            description: "ہم اپنی ویب سائٹ کے صارف کے تجربے اور کارکردگی کو مسلسل بہتر بنانے کی کوشش کرتے ہیں۔ اس کے لیے، ہم تجزیاتی ٹیکنالوجیز (بشمول کوکیز) استعمال کرتے ہیں جو گمنام طور پر ناپتی اور جانچتی ہیں کہ ہماری ویب سائٹ کی کون سی خصوصیات اور مواد استعمال ہوتے ہیں، کیسے، اور کتنی بار۔ یہ ڈیٹا ہمیں صارفین کے لیے اپنی سائٹ بہتر بنانے میں مدد دیتا ہے۔"
+        },
+        marketing: {
+            title: "مارکیٹنگ",
+            description: "ہم قابل اعتماد شراکت داروں کی ویب ٹیکنالوجیز (بشمول کوکیز) استعمال کرتے ہیں تاکہ ویب سائٹس اور سوشل میڈیا پلیٹ فارمز پر آپ کے لیے خاص طور پر تیار کردہ مواد اور اشتہارات فراہم کر سکیں۔ یہ مواد آپ کے براؤزنگ رویے کی بنیاد پر منتخب اور ظاہر کیا جاتا ہے۔ اشتہاری اور مارکیٹنگ کوکیز متعلقہ اشتہارات اور مہمات دکھانے، مختلف سائٹس پر زائرین کو ٹریک کرنے، اور ذاتی نوعیت کے اشتہارات پیش کرنے کے لیے معلومات جمع کرنے کے لیے استعمال ہوتی ہیں۔"
+        }
+    },
+    bengali: {
+        saveSettings: "সব প্রত্যাখ্যান করুন",
+        necessary: {
+            title: "প্রয়োজনীয়",
+            description: "প্রয়োজনীয় ওয়েব প্রযুক্তি এবং কুকি আমাদের ওয়েবসাইটকে আপনার জন্য অ্যাক্সেসযোগ্য ও কার্যকরী করার জন্য অপরিহার্য। এগুলো নেভিগেশন, আপনার ব্রাউজারে সঠিক প্রদর্শন এবং আপনার সম্মতির পছন্দ পরিচালনার মতো মূল বৈশিষ্ট্যগুলো সক্ষম করে। এই প্রযুক্তি ও কুকি ছাড়া, আমাদের ওয়েবসাইট সঠিকভাবে কাজ করতে পারে না।"
+        },
+        functional: {
+            title: "কার্যকরী",
+            description: "কার্যকরী কুকিগুলো আমাদের এমন তথ্য সংরক্ষণ করতে দেয় যা ওয়েবসাইটের চেহারা বা আচরণ পরিবর্তন করে, যেমন আপনার পছন্দের ভাষা বা অঞ্চল।"
+        },
+        statisic: {
+            title: "অ্যানালিটিক্স",
+            description: "আমরা আমাদের ওয়েবসাইটের ব্যবহারকারীর অভিজ্ঞতা এবং কর্মক্ষমতা ক্রমাগত উন্নত করার চেষ্টা করি। এর জন্য, আমরা বিশ্লেষণাত্মক প্রযুক্তি (কুকি সহ) ব্যবহার করি যা বেনামে পরিমাপ ও মূল্যায়ন করে যে আমাদের ওয়েবসাইটের কোন বৈশিষ্ট্য ও বিষয়বস্তু কীভাবে এবং কতবার ব্যবহৃত হয়। এই তথ্য আমাদের ব্যবহারকারীদের জন্য সাইটটি উন্নত করতে সাহায্য করে।"
+        },
+        marketing: {
+            title: "মার্কেটিং",
+            description: "আমরা বিশ্বস্ত অংশীদারদের ওয়েব প্রযুক্তি (কুকি সহ) ব্যবহার করি যাতে ওয়েবসাইট ও সামাজিক মাধ্যম প্ল্যাটফর্মে আপনার জন্য বিশেষভাবে তৈরি বিষয়বস্তু ও বিজ্ঞাপন প্রদান করা যায়। এই বিষয়বস্তু আপনার ব্রাউজিং আচরণের ভিত্তিতে নির্বাচিত ও প্রদর্শিত হয়। বিজ্ঞাপন ও মার্কেটিং কুকিগুলো প্রাসঙ্গিক বিজ্ঞাপন ও প্রচারাভিযান দেখাতে, বিভিন্ন সাইটে দর্শকদের ট্র্যাক করতে এবং ব্যক্তিগতকৃত বিজ্ঞাপন উপস্থাপনের জন্য তথ্য সংগ্রহ করতে ব্যবহৃত হয়।"
+        }
+    },
+    swahili: {
+        saveSettings: "Kataa Vyote",
+        necessary: {
+            title: "Muhimu",
+            description: "Teknolojia za wavuti na vidakuzi muhimu ni muhimu ili kufanya tovuti yetu ipatikane na ifanye kazi kwa ajili yako. Vinawezesha vipengele muhimu kama vile uabiri, uonyeshaji sahihi kwenye kivinjari chako, na usimamizi wa mapendeleo yako ya idhini. Bila teknolojia na vidakuzi hivi, tovuti yetu haiwezi kufanya kazi ipasavyo."
+        },
+        functional: {
+            title: "Utendaji",
+            description: "Vidakuzi vya utendaji vinaturuhusu kuhifadhi taarifa zinazobadilisha jinsi tovuti inavyoonekana au kufanya kazi, kama vile lugha au eneo unalopendelea."
+        },
+        statisic: {
+            title: "Uchambuzi",
+            description: "Tunajitahidi kuboresha kwa kuendelea uzoefu wa mtumiaji na utendaji wa tovuti yetu. Ili kufanikisha hili, tunatumia teknolojia za uchambuzi (ikiwa ni pamoja na vidakuzi) ambazo hupima na kutathmini bila kutambulisha jina ni vipengele na maudhui gani ya tovuti yetu vinavyotumika, jinsi gani, na mara ngapi. Data hii hutusaidia kuboresha tovuti kwa watumiaji."
+        },
+        marketing: {
+            title: "Uuzaji",
+            description: "Tunatumia teknolojia za wavuti (ikiwa ni pamoja na vidakuzi) kutoka kwa washirika wanaoaminika ili kukupatia maudhui na matangazo yaliyoundwa mahususi kwa ajili yako kwenye tovuti na mitandao ya kijamii. Maudhui haya huchaguliwa na kuonyeshwa kulingana na tabia yako ya kuvinjari. Vidakuzi vya matangazo na uuzaji hutumika kuonyesha matangazo na kampeni zinazofaa, kufuatilia wageni kwenye tovuti mbalimbali, na kukusanya taarifa ili kuwasilisha matangazo binafsishwa."
+        }
+    },
+    tamil: {
+        saveSettings: "அனைத்தையும் நிராகரி",
+        necessary: {
+            title: "அவசியமானவை",
+            description: "எங்கள் இணையதளத்தை உங்களுக்கு அணுகக்கூடியதாகவும் செயல்படக்கூடியதாகவும் மாற்ற அவசியமான வலை தொழில்நுட்பங்களும் குக்கீகளும் இன்றியமையாதவை. வழிசெலுத்தல், உங்கள் உலாவியில் சரியான காட்சி, மற்றும் உங்கள் ஒப்புதல் விருப்பங்களை நிர்வகித்தல் போன்ற முக்கிய அம்சங்களை இவை செயல்படுத்துகின்றன. இந்த தொழில்நுட்பங்களும் குக்கீகளும் இல்லாமல், எங்கள் இணையதளம் சரியாக செயல்பட முடியாது."
+        },
+        functional: {
+            title: "செயல்பாட்டு",
+            description: "செயல்பாட்டு குக்கீகள் இணையதளத்தின் தோற்றத்தை அல்லது நடத்தையை மாற்றும் தகவல்களை சேமிக்க எங்களை அனுமதிக்கின்றன, உதாரணமாக உங்கள் விருப்பமான மொழி அல்லது பிராந்தியம்."
+        },
+        statisic: {
+            title: "பகுப்பாய்வு",
+            description: "எங்கள் இணையதளத்தின் பயனர் அனுபவத்தையும் செயல்திறனையும் தொடர்ந்து மேம்படுத்த நாங்கள் முயல்கிறோம். இதற்காக, எங்கள் இணையதளத்தின் எந்த அம்சங்களும் உள்ளடக்கமும் எவ்வாறு, எப்போது பயன்படுத்தப்படுகின்றன என்பதை புனைப்பெயரில் அளவிடும் மற்றும் மதிப்பிடும் பகுப்பாய்வு தொழில்நுட்பங்களை (குக்கீகள் உட்பட) பயன்படுத்துகிறோம். இந்த தரவு பயனர்களுக்காக எங்கள் தளத்தை மேம்படுத்த உதவுகிறது."
+        },
+        marketing: {
+            title: "சந்தைப்படுத்தல்",
+            description: "நம்பகமான கூட்டாளர்களிடமிருந்து வலை தொழில்நுட்பங்களை (குக்கீகள் உட்பட) பயன்படுத்தி, இணையதளங்களிலும் சமூக ஊடக தளங்களிலும் உங்களுக்கென தனிப்பயனாக்கப்பட்ட உள்ளடக்கம் மற்றும் விளம்பரங்களை வழங்குகிறோம். இந்த உள்ளடக்கம் உங்கள் உலாவல் நடத்தையின் அடிப்படையில் தேர்ந்தெடுக்கப்பட்டு காட்டப்படுகிறது. தொடர்புடைய விளம்பரங்கள் மற்றும் பிரச்சாரங்களைக் காட்ட, பல்வேறு தளங்களில் பார்வையாளர்களைக் கண்காணிக்க, மற்றும் தனிப்பயனாக்கப்பட்ட விளம்பரங்களை வழங்க தகவல்களை சேகரிக்க விளம்பர மற்றும் சந்தைப்படுத்தல் குக்கீகள் பயன்படுத்தப்படுகின்றன."
+        }
     }
 };

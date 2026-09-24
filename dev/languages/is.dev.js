@@ -1,0 +1,44 @@
+(function () {
+    var categories = {
+    saveSettings: "Hafna öllu",
+    necessary: {
+        title: "Nauðsynlegt",
+        description: "Nauðsynleg vaftækni og vafrakökur eru mikilvæg til að gera vefsíðuna okkar aðgengilega og virka fyrir þig. Þær gera lykilaðgerðir mögulegar, svo sem flakk, rétta birtingu í vafranum þínum og stjórnun á samþykkisstillingum þínum. Án þessarar tækni og vafrakaka getur vefsíðan okkar ekki virkað sem skyldi."
+    },
+    functional: {
+        title: "Virkni",
+        description: "Virknivafrakökur gera okkur kleift að vista upplýsingar sem breyta útliti eða hegðun vefsíðunnar, svo sem æskilegt tungumál þitt eða svæði."
+    },
+    statisic: {
+        title: "Greiningar",
+        description: "Við leitumst stöðugt við að bæta notendaupplifun og afköst vefsíðunnar okkar. Til að ná því notum við greiningartækni (þar á meðal vafrakökur) sem mælir og metur, undir dulnefni, hvaða eiginleikar og efni vefsíðunnar okkar eru notuð, hvernig og hversu oft. Þessi gögn hjálpa okkur að bæta síðuna fyrir notendur."
+    },
+    marketing: {
+        title: "Markaðssetning",
+        description: "Við notum vaftækni (þar á meðal vafrakökur) frá traustum samstarfsaðilum til að birta þér efni og auglýsingar sem eru sérsniðnar fyrir þig á vefsíðum og samfélagsmiðlum. Þetta efni er valið og birt út frá vafrahegðun þinni. Auglýsinga- og markaðsvafrakökur eru notaðar til að sýna viðeigandi auglýsingar og herferðir, rekja gesti milli vefsvæða og safna upplýsingum til að birta persónusniðnar auglýsingar."
+    }
+};
+    var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "vinstra" : "hægra";
+    window.__intaCmpLocalePayload = {
+        slug: "is",
+        cookieSettingsLabel: "Vafrakökustillingar",
+        showHideDetails: "Sýna nánar",
+        acceptLabel: "Samþykkja",
+        acceptShortLabel: "Samþykkja",
+        declineLabel: "Hafna öllu",
+        settingsLabel: "Stillingar",
+        policyLinkLabel: "Persónuverndar- og vafrakökustefna okkar",
+        bannerMessage: "Með því að samþykkja allar vafrakökur styður þú " + document.domain + " við að þróa betri lausn fyrir þig.</p><p>Veldu hvort þú vilt aðeins leyfa nauðsynlegar vafrakökur eða leyfa allar vafrakökur.",
+        settingsMessage: "<h3 style=\"    font-size: 25px;\">Þú hefur stjórnina</h3>"
+            + "<p>Við og traustir samstarfsaðilar okkar notum tækni, svo sem vafrakökur, til að safna upplýsingum í ýmsum tilgangi, þar á meðal:</p>"
+            + "<ol>"
+            + "<li>Virkni</li>"
+            + "<li>Greiningar</li>"
+            + "<li>Markaðssetning</li>"
+            + "</ol>"
+            + "<p>Með því að smella á 'Samþykkja' samþykkir þú alla þessa tilgangi. Að öðrum kosti geturðu valið tiltekna tilgangi sem þú samþykkir með því að haka við reitina og smella á 'Vista stillingar'.</p>"
+            + "<p>Þú getur afturkallað samþykki þitt hvenær sem er með því að smella á litla táknið neðst " + arrangeWord + " á vefsíðunni.</p>",
+        settingsMessageSuffix: '<button onClick="showPrivacy()" class="intastellarCookie-settings__privacyLink">Persónuverndarstefna Intastellar Solutions, International</button>',
+        categories: categories
+    };
+})();

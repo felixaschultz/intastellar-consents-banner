@@ -41,7 +41,16 @@
         croatian: "hr", hr: "hr", "hr-hr": "hr",
         slovenian: "sl", sl: "sl", "sl-si": "sl",
         lithuanian: "lt", lt: "lt", "lt-lt": "lt",
-        latvian: "lv", lv: "lv", "lv-lv": "lv"
+        latvian: "lv", lv: "lv", "lv-lv": "lv",
+        irish: "ga", ga: "ga", "ga-ie": "ga",
+        maltese: "mt", mt: "mt", "mt-mt": "mt",
+        icelandic: "is", is: "is", "is-is": "is",
+        serbian: "sr", sr: "sr", "sr-rs": "sr",
+        persian: "fa", fa: "fa", "fa-ir": "fa",
+        urdu: "ur", ur: "ur", "ur-pk": "ur",
+        bengali: "bn", bn: "bn", "bn-bd": "bn", "bn-in": "bn",
+        swahili: "sw", sw: "sw", "sw-ke": "sw", "sw-tz": "sw",
+        tamil: "ta", ta: "ta", "ta-in": "ta", "ta-lk": "ta"
     };
 
     function intaNormalizeLocaleToken(v) {
