@@ -726,6 +726,379 @@ button.intastellarCookie-settings__privacyLink {
     margin-left: 6px;
 }
 
+/* ── CCPA/CPRA "Do not sell or share" side tab + popup ──────────────────── */
+
+.intastellarCCPAContainer {
+    position: fixed;
+    z-index: 2147483000;
+    top: 60%;
+    right: -168px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 210px;
+    box-sizing: border-box;
+    padding: 12px 16px;
+    background: var(--inta-premium-bg);
+    color: var(--inta-premium-fg);
+    border: 1px solid var(--inta-premium-border);
+    border-right: none;
+    border-radius: var(--inta-premium-radius) 0 0 var(--inta-premium-radius);
+    box-shadow: var(--inta-premium-shadow);
+    font-family: var(--inta-premium-font);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: left;
+    cursor: pointer;
+    transition: right 0.2s ease-in-out;
+}
+
+.intastellarCCPAContainer:hover {
+    right: 0;
+}
+
+.intastellarCCPAContainer__content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    font-size: inherit;
+}
+
+/* The icon's fill is hardcoded on the inline SVG markup (#fff for the tab, #000 for the
+   popup heading) — both assume a fixed-color background. currentColor lets it follow the
+   premium card's light/dark theme instead of disappearing against it. */
+.intastellarCCPA__icon {
+    flex: 0 0 auto;
+    display: inline-block;
+}
+
+.intastellarCCPA__icon path {
+    fill: currentColor !important;
+}
+
+.intastellarCCPApopup {
+    position: fixed;
+    z-index: 2147483003;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - (var(--inta-premium-gap) * 2));
+    max-width: 480px;
+    max-height: calc(100vh - (var(--inta-premium-gap) * 2));
+    overflow-y: auto;
+    box-sizing: border-box;
+    background: var(--inta-premium-bg);
+    color: var(--inta-premium-fg);
+    border: 1px solid var(--inta-premium-border);
+    border-radius: var(--inta-premium-radius);
+    box-shadow: var(--inta-premium-shadow);
+    font-family: var(--inta-premium-font);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+}
+
+.intastellarCCPApopup.--active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.intastellarCCPApopup__content {
+    position: relative;
+    padding: 28px 24px 24px;
+    color: var(--inta-premium-fg);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.intastellarCCPApopup__content h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 12px;
+    padding-right: 30px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--inta-premium-fg);
+}
+
+.intastellarCCPApopup__content h3 {
+    margin: 16px 0 6px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--inta-premium-fg-muted);
+}
+
+.intastellarCCPApopup__content p {
+    margin: 0 0 10px;
+    color: var(--inta-premium-fg);
+}
+
+.intastellarCCPApopup__content ul {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--inta-premium-fg);
+}
+
+.intastellarCCPApopup__content li {
+    margin: 2px 0;
+}
+
+.intastellarCCPA__popupClose {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: var(--inta-premium-border);
+    color: var(--inta-premium-fg);
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.intastellarCCPA__popupClose:hover {
+    background: var(--inta-premium-fg-muted);
+    color: var(--inta-premium-bg);
+}
+
+/* ── Regional rights modals (LGPD/POPIA/PIPEDA/Law 25/Australian Privacy/PDPL) ──
+   Every jurisdiction's modal (built in cb.dev.js) shares this one set of "inta-lgpd-*"
+   classes regardless of which law it represents — only the outer dialog id and the
+   text content differ, so styling this once covers all six. */
+
+#lgpd-modal,
+#popia-modal,
+#pipeda-modal,
+#law25-modal,
+#au-privacy-modal,
+#pdpl-modal {
+    display: none;
+    position: fixed;
+    z-index: 2147483004;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: var(--inta-premium-gap);
+    background: rgba(0, 0, 0, 0.45);
+}
+
+#lgpd-modal.inta-lgpd-active,
+#popia-modal.inta-lgpd-active,
+#pipeda-modal.inta-lgpd-active,
+#law25-modal.inta-lgpd-active,
+#au-privacy-modal.inta-lgpd-active,
+#pdpl-modal.inta-lgpd-active {
+    display: flex;
+}
+
+.inta-lgpd-modal-box {
+    width: 100%;
+    max-width: 480px;
+    max-height: calc(100vh - (var(--inta-premium-gap) * 2));
+    overflow-y: auto;
+    box-sizing: border-box;
+    background: var(--inta-premium-bg);
+    color: var(--inta-premium-fg);
+    border: 1px solid var(--inta-premium-border);
+    border-radius: var(--inta-premium-radius);
+    box-shadow: var(--inta-premium-shadow);
+    font-family: var(--inta-premium-font);
+    text-align: left;
+}
+
+.inta-lgpd-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--inta-premium-border);
+}
+
+.inta-lgpd-modal-header-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.inta-lgpd-modal-header-icon {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--inta-premium-border);
+    font-size: 16px;
+}
+
+.inta-lgpd-modal-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: var(--inta-premium-fg);
+}
+
+.inta-lgpd-modal-subtitle {
+    margin-top: 2px;
+    font-size: 12px;
+    color: var(--inta-premium-fg-muted);
+}
+
+.inta-lgpd-modal-close {
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: var(--inta-premium-border);
+    color: var(--inta-premium-fg);
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inta-lgpd-modal-close:hover {
+    background: var(--inta-premium-fg-muted);
+    color: var(--inta-premium-bg);
+}
+
+.inta-lgpd-modal-body {
+    padding: 16px 20px 20px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--inta-premium-fg);
+}
+
+.inta-lgpd-modal-intro {
+    margin: 0 0 14px;
+    color: var(--inta-premium-fg);
+}
+
+.inta-lgpd-rights-list {
+    list-style: none;
+    margin: 0 0 16px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.inta-lgpd-right-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--inta-premium-border);
+}
+
+.inta-lgpd-right-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.inta-lgpd-right-number {
+    flex: 0 0 auto;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--inta-premium-border);
+    color: var(--inta-premium-fg);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inta-lgpd-right-content {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.inta-lgpd-right-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--inta-premium-fg);
+    margin-bottom: 2px;
+}
+
+.inta-lgpd-right-desc {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--inta-premium-fg-muted);
+}
+
+.inta-lgpd-dpo-section {
+    padding: 14px;
+    background: var(--inta-premium-border);
+    border-radius: 12px;
+}
+
+.inta-lgpd-dpo-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--inta-premium-fg-muted);
+    margin-bottom: 6px;
+}
+
+.inta-lgpd-dpo-text {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--inta-premium-fg);
+}
+
+.inta-lgpd-dpo-text a {
+    color: var(--inta-premium-fg);
+}
+
+.inta-lgpd-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--inta-premium-border);
+}
+
+.inta-lgpd-footer-note {
+    font-size: 11px;
+    color: var(--inta-premium-fg-muted);
+}
+
+.inta-lgpd-btn-close-modal {
+    flex: 0 0 auto;
+    padding: 10px 20px;
+    border-radius: 11px;
+    border: 1px solid var(--inta-premium-border);
+    background: transparent;
+    color: var(--inta-premium-fg);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.inta-lgpd-btn-close-modal:hover {
+    border-color: var(--inta-premium-fg-muted);
+}
+
 /* ── Small screens: let the card use the full width with side margins ──── */
 
 @media (max-width: 480px) {
@@ -735,8 +1108,19 @@ button.intastellarCookie-settings__privacyLink {
     }
 
     .intastellarCookieConstents,
-    .intastellarCookie-settings__container {
+    .intastellarCookie-settings__container,
+    .intastellarCCPApopup,
+    .inta-lgpd-modal-box {
         max-width: none;
         width: calc(100% - 24px);
+    }
+
+    .inta-lgpd-modal-footer {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .inta-lgpd-btn-close-modal {
+        width: 100%;
     }
 }
