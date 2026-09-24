@@ -5156,3 +5156,19 @@ function IntaSaveSettings() {
     // Dispatch TCF event after user action
     dispatchTCFConsentChangedIfAvailable();
 };
+
+function intaCbShopifySyncFromBannerCheckboxes() {
+    const fn = document.querySelector("#functional");
+    const st = document.querySelector("#statics");
+    const mk = document.querySelector("#marketing");
+    const payload = {
+        analytics: !!(st && st.checked),
+        marketing: !!(mk && mk.checked),
+        preferences: !!(fn && fn.checked),
+    };
+    intaShopifySetTrackingConsentSafe(payload, function () {
+        if (typeof window !== "undefined" && window.INTA_DEBUG) {
+            console.log("Shopify Customer Privacy synced from banner", payload);
+        }
+    });
+}
