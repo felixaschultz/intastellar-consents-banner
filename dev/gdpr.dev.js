@@ -4316,6 +4316,15 @@ function intaUcResolveCmpLocaleSlug() {
             if (lang === "slovenian") return "sl";
             if (lang === "lithuanian") return "lt";
             if (lang === "latvian") return "lv";
+            if (lang === "irish") return "ga";
+            if (lang === "maltese") return "mt";
+            if (lang === "icelandic") return "is";
+            if (lang === "serbian") return "sr";
+            if (lang === "persian") return "fa";
+            if (lang === "urdu") return "ur";
+            if (lang === "bengali") return "bn";
+            if (lang === "swahili") return "sw";
+            if (lang === "tamil") return "ta";
             return lang.split("-")[0];
         }
     }
