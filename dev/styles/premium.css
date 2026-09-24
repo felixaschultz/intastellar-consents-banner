@@ -147,20 +147,46 @@
     left: var(--inta-premium-gap);
 }
 
+/* Each category (Necessary/Functional/Analytics/Marketing) is its own accordion row:
+   a divider between rows instead of the previous "just floating in space" layout, and
+   a consistent, smaller type scale that matches the rest of the card instead of
+   falling back to the browser default 16px. */
+.intastellarCookieConstents__content-footer .intReadMore > section {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--inta-premium-border);
+}
+
+.intastellarCookieConstents__content-footer .intReadMore > section:last-child {
+    border-bottom: none;
+    padding-bottom: 2px;
+}
+
 .intaExpandCookieList {
     color: var(--inta-premium-fg);
     font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin: 10px 0 4px;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0;
+    text-align: left;
 }
 
 .intastellarCookieConstents__content-footer p,
 .intaCookieListOverview-heading,
 .intaCookieList-CookieName {
     color: var(--inta-premium-fg);
+    text-align: left;
+}
+
+.intastellarCookieConstents__content-footer .intReadMore > section > p {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--inta-premium-fg-muted);
+    margin: 6px 0 0;
 }
 
 .intastellarCookieConstents__content-footer .intaCookieCount,
@@ -170,22 +196,26 @@
 
 .intaCookieCount {
     color: var(--inta-premium-fg-muted);
-    font-weight: normal;
+    font-weight: 400;
     font-size: 12px;
+    margin-left: auto;
 }
 
+/* Simple, crisp chevron instead of a rotated border-corner (reads slightly heavy/
+   imprecise at small sizes) — an actual triangle via border-tricks, thin and centered. */
 .intastellar__arrow {
+    flex: 0 0 auto;
     display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-right: 1.5px solid var(--inta-premium-fg-muted);
-    border-bottom: 1.5px solid var(--inta-premium-fg-muted);
-    transform: rotate(45deg);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid var(--inta-premium-fg-muted);
     transition: transform 0.15s ease-in-out;
 }
 
 .intastellar__arrow.open {
-    transform: rotate(-135deg);
+    transform: rotate(180deg);
 }
 
 .intaCookieListOverview {
@@ -197,6 +227,7 @@
 .intaCookieListOverview.view {
     max-height: 60vh;
     overflow-y: auto;
+    margin-top: 10px;
 }
 
 /* Mirror the panel to the other side when arrange="ltr" */
@@ -345,12 +376,13 @@
 .intastellarSettings__control {
     display: flex;
     align-items: center;
-    padding: 10px 0;
+    padding: 14px 0;
     border-bottom: 1px solid var(--inta-premium-border);
 }
 
 .intastellarSettings__control:last-of-type {
     border-bottom: none;
+    padding-bottom: 2px;
 }
 
 /* Keep the label and the toggle on one line, never wrapping. */
@@ -366,6 +398,8 @@
 .intSettingsTitle {
     color: var(--inta-premium-fg);
     font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
     white-space: nowrap;
 }
 
