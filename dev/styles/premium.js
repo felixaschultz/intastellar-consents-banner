@@ -552,252 +552,103 @@ const messageWrapEnd = "</p></div>";
 
 const settingsMessagesLanguages = {
     danish: `<h3 class="intastellarconsents-heading">Du bestemmer selv over dine data!</h3>
-    <p>Vi og vores samarbejdspartnere bruger teknologier, herunder cookies, til at indsamle oplysninger om dig til forskellige formål, herunder:</p>
-    <ol>
-        <li>Funktion</li>
-        <li>Statistik</li>
-        <li>Marketing</li>
-    </ol>
-    <p>Ved at trykke på 'Accepter' giver du samtykke til alle disse formål. Du kan også vælge hvilke formål du ønsker at give samtykke til ved at benytte checkboksene herunder, og derefter trykke på ”Gem”.
-    Du kan til enhver tid trække dit samtykke tilbage ved at trykke på det lille ikon nederst i ${(window?.INTA?.settings.arrange == "ltr") ? "venstre" : "højre"} hjørne af hjemmesiden.</p>
+    <p>Vi og vores samarbejdspartnere bruger cookies til funktion, statistik og marketing. Du kan acceptere, afvise eller vælge selv — og til enhver tid trække dit samtykke tilbage via det lille ikon nederst i ${(window?.INTA?.settings.arrange == "ltr") ? "venstre" : "højre"} hjørne.</p>
     ${generatePolicyUrl('Vores privat og cookie politik')}
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")}`,
     german: `<h3 class="intastellarconsents-heading">Sie haben die Kontrolle über Ihre Daten</h3>
-    <p>Wir und unsere Geschäftspartner nutzen Technologien wie Cookies dazu, personenbezogene Informationen für verschiedene Zwecke zu sammeln, darunter:</p>
-    <ol>
-        <li>Funktion</li>
-        <li>Statistik</li>
-        <li>Werbung</li>
-    </ol>
-    <p>Wenn Sie auf „Akzeptieren“ klicken, erteilen Sie Ihre Einwilligung für alle diese Zwecke. Sie können auch entscheiden, welchen Zwecken Sie zustimmen, indem Sie das Kästchen neben dem Zweck anklicken und auf „Speichern“ klicken.</p>
-    <p>Sie können Ihre Einwilligung jederzeit widerrufen, indem Sie auf das kleine Symbol unten in der ${(window?.INTA?.settings.arrange == "ltr") ? "linken" : "rechten"} Ecke klicken.</p>
+    <p>Wir und unsere Geschäftspartner nutzen Cookies für Funktion, Statistik und Werbung. Sie können akzeptieren, ablehnen oder selbst wählen — und Ihre Einwilligung jederzeit über das kleine Symbol unten in der ${(window?.INTA?.settings.arrange == "ltr") ? "linken" : "rechten"} Ecke widerrufen.</p>
     ${generatePolicyUrl('Unsere Datenschutz Erklährung und Cookie politik')}
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     english: `<h3 class="intastellarconsents-heading">You´re in control</h3>
-    <p>We and our trusted partners use technologies, such as cookies, to collect information for various purposes, including:</p>
-    <ol>
-        <li>Functionality</li>
-        <li>Analytics</li>
-        <li>Advertising</li>
-    </ol>
-    <p>By clicking 'Accept', you consent to all of these purposes. Alternatively, you can select the specific purposes you agree to by ticking the checkboxes and clicking 'Save Settings'.</p>
-    <p>You can withdraw your consent at any time by clicking the small icon in the bottom ${(window?.INTA?.settings.arrange == "ltr") ? "left" : "right"} corner of the website.</p>
+    <p>We and our partners use cookies for functionality, analytics, and advertising. Accept, decline, or choose what you allow — you can withdraw consent anytime via the small icon in the bottom ${(window?.INTA?.settings.arrange == "ltr") ? "left" : "right"} corner.</p>
     ${generatePolicyUrl('Our Privacy and cookie Policy')}
-    
+
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     spanish: `<h3 class="intastellarconsents-heading">Tienes el control</h3>
-    <p>Nosotros y nuestros socios comerciales utilizamos tecnologías, incluidas las cookies, para recopilar información sobre usted con diversos fines, incluidos:</p>
-    <ol>
-        <li>Funcional</li>
-        <li>Estadísticas</li>
-        <li>Publicidad</li>
-    </ol>
-    <p>Al hacer clic en "Aceptar", usted da su consentimiento para todos estos fines. También puede decidir a qué fines dar su consentimiento marcando la casilla junto al fin y haciendo clic en "Guardar configuración".</p>
-    <p>Puede retirar su consentimiento en cualquier momento haciendo clic en el pequeño icono en la esquina inferior ${(window?.INTA?.settings.arrange == "ltr") ? "izquierda" : "derecha"} del sitio web.</p>
+    <p>Nosotros y nuestros socios utilizamos cookies con fines funcionales, estadísticos y publicitarios. Puede aceptar, rechazar o elegir usted mismo, y retirar su consentimiento en cualquier momento mediante el pequeño icono en la esquina inferior ${(window?.INTA?.settings.arrange == "ltr") ? "izquierda" : "derecha"}.</p>
     ${generatePolicyUrl('Nuestra política de privacidad y cookies')}
-    <button onClick="showPrivacy()" class="intastellarCookie-settings__privacyLink">Intastellar Solutions, International política de privacidad</button>
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     french: `<h3 class="intastellarconsents-heading">Vous êtes aux commandes</h3>
-    <p>Nous et nos partenaires commerciaux utilisons des technologies, y compris des cookies, pour collecter des informations vous concernant à diverses fins, notamment:</p>
-    <ol>
-        <li>Fonctionnel</li>
-        <li>Statistiques</li>
-        <li>Publicité</li>
-    </ol>
-    <p>En cliquant sur "Accepter", vous donnez votre consentement pour tous ces objectifs. Vous pouvez également choisir de spécifier les objectifs auxquels vous consentez en cochant la case à côté de l'objectif et en cliquant sur "Enregistrer les paramètres".</p>
-    <p>Vous pouvez retirer votre consentement à tout moment en cliquant sur le petit icône en bas à gauche du site web.</p>
+    <p>Nous et nos partenaires utilisons des cookies à des fins fonctionnelles, statistiques et publicitaires. Vous pouvez accepter, refuser ou choisir vous-même, et retirer votre consentement à tout moment via la petite icône en bas à ${(window?.INTA?.settings.arrange == "ltr") ? "gauche" : "droite"}.</p>
     ${generatePolicyUrl('Notre politique de confidentialité et de cookies')}
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     swedish: `<h3 class="intastellarconsents-heading">Du har kontrollen</h3>
-    <p>Vi och våra affärspartners använder teknik, inklusive cookies, för att samla in information om dig för olika ändamål, inklusive:</p>
-    <ol>
-        <li>Funktionell</li>
-        <li>Statistik</li>
-        <li>Marknadsföring</li>
-    </ol>
-    <p>Genom att klicka på "Acceptera" ger du ditt samtycke till alla dessa ändamål. Du kan också välja att specificera de ändamål du samtycker till genom att markera rutan bredvid ändamålet och klicka på "Spara inställningar".</p>
-    <p>Du kan återkalla ditt samtycke när som helst genom att klicka på den lilla ikonen längst ned ${(window?.INTA?.settings.arrange == "ltr") ? "vänster" : "höger"} hörn av webbplatsen.</p>
+    <p>Vi och våra partners använder cookies för funktion, statistik och marknadsföring. Du kan acceptera, avvisa eller välja själv — och när som helst återkalla ditt samtycke via den lilla ikonen längst ned i ${(window?.INTA?.settings.arrange == "ltr") ? "vänster" : "höger"} hörn.</p>
     ${generatePolicyUrl('Vår integritets- och cookiepolicy')}
-    <button onClick="showPrivacy()" class="intastellarCookie-settings__privacyLink">Intastellar Solutions, International integritetspolicy</button>
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     norwegian: `<h3 class="intastellarconsents-heading">Du har kontrollen</h3>
-    <p>Vi og våre forretningspartnere bruker teknologi, inkludert informasjonskapsler, for å samle inn informasjon om deg for ulike formål, inkludert:</p>
-    <ol>
-        
-        <li>Funksjonell</li>
-        <li>Statistikk</li>
-        <li>Markedsføring</li>
-    </ol>
-    <p>Ved å klikke på "Godta", gir du ditt samtykke til alle disse formålene. Du kan også velge å spesifisere formålene du samtykker til ved å krysse av i boksen ved siden av formålet og klikke på "Lagre innstillinger".</p>
-    <p>Du kan når som helst trekke tilbake ditt samtykke ved å klikke på det lille ikonet nederst ${(window?.INTA?.settings.arrange == "ltr") ? "venstre" : "høyre"} hjørne av nettsiden.</p>
+    <p>Vi og våre partnere bruker informasjonskapsler til funksjon, statistikk og markedsføring. Du kan godta, avslå eller velge selv — og når som helst trekke tilbake samtykket via det lille ikonet nederst i ${(window?.INTA?.settings.arrange == "ltr") ? "venstre" : "høyre"} hjørne.</p>
     ${generatePolicyUrl('Vår personvern- og informasjonskapsler')}
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     finnish: `<h3 class="intastellarconsents-heading">Olet ohjaimissa</h3>
-    <p>Me ja liikekumppanimme käytämme teknologioita, mukaan lukien evästeet, kerätäksemme tietoja sinusta eri tarkoituksiin, mukaan lukien:</p>
-    <ol>
-        <li>Toiminnallinen</li>
-        <li>Tilastollinen</li>
-        <li>Mainonta</li>
-    </ol>
-    <p>Klikkaamalla "Hyväksy" annat suostumuksesi kaikkiin näihin tarkoituksiin. Voit myös valita, mihin tarkoituksiin suostut valitsemalla ruudun tarkoituksen vieressä ja napsauttamalla "Tallenna asetukset".</p>
-    <p>Voit peruuttaa suostumuksesi milloin tahansa napsauttamalla sivuston alareunan pientä kuvaketta ${(window?.INTA?.settings.arrange == "ltr") ? "vasen" : "oikea"} kulma.</p>
+    <p>Me ja kumppanimme käytämme evästeitä toiminnallisuuteen, tilastointiin ja markkinointiin. Voit hyväksyä, hylätä tai valita itse — ja peruuttaa suostumuksesi milloin tahansa sivuston alareunan ${(window?.INTA?.settings.arrange == "ltr") ? "vasemman" : "oikean"} kulman pienestä kuvakkeesta.</p>
     ${generatePolicyUrl('Tietosuojakäytäntömme ja evästekäytäntömme')}
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     dutch: `<h3 class="intastellarconsents-heading">U bent in controle</h3>
-    <p>Wij en onze zakenpartners gebruiken technologieën, waaronder cookies, om informatie over u te verzamelen voor verschillende doeleinden, waaronder:</p>
-    <ol>
-        <li>Functioneel</li>
-        <li>Statistisch</li>
-        <li>Reclame</li>
-    </ol>
-    <p>Door op 'Accepteren' te klikken, geeft u uw toestemming voor al deze doeleinden. U kunt ook beslissen welke doeleinden u wilt goedkeuren door het selectievakje naast het doel aan te vinken en op 'Instellingen opslaan' te klikken.</p>
-    <p>U kunt uw toestemming te allen tijde intrekken door op het kleine pictogram te klikken onderaan de ${(window?.INTA?.settings.arrange == "ltr") ? "linker" : "rechter"} hoek van de website.</p>
+    <p>Wij en onze partners gebruiken cookies voor functionaliteit, statistieken en marketing. U kunt accepteren, weigeren of zelf kiezen — en uw toestemming op elk moment intrekken via het kleine pictogram in de ${(window?.INTA?.settings.arrange == "ltr") ? "linker" : "rechter"} benedenhoek.</p>
     ${generatePolicyUrl('Ons privacy- en cookiebeleid')}
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     italian: `<h3 class="intastellarconsents-heading">Sei al comando</h3>
-    <p>Noi e i nostri partner commerciali utilizziamo tecnologie, tra cui i cookie, per raccogliere informazioni su di te per vari scopi, tra cui:</p>
-    <ol>
-        <li>Funzionale</li>
-        <li>Statistiche</li>
-        <li>Pubblicità</li>
-    </ol>
-    <p>Cliccando su "Accetta", dai il tuo consenso per tutti questi scopi. Puoi anche decidere a quali scopi acconsentire spuntando la casella accanto allo scopo e cliccando su "Salva impostazioni".</p>
-    <p>Puoi revocare il tuo consenso in qualsiasi momento cliccando sull'icona in basso a sinistra del sito web.</p>
+    <p>Noi e i nostri partner utilizziamo cookie per funzionalità, statistiche e marketing. Puoi accettare, rifiutare o scegliere tu stesso, e revocare il consenso in qualsiasi momento tramite la piccola icona in basso a ${(window?.INTA?.settings.arrange == "ltr") ? "sinistra" : "destra"}.</p>
     ${generatePolicyUrl('La nostra politica sulla privacy e sui cookie')}
-    
+
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     portuguese: `<h3 class="intastellarconsents-heading">Você está no controle</h3>
-    <p>Nós e nossos parceiros comerciais usamos tecnologias, incluindo cookies, para coletar informações sobre você para diversos fins, incluindo:</p>
-    <ol>
-        <li>Funcional</li>
-        <li>Estatísticas</li>
-        <li>Publicidade</li>
-    </ol>
-    <p>Ao clicar em "Aceitar", você dá seu consentimento para todos esses fins. Você também pode optar por especificar os fins aos quais consente marcando a caixa ao lado do fim e clicando em "Salvar configurações".</p>
-    <p>Você pode retirar seu consentimento a qualquer momento clicando no pequeno ícone na parte inferior ${(window?.INTA?.settings.arrange == "ltr") ? "esquerda" : "direita"} do site.</p>
+    <p>Nós e os nossos parceiros usamos cookies para funcionalidade, estatísticas e marketing. Pode aceitar, recusar ou escolher você mesmo, e retirar o seu consentimento a qualquer momento através do pequeno ícone no canto inferior ${(window?.INTA?.settings.arrange == "ltr") ? "esquerdo" : "direito"}.</p>
     ${generatePolicyUrl('Nossa política de privacidade e cookies')}
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     russian: `<h3 class="intastellarconsents-heading">Вы в контроле</h3>
-    <p>Мы и наши деловые партнеры используем технологии, включая файлы cookie, для сбора информации о вас для различных целей, включая:</p>
-    <ol>
-        <li>Функциональный</li>
-        <li>Статистика</li>
-        <li>Реклама</li>
-    </ol>
-    <p>Нажимая «Принять», вы даете согласие на все эти цели. Вы также можете решить, какие цели вы согласны утвердить, установив флажок рядом с целью и нажав «Сохранить настройки».</p>
-    <p>Вы можете отозвать свое согласие в любое время, нажав на небольшой значок в нижнем ${(window?.INTA?.settings.arrange == "ltr") ? "левом" : "правом"} углу веб-сайта.</p>
+    <p>Мы и наши партнёры используем файлы cookie для функциональности, статистики и рекламы. Вы можете принять, отклонить или выбрать сами — и в любой момент отозвать согласие через маленький значок в нижнем ${(window?.INTA?.settings.arrange == "ltr") ? "левом" : "правом"} углу.</p>
     ${generatePolicyUrl('Наша политика конфиденциальности и файлы cookie')}
-    <button onClick="showPrivacy()" class="intastellarCookie-settings__privacyLink">Intastellar Solutions, International политика конфиденциальности</button>
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     polish: `<h3 class="intastellarconsents-heading">Ty decydujesz o swoich danych</h3>
-    <p>My i nasi partnerzy biznesowi wykorzystujemy technologie, w tym pliki cookie, do zbierania informacji o Tobie w różnych celach, w tym:</p>
-    <ol>
-        <li>Funkcjonalność</li>
-        <li>Statystyki</li>
-        <li>Reklama</li>
-    </ol>
-    <p>Klikając „Akceptuj”, wyrażasz zgodę na wszystkie te cele. Możesz także zdecydować, które cele chcesz zatwierdzić, zaznaczając pole wyboru obok celu i klikając „Zapisz ustawienia”.</p>
-    <p>Możesz wycofać swoją zgodę w dowolnym momencie, klikając małą ikonę w dolnym ${(window?.INTA?.settings.arrange == "ltr") ? "lewy" : "prawy"} rogu strony internetowej.</p>
+    <p>My i nasi partnerzy używamy plików cookie do celów funkcjonalnych, statystycznych i marketingowych. Możesz zaakceptować, odrzucić lub wybrać samodzielnie — i w każdej chwili wycofać zgodę za pomocą małej ikony w dolnym ${(window?.INTA?.settings.arrange == "ltr") ? "lewym" : "prawym"} rogu.</p>
     ${generatePolicyUrl('Nasza polityka prywatności i plików cookie')}
-    <button onClick="showPrivacy()" class="intastellarCookie-settings__privacyLink">Intastellar Solutions, International polityka prywatności</button>
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     afrikaans: `<h3 class="intastellarconsents-heading">Jy is in beheer</h3>
-    <p>Ons en ons sakevennote gebruik tegnologieë, insluitend koekies, om inligting oor jou vir verskillende doeleindes in te samel, insluitend:</p>
-    <ol>
-        <li>Funksionaliteit</li>
-        <li>Analise</li>
-        <li>Advertering</li>
-    </ol>
-    <p>Deur op 'Aanvaar' te klik, gee jy toestemming vir al hierdie doeleindes. Jy kan ook die spesifieke doeleindes waarvoor jy toestemming gee, kies deur die keuselys langs die doelwit aan te dui en op 'Stoor instellings' te klik.</p>
-    <p>Jy kan jou toestemming te eniger tyd intrek deur op die klein ikoon in die onderkant ${(window?.INTA?.settings.arrange == "ltr") ? "linker" : "regter"} hoek van die webwerf te klik.</p>
+    <p>Ons en ons vennote gebruik koekies vir funksionaliteit, analise en advertensies. Jy kan aanvaar, weier of self kies — en jou toestemming enige tyd herroep via die klein ikoon in die onderste ${(window?.INTA?.settings.arrange == "ltr") ? "linker" : "regter"} hoek.</p>
     ${generatePolicyUrl('Ons Privaatheids- en koekiebeleid')}
-    <button onClick="showPrivacy()" class="intastellarCookie-settings__privacyLink">Intastellar Solutions, International privaatheidsbeleid</button>
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     arabic: `<h3 class="intastellarconsents-heading">أنت المتحكم</h3>
-    <p>نحن وشركاؤنا التجاريون نستخدم تقنيات، بما في ذلك ملفات تعريف الارتباط، لجمع المعلومات عنك لأغراض مختلفة، بما في ذلك:</p>
-    <ol>
-        <li>الوظائف</li>
-        <li>التحليلات</li>
-        <li>الإعلانات</li>
-    </ol>
-    <p>من خلال النقر على "قبول"، فإنك توافق على جميع هذه الأغراض. يمكنك أيضًا اختيار الأغراض المحددة التي توافق عليها عن طريق تحديد المربعات بجوار الأغراض والنقر على "حفظ الإعدادات".</p>
-    <p>يمكنك سحب موافقتك في أي وقت من خلال النقر على الأيقونة الصغيرة في الزاوية ${(window?.INTA?.settings.arrange == "ltr") ? "اليسرى" : "اليمنى"} السفلية من الموقع.</p>
+    <p>نحن وشركاؤنا نستخدم ملفات تعريف الارتباط للوظائف والتحليلات والإعلانات. يمكنك القبول أو الرفض أو الاختيار بنفسك، وسحب موافقتك في أي وقت عبر الأيقونة الصغيرة في الزاوية ${(window?.INTA?.settings.arrange == "ltr") ? "اليسرى" : "اليمنى"} السفلية.</p>
     ${generatePolicyUrl('سياسة الخصوصية وملفات تعريف الارتباط الخاصة بنا')}
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     greek: `<h3 class="intastellarconsents-heading">Είστε σε έλεγχο</h3>
-    <p>Εμείς και οι επιχειρηματικοί μας συνεργάτες χρησιμοποιούμε τεχνολογίες, όπως τα cookies, για να συλλέγουμε πληροφορίες για
-    εσάς για διάφορους σκοπούς, συμπεριλαμβανομένων:</p>
-    <ol>
-        <li>Λειτουργικότητα</li>
-        <li>Στατιστικά</li>
-        <li>Διαφήμιση</li>
-    </ol>
-    <p>Κάνοντας κλικ στο "Αποδοχή", συναινείτε σε όλους αυτούς τους σκοπούς. Μπορείτε επίσης να επιλέξετε τους συγκεκριμένους σκοπούς στους οποίους συμφωνείτε, επιλέγοντας τα πλαί
-ς δίπλα στον σκοπό και κάνοντας κλικ στο "Αποθήκευση ρυθμίσεων".</p>
-    <p>Μπορείτε να ανακαλέσετε τη συγκατάθεσή σας ανά πάσα στιγμή κάνοντας κλικ στο μικρό εικονίδιο στην κάτω ${(window?.INTA?.settings.arrange == "ltr") ? "αριστερή" : "δεξιά"} γωνία της ιστοσελίδας.</p>
+    <p>Εμείς και οι συνεργάτες μας χρησιμοποιούμε cookies για λειτουργικότητα, στατιστικά και διαφήμιση. Μπορείτε να αποδεχτείτε, να απορρίψετε ή να επιλέξετε μόνοι σας — και να ανακαλέσετε τη συναίνεσή σας ανά πάσα στιγμή μέσω του μικρού εικονιδίου στην κάτω ${(window?.INTA?.settings.arrange == "ltr") ? "αριστερή" : "δεξιά"} γωνία.</p>
     ${generatePolicyUrl('Η Πολιτική Απορρήτου και Cookies μας')}
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     chinese: `<h3 class="intastellarconsents-heading">你掌控一切</h3>
-    <p>我们和我们的商业伙伴使用技术，包括 cookies，收集关于您的信息用于各种目的，包括：</p>
-    <ol>
-        <li>功能性</li>
-        <li>统计</li>
-        <li>广告</li>
-    </ol>
-    <p>点击“接受”即表示您同意所有这些目的。您也可以选择您同意的具体目的，通过勾选目的旁边的复选框并点击“保存设置”。</p>
-    <p>您可以随时通过点击网站底部 ${(window?.INTA?.settings.arrange == "ltr") ? "左侧" : "右侧"} 角落的小图标来撤销您的同意。</p>
+    <p>我们及合作伙伴使用 cookie 用于功能性、统计和广告目的。您可以接受、拒绝或自行选择，并可随时通过网站底部 ${(window?.INTA?.settings.arrange == "ltr") ? "左侧" : "右侧"} 角落的小图标撤销您的同意。</p>
     ${generatePolicyUrl('我们的隐私和 Cookie 政策')}
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     japanese: `<h3 class="intastellarconsents-heading">あなたがコントロール</h3>
-    <p>私たちと私たちのビジネスパートナーは、クッキーなどの技術を使用して、あなたに関する情報をさまざまな目的で収集しています。これには以下が含まれます：</p>
-    <ol>
-        <li>機能性</li>
-        <li>統計</li>
-        <li>広告</li>
-    </ol>
-    <p>「承認」をクリックすることで、これらすべての目的に同意します。また、目的の横にあるチェックボックスを選択し、「設定を保存」をクリックすることで、同意する特定の目的を選択することもできます。</p>
-    <p>ウェブサイトの下部 ${(window?.INTA?.settings.arrange == "ltr") ? "左側" : "右側"} 角にある小さなアイコンをクリックすることで、いつでも同意を撤回できます。</p>
+    <p>当社とパートナーは、機能性、統計、広告のためにクッキーを使用しています。承認、拒否、またはご自身で選択でき、いつでも画面下部の${(window?.INTA?.settings.arrange == "ltr") ? "左側" : "右側"}にある小さなアイコンから同意を撤回できます。</p>
     ${generatePolicyUrl('私たちのプライバシーとクッキーポリシー')}
-    <button onClick="showPrivacy()" class="intastellarCookie-settings__privacyLink">Intastellar Solutions, International プライバシーポリシー</button>
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     korean: `<h3 class="intastellarconsents-heading">당신이 통제합니다</h3>
-    <p>우리는 우리의 비즈니스 파트너와 함께 쿠키와 같은 기술을 사용하여 다양한 목적을 위해 귀하에 대한 정보를 수집합니다. 여기에는 다음이 포함됩니다:</p>
-    <ol>
-        <li>기능성</li>
-        <li>통계</li>
-        <li>광고</li>
-    </ol>
-    <p>'수락'을 클릭함으로써, 당신은 이 모든 목적에 동의합니다. 또한, 목적 옆의 체크박스를 선택하고 '설정 저장'을 클릭함으로써 동의할 특정 목적을 선택할 수 있습니다.</p>
-    <p>웹사이트 하단 ${(window?.INTA?.settings.arrange == "ltr") ? "왼쪽" : "오른쪽"} 모서리에 있는 작은 아이콘을 클릭하여 언제든지 동의를 철회할 수 있습니다.</p>
+    <p>당사와 파트너는 기능성, 통계, 광고 목적으로 쿠키를 사용합니다. 수락, 거부 또는 직접 선택할 수 있으며, 하단 ${(window?.INTA?.settings.arrange == "ltr") ? "왼쪽" : "오른쪽"} 모서리의 작은 아이콘을 통해 언제든지 동의를 철회할 수 있습니다.</p>
     ${generatePolicyUrl('우리의 개인정보 보호정책 및 쿠키 정책')}
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
     estonian: `<h3 class="intastellarconsents-heading">Sa oled kontrolli all</h3>
-    <p>Meie ja meie äripartnerid kasutame tehnoloogiaid, sealhulgas küpsiseid, et koguda teavet teie kohta erinevatel eesmärkidel, sealhulgas:</p>
-    <ol>
-        <li>Funktsionaalsus</li>
-        <li>Statistika</li>
-        <li>Reklaam</li>
-    </ol>
-    <p>Klikkides "Nõustu", annate nõusoleku kõikidele nendele eesmärkidele. Samuti saate valida, millistele eesmärkidele te nõustute, märkides ruudud eesmärkide kõrval ja klõpsates "Salvesta seaded".</p>
-    <p>Te saate oma nõusoleku igal ajal tagasi võtta, klõpsates veebilehe alumises ${(window?.INTA?.settings.arrange == "ltr") ? "vasakus" : "paremas"} nurgas asuvale väikesele ikoonile.</p>
+    <p>Meie ja meie partnerid kasutame küpsiseid funktsionaalsuse, statistika ja reklaami jaoks. Võite nõustuda, keelduda või ise valida — ja igal ajal nõusoleku tagasi võtta veebilehe alumises ${(window?.INTA?.settings.arrange == "ltr") ? "vasakus" : "paremas"} nurgas oleva väikese ikooni kaudu.</p>
     ${generatePolicyUrl('Meie privaatsus- ja küpsiste poliitika')}
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
