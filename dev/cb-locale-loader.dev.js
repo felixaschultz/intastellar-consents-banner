@@ -255,7 +255,7 @@
                     description: "Functional cookies allow us to store information that alters how the website appears or behaves, such as your preferred language or region."
                 },
                 statisic: {
-                    title: "Statics",
+                    title: "Analytics",
                     description: "We strive to continuously enhance the user experience and performance of our website. To achieve this, we use analytical technologies (including cookies) that pseudonymously track and assess how, when, and which features and content of our website are used. This data helps us improve our site for users."
                 },
                 marketing: {

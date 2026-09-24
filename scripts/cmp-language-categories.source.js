@@ -11,7 +11,7 @@ module.exports = {
             description: "Functional cookies allow us to store information that alters how the website appears or behaves, such as your preferred language or region."
         },
         statisic: {
-            title: "Statics",
+            title: "Analytics",
             description: "We strive to continuously enhance the user experience and performance of our website. To achieve this, we use analytical technologies (including cookies) that pseudonymously track and assess how, when, and which features and content of our website are used. This data helps us improve our site for users."
         },
         marketing: {
@@ -30,7 +30,7 @@ module.exports = {
             description: "Funktionale Cookies ermöglichen es, Informationen zu speichern, die das Erscheinungsbild oder Verhalten der Website anpassen, wie zum Beispiel Ihre bevorzugte Sprache oder Region."
         },
         statisic: {
-            title: "Statistik",
+            title: "Analyse",
             description: "Wir möchten die Benutzerfreundlichkeit und Leistung unserer Websites kontinuierlich verbessern. Daher setzen wir Analysetechnologien (einschließlich Cookies) ein, die pseudonym ermitteln und auswerten, welche Funktionen und Inhalte unserer Websites wie und wie oft genutzt werden. Auf dieser Basis können wir unsere Websites für die Nutzer optimieren."
         },
         marketing: {
@@ -49,7 +49,7 @@ module.exports = {
             description: "Funktionelle cookies gør det muligt at gemme information, der ændrer måden hjemmesiden fremstår eller fungerer på. For eksempel dit foretrukne sprog eller område."
         },
         statisic: {
-            title: "Statistik",
+            title: "Analyse",
             description: "Vi ønsker konstant at forbedre brugervenligheden og ydeevnen på vores hjemmesider. Af denne grund bruger vi analyseteknologier (inklusive cookies), som pseudonymt måler og vurderer, hvilke funktioner og indhold på vores hjemmesider der bruges, hvordan og hvor ofte. På dette grundlag kan vi forbedre vores hjemmesider for brugerne."
         },
         marketing: {
@@ -68,7 +68,7 @@ module.exports = {
             description: "Las cookies funcionales permiten guardar información que cambia la forma en que aparece o actúa el sitio web. Por ejemplo, su idioma o región preferidos."
         },
         statisic: {
-            title: "Estadísticas",
+            title: "Analítica",
             description: "Queremos mejorar letantemente la facilidad de uso y el rendimiento de nuestros sitios web. Por esta razón, utilizamos tecnologías de análisis (incluidas las cookies) que miden y evalúan de forma seudónima qué funciones y contenidos de nuestros sitios web se utilizan, cómo y con qué frecuencia. Sobre esta base, podemos mejorar nuestros sitios web para los usuarios."
         },
         marketing: {
@@ -87,7 +87,7 @@ module.exports = {
             description: "Les cookies fonctionnels permettent de stocker des informations qui modifient l'apparence ou le comportement du site web. Par exemple, votre langue ou région préférée."
         },
         statisic: {
-            title: "Statistiques",
+            title: "Analytique",
             description: "Nous voulons letamment améliorer la convivialité et les performances de nos sites web. Pour cette raison, nous utilisons des technologies d'analyse (y compris des cookies) qui mesurent et évaluent de manière pseudonyme quelles fonctions et quels contenus de nos sites web sont utilisés, comment et à quelle fréquence. Sur cette base, nous pouvons améliorer nos sites web pour les utilisateurs."
         },
         marketing: {
@@ -106,7 +106,7 @@ module.exports = {
             description: "I cookie funzionali consentono di salvare informazioni che modificano l'aspetto o il comportamento del sito web. Ad esempio, la tua lingua o regione preferita."
         },
         statisic: {
-            title: "Statistiche",
+            title: "Analitica",
             description: "Vogliamo migliorare costantemente l'usabilità e le prestazioni dei nostri siti web. Per questo motivo utilizziamo tecnologie di analisi (compresi i cookie) che misurano e valutano in modo pseudonimo quali funzioni e contenuti dei nostri siti web vengono utilizzati, come e con quale frequenza. Su questa base possiamo migliorare i nostri siti web per gli utenti."
         },
         marketing: {
@@ -125,7 +125,7 @@ module.exports = {
             description: "Functionele cookies maken het mogelijk informatie op te slaan die de manier waarop de website verschijnt of werkt, verandert. Bijvoorbeeld uw voorkeurstaal of regio."
         },
         statisic: {
-            title: "Statistieken",
+            title: "Analyse",
             description: "We willen de gebruiksvriendelijkheid en prestaties van onze websites voortdurend verbeteren. Daarom gebruiken we analyse technologieën (inclusief cookies) die pseudoniem meten en evalueren welke functies en inhoud van onze websites worden gebruikt, hoe en hoe vaak. Op basis hiervan kunnen we onze websites verbeteren voor gebruikers."
         },
         marketing: {
@@ -144,7 +144,7 @@ module.exports = {
             description: "Os cookies funcionais permitem guardar informações que alteram a forma como o site aparece ou se comporta. Por exemplo, o seu idioma ou região preferidos."
         },
         statisic: {
-            title: "Estatísticas",
+            title: "Análise",
             description: "Queremos melhorar letantemente a usabilidade e o desempenho dos nossos sites. Para isso, utilizamos tecnologias de análise (incluindo cookies) que medem e avaliam de forma pseudónima quais as funções e conteúdos dos nossos sites que são utilizados, como e com que frequência. Com base nisso, podemos melhorar os nossos sites para os utilizadores."
         },
         marketing: {
@@ -164,7 +164,7 @@ module.exports = {
             description: "Функциональные файлы cookie позволяют сохранять информацию, которая изменяет внешний вид или действие сайта. Например, ваш предпочитаемый язык или регион."
         },
         statisic: {
-            title: "Статистика",
+            title: "Аналитика",
             description: "Мы постоянно стремимся улучшить удобство использования и производительность наших сайтов. Для этого мы используем технологии анализа (включая файлы cookie), которые псевдонимно измеряют и оценивают, какие функции и содержимое наших сайтов используются, как и как часто. На этой основе мы можем улучшить наши сайты для пользователей."
         },
         marketing: {
@@ -183,7 +183,7 @@ module.exports = {
             description: "Funktionella cookies gör det möjligt att spara information som ändrar hur webbplatsen visas eller fungerar. Till exempel ditt föredragna språk eller region."
         },
         statisic: {
-            title: "Statistik",
+            title: "Analys",
             description: "Vi vill ständigt förbättra användarvänligheten och prestandan på våra webbplatser. Därför använder vi analys tekniker (inklusive cookies) som pseudonymt mäter och utvärderar vilka funktioner och innehåll på våra webbplatser som används, hur och hur ofta. På denna grund kan vi förbättra våra webbplatser för användarna."
         },
         marketing: {
@@ -202,7 +202,7 @@ module.exports = {
             description: "Funksjonelle informasjonskapsler gjør det mulig å lagre informasjon som endrer måten nettstedet vises eller fungerer på. For eksempel ditt foretrukne språk eller region."
         },
         statisic: {
-            title: "Statistikk",
+            title: "Analyse",
             description: "Vi ønsker å forbedre brukervennligheten og ytelsen til nettstedene våre kontinuerlig. Derfor bruker vi analyse teknologier (inkludert informasjonskapsler) som måler og evaluerer pseudonymt hvilke funksjoner og innhold på nettstedene våre som brukes, hvordan og hvor ofte. På denne bakgrunn kan vi forbedre nettstedene våre for brukerne."
         },
         marketing: {
@@ -221,7 +221,7 @@ module.exports = {
             description: "Toiminnalliset evästeet mahdollistavat tietojen tallentamisen, jotka muuttavat sivuston ulkonäköä tai toimintaa. Esimerkiksi suosikkikieli tai alue."
         },
         statisic: {
-            title: "Tilastot",
+            title: "Analytiikka",
             description: "Haluamme jatkuvasti parantaa verkkosivustojemme käytettävyyttä ja suorituskykyä. Tätä varten käytämme analyysitekniikoita (mukaan lukien evästeet), jotka mittaavat ja arvioivat pseudonyymisti, mitä sivustojemme toimintoja ja sisältöjä käytetään, miten ja kuinka usein. Tällä perusteella voimme parantaa sivustoja käyttäjille."
         },
         marketing: {
@@ -240,7 +240,7 @@ module.exports = {
             description: "Pliki cookie funkcjonalne umożliwiają przechowywanie informacji, które zmieniają wygląd lub działanie strony. Na przykład preferowany język lub region."
         },
         statisic: {
-            title: "Statystyki",
+            title: "Analityka",
             description: "Stale dążymy do poprawy użyteczności i wydajności naszych stron internetowych. Dlatego korzystamy z technologii analitycznych (w tym plików cookie), które pseudonimizują pomiar i ocenę, które funkcje i treści naszych stron są używane, jak i jak często. Na tej podstawie możemy poprawić nasze strony dla użytkowników."
         },
         marketing: {
@@ -259,7 +259,7 @@ module.exports = {
             description: "功能性Cookie允许我们存储更改网站外观或行为的信息。例如，您首选的语言或地区。"
         },
         statisic: {
-            title: "统计",
+            title: "分析",
             description: "我们希望不断改善我们网站的可用性和性能。因此，我们使用分析技术（包括Cookie），这些技术以假名方式测量和评估我们网站的哪些功能和内容被使用、如何使用以及使用频率。基于此，我们可以改善我们的网站以满足用户需求。"
         },
         marketing: {
@@ -278,7 +278,7 @@ module.exports = {
             description: "機能的なCookieは、Webサイトの外観や動作を変更する情報を保存できます。たとえば、お好みの言語や地域などです。"
         },
         statisic: {
-            title: "統計",
+            title: "アナリティクス",
             description: "当社は、Webサイトの使いやすさとパフォーマンスを継続的に改善したいと考えています。そのため、分析技術（Cookieを含む）を使用して、当社のWebサイトのどの機能やコンテンツがどのように使用されているかを匿名で測定および評価しています。これに基づいて、ユーザー向けにWebサイトを改善できます。"
         },
         marketing: {
@@ -297,7 +297,7 @@ module.exports = {
             description: "คุกกี้เชิงฟังก์ชันช่วยให้เราจัดเก็บข้อมูลที่เปลี่ยนแปลงลักษณะหรือพฤติกรรมของเว็บไซต์ เช่น ภาษาหรือภูมิภาคที่คุณต้องการ",
         },
         statisic: {
-            title: "สถิติ",
+            title: "การวิเคราะห์",
             description: "เราต้องการพัฒนาประสบการณ์การใช้งานและประสิทธิภาพของเว็บไซต์อย่างต่อเนื่อง จึงใช้เทคโนโลยีวิเคราะห์ (รวมถึงคุกกี้) เพื่อวัดและประเมินแบบไม่ระบุตัวตนว่าฟีเจอร์และเนื้อหาใดของเว็บไซต์ถูกใช้งานอย่างไรและบ่อยเพียงใด เพื่อนำไปปรับปรุงเว็บไซต์ให้เหมาะกับผู้ใช้",
         },
         marketing: {
@@ -316,7 +316,7 @@ module.exports = {
             description: "Τα λειτουργικά cookies επιτρέπουν την αποθήκευση πληροφοριών που αλλάζουν την εμφάνιση ή τη λειτουργία του ιστότοπου. Για παράδειγμα, η προτιμώμενη γλώσσα ή περιοχή σας."
         },
         statisic: {
-            title: "Στατιστικά",
+            title: "Αναλυτικά",
             description: "Θέλουμε να βελτιώνουμε συνεχώς τη χρησιμότητα και την απόδοση των ιστότοπών μας. Για το λόγο αυτό, χρησιμοποιούμε τεχνολογίες ανάλυσης (συμπεριλαμβανομένων των cookies) που μετρούν και αξιολογούν ανώνυμα ποιες λειτουργίες και περιεχόμενο των ιστότοπών μας χρησιμοποιούνται, πώς και πόσο συχνά. Με βάση αυτό, μπορούμε να βελτιώσουμε τους ιστότοπούς για τους χρήστες."
         },
         marketing: {
@@ -335,7 +335,7 @@ module.exports = {
             description: "Funksionele koekies maak dit moontlik om inligting te stoor wat die voorkoms of gedrag van die webwerf verander. Byvoorbeeld, u voorkeurtaal of -streek."
         },
         statisic: {
-            title: "Statistiek",
+            title: "Analise",
             description: "Ons wil die bruikbaarheid en prestasie van ons webwerwe voortdurend verbeter. Daarom gebruik ons analise tegnologieë (insluitend koekies) wat pseudoniem meet en evalueer watter funksies en inhoud van ons webwerwe gebruik word, hoe en hoe gereeld. Op hierdie basis kan ons ons webwerwe vir gebruikers verbeter."
         },
         marketing: {
@@ -354,7 +354,7 @@ module.exports = {
             description: "تسمح ملفات تعريف الارتباط الوظيفية بتخزين المعلومات التي تغير مظهر الموقع أو سلوكه. على سبيل المثال، لغتك المفضلة أو منطقتك."
         },
         statisic: {
-            title: "إحصائيات",
+            title: "التحليلات",
             description: "نريد تحسين سهولة استخدام وأداء مواقعنا الإلكترونية باستمرار. لهذا السبب، نستخدم تقنيات التحليل (بما في ذلك ملفات تعريف الارتباط) التي تقيس وتقييم بشكل مجهول أي الميزات والمحتوى من مواقعنا الإلكترونية يتم استخدامه، وكيف ومتى. بناءً على ذلك، يمكننا تحسين مواقعنا الإلكترونية للمستخدمين."
         },
         marketing: {
@@ -373,7 +373,7 @@ module.exports = {
             description: "기능적 쿠키는 웹사이트의 모양이나 동작을 변경하는 정보를 저장할 수 있습니다. 예를 들어, 선호하는 언어나 지역입니다."
         },
         statisic: {
-            title: "통계",
+            title: "분석",
             description: "우리는 웹사이트의 사용 편의성과 성능을 지속적으로 개선하고자 합니다. 이를 위해 분석 기술(쿠키 포함)을 사용하여 웹사이트의 어떤 기능과 콘텐츠가 어떻게, 얼마나 자주 사용되는지를 익명으로 측정하고 평가합니다. 이를 바탕으로 사용자에게 더 나은 웹사이트를 제공할 수 있습니다."
         },
         marketing: {
@@ -392,7 +392,7 @@ module.exports = {
             description: "Funktsionaalsed küpsised võimaldavad salvestada teavet, mis muudab veebisaidi välimust või käitumist. Näiteks teie eelistatud keel või piirkond."
         },
         statisic: {
-            title: "Statistika",
+            title: "Analüütika",
             description: "Soovime pidevalt parandada meie veebisaitide kasutatavust ja jõudlust. Selleks kasutame analüüsitehnoloogiaid (sealhulgas küpsiseid), mis mõõdavad ja hindavad anonüümselt, milliseid funktsioone ja sisu meie veebisaitidel kasutatakse, kuidas ja kui sageli. Selle alusel saame oma veebisaite kasutajatele paremaks muuta."
         },
         marketing: {

@@ -10,7 +10,7 @@
         description: "Toiminnalliset evästeet mahdollistavat tietojen tallentamisen, jotka muuttavat sivuston ulkonäköä tai toimintaa. Esimerkiksi suosikkikieli tai alue."
     },
     statisic: {
-        title: "Tilastot",
+        title: "Analytiikka",
         description: "Haluamme jatkuvasti parantaa verkkosivustojemme käytettävyyttä ja suorituskykyä. Tätä varten käytämme analyysitekniikoita (mukaan lukien evästeet), jotka mittaavat ja arvioivat pseudonyymisti, mitä sivustojemme toimintoja ja sisältöjä käytetään, miten ja kuinka usein. Tällä perusteella voimme parantaa sivustoja käyttäjille."
     },
     marketing: {
@@ -33,7 +33,7 @@
             + "<p>Me ja liikekumppanimme käytämme teknologioita, mukaan lukien evästeet, kerätäksemme tietoja sinusta eri tarkoituksiin, mukaan lukien:</p>"
             + "<ol>"
             + "<li>Toiminnallinen</li>"
-            + "<li>Tilastollinen</li>"
+            + "<li>Analytiikka</li>"
             + "<li>Mainonta</li>"
             + "</ol>"
             + "<p>Klikkaamalla \"Hyväksy\" annat suostumuksesi kaikkiin näihin tarkoituksiin. Voit myös valita, mihin tarkoituksiin suostut valitsemalla ruudun tarkoituksen vieressä ja napsauttamalla \"Tallenna asetukset\".</p>"
