@@ -3598,6 +3598,43 @@ function listAllCookies(cookieList) {
                     <section class="intaCookieList-left">
                         <h3 class="intaCookieListOverview-heading">Udbyder</h3>
                         <p class="intaCookieListOverview-vendor">${vendor}</p>
+                        <p>${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`Privatslivs politik`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Privatslivs politik</a>`}</p>
+                        <h4 class="intaCookieList-CookieName">Domæne</h4>
+                        ${cookie.domains.map((cookie) => {
+                if (cookie == undefined) return;
+                if (cookie.indexOf("intastellar") > -1 || cookie.indexOf("intastellarconsents") > -1) {
+                    return `
+                                                <a href="https://${cookie}" target="_blank" rel="noopener">${cookie}</a>
+                                            `
+                } else {
+                    return `
+                                                <p>${cookie}</p>
+                                            `;
+                }
+            }).join(" ")}
+                    </section>
+                    <section>
+                        <h3 class="intaCookieListOverview-heading">Cookies</h3>
+                        <section>
+                            ${cookie.cookies.map((cookie) => {
+                if (cookie.cookie == undefined) return;
+                return `
+                                    <article class="intaCookieList-cookie">
+                                        <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
+                                        <p>${cookie.purpose}</p>
+                                    </article>
+                                `
+            }).join(" ")}
+                        </section>
+                    </section>
+                </section>
+                `
+        } else if (intastellarCookieLanguage != null && intastellarCookieLanguage === "de-DE" || intastellarCookieLanguage === "de") {
+            return `
+            <section class="intaCookieListOverview-grid">
+                <section class="intaCookieList-left">
+                    <h3 class="intaCookieListOverview-heading">Anbieter</h3>
+                    <p class="intaCookieListOverview-vendor">${vendor}</p>
                     ${(cookie.vendor_privacy === null || cookie.vendor_privacy == undefined) ? generatePolicyUrl(`Datenschutzerklährung`) : `<a href="${cookie.vendor_privacy}" target="_blank" rel="noopener noreferrer">Datenschutzerklährung</a>`}
                     <h4 class="intaCookieList-CookieName">Domain</h4>
                     ${cookie.domains.map((cookie) => {
