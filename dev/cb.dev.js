@@ -3804,6 +3804,20 @@ function allStorage() {
     return values;
 }
 
+/* Total individual cookies across all vendors in a category's cookie list */
+function intaCountCookiesInList(list) {
+    if (!Array.isArray(list)) return 0;
+    return list.reduce(function (sum, vendor) {
+        return sum + (vendor && Array.isArray(vendor.cookies) ? vendor.cookies.length : 0);
+    }, 0);
+}
+
+/* Updates the "(N)" cookie count badge next to a category heading */
+function intaSetCookieCountBadge(cat, count) {
+    var badge = document.getElementById('inta-cookie-count-' + cat);
+    if (badge) badge.textContent = '(' + count + ')';
+}
+
 /* Helper function to list all cookies */
 function listAllCookies(cookieList) {
     return cookieList.map((cookie) => {
@@ -4821,8 +4835,9 @@ function intaApplyCookieBannerApiData(data) {
 
     Object.keys(categories).forEach(function (cat) {
         var el = document.getElementById('inta-cookie-list-' + cat);
-        if (!el) return;
         var list = categories[cat];
+        intaSetCookieCountBadge(cat, intaCountCookiesInList(list));
+        if (!el) return;
         el.innerHTML = list.length ? listAllCookies(list) : '';
     });
 }
@@ -4835,6 +4850,7 @@ function intaRenderFallbackCookieLists() {
     };
     Object.keys(map).forEach(function (cat) {
         var el = document.getElementById('inta-cookie-list-' + cat);
+        intaSetCookieCountBadge(cat, intaCountCookiesInList(map[cat]));
         if (el) el.innerHTML = listAllCookies(map[cat]);
     });
 }

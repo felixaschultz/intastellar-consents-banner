@@ -217,13 +217,13 @@
             + '<section class="intastellar_privacyPolicy"></section>'
             + '<article class="intReadMore">'
             + '<section class="required">' + uidHtml
-            + '<h3 class="intaExpandCookieList">' + C.necessary.title + ' <i class="intastellar__arrow"></i></h3><p>' + C.necessary.description + '</p>'
+            + '<h3 class="intaExpandCookieList">' + C.necessary.title + ' <span class="intaCookieCount">(' + intaCountCookiesInList(inta_requiredCookieList) + ')</span> <i class="intastellar__arrow"></i></h3><p>' + C.necessary.description + '</p>'
             + '<article class="intaCookieListOverview">' + listAllCookies(inta_requiredCookieList) + "</article></section>"
-            + "<section><h3 class=\"intaExpandCookieList\">" + C.functional.title + ' <i class="intastellar__arrow"></i></h3><p>' + C.functional.description + '</p>'
+            + "<section><h3 class=\"intaExpandCookieList\">" + C.functional.title + ' <span class="intaCookieCount" id="inta-cookie-count-functional"></span> <i class="intastellar__arrow"></i></h3><p>' + C.functional.description + '</p>'
             + '<article class="intaCookieListOverview" id="inta-cookie-list-functional"></article></section>'
-            + "<section><h3 class=\"intaExpandCookieList\">" + C.statisic.title + ' <i class="intastellar__arrow"></i></h3><p>' + C.statisic.description + '</p>'
+            + "<section><h3 class=\"intaExpandCookieList\">" + C.statisic.title + ' <span class="intaCookieCount" id="inta-cookie-count-statistics"></span> <i class="intastellar__arrow"></i></h3><p>' + C.statisic.description + '</p>'
             + '<article class="intaCookieListOverview" id="inta-cookie-list-statistics"></article></section>'
-            + "<section><h3 class=\"intaExpandCookieList\">" + C.marketing.title + ' <i class="intastellar__arrow"></i></h3><p>' + C.marketing.description + '</p>'
+            + "<section><h3 class=\"intaExpandCookieList\">" + C.marketing.title + ' <span class="intaCookieCount" id="inta-cookie-count-marketing"></span> <i class="intastellar__arrow"></i></h3><p>' + C.marketing.description + '</p>'
             + '<article class="intaCookieListOverview" id="inta-cookie-list-marketing"></article></section>'
             + "</article>";
     };
