@@ -503,6 +503,120 @@ function intaGetCompiledScriptPatterns() {
     }
     return __intaCompiledScriptPatterns;
 }
+
+/* ── Synchronous script-injection guard ───────────────────────────────────
+   Patches the DOM insertion points third-party trackers actually use
+   (appendChild/insertBefore/src setter) so a script can be neutralized
+   *before* the browser fetches/executes it, instead of reacting to a
+   MutationObserver after the fact. Only catches scripts injected via JS
+   (GTM, GA, pixels, etc.) — scripts hardcoded directly in the page's HTML
+   are inserted by the parser, which bypasses these prototypes entirely;
+   those still need the type="text/plain" convention. */
+var INTA_SCRIPT_GUARD_ALLOWED_HOSTS = [
+    "intastellarsolutions.com",
+    "intastellarconsents.com",
+    "intastellar.app",
+    "intastellar.eu",
+    "intastellar.dk",
+    "intastellar.com"
+];
+
+function intaIsOwnScriptUrl(url) {
+    if (!url) return false;
+    try {
+        var host = new URL(url, location.href).hostname;
+        if (host === location.hostname) return true;
+        for (let i = 0; i < INTA_SCRIPT_GUARD_ALLOWED_HOSTS.length; i++) {
+            let d = INTA_SCRIPT_GUARD_ALLOWED_HOSTS[i];
+            if (host === d || host.endsWith("." + d)) return true;
+        }
+        return false;
+    } catch (eUrl) {
+        return false;
+    }
+}
+
+/** Classify a script src/inline body against the existing per-category patterns. */
+function intaClassifyScriptContent(text) {
+    if (!text) return null;
+    let compiled = intaGetCompiledScriptPatterns();
+    for (let i = 0; i < compiled.length; i++) {
+        let regexes = compiled[i].regexes;
+        for (let j = 0; j < regexes.length; j++) {
+            if (regexes[j].test(text)) return compiled[i].type;
+        }
+    }
+    return null;
+}
+
+function intaScriptCategoryConsented(type) {
+    let c = window.intaCookieConsents;
+    if (type === "statics") return c?.staticsticCookies === "checked";
+    if (type === "marketing") return c?.advertisementCookies === "checked";
+    if (type === "functional") return c?.functionalCookies === "checked";
+    return true; // unclassified: treat as necessary, don't block
+}
+
+/** Mark a not-yet-inserted script node so the browser never fetches/executes it. */
+function intaNeutralizeScriptNode(node, pendingSrc) {
+    if (node.getAttribute("data-inta-blocked") === "1") return;
+    node.setAttribute("data-inta-blocked", "1");
+    if (pendingSrc) node.setAttribute("data-inta-pending-src", pendingSrc);
+    node.type = "text/blocked";
+}
+
+/** Runs before a SCRIPT node is inserted; returns true if it neutralized the node. */
+function intaGuardScriptNode(node) {
+    if (!node || node.tagName !== "SCRIPT" || (typeof isGtmMode !== "undefined" && isGtmMode)) return false;
+    if (node.getAttribute("data-inta-blocked") === "1") return false;
+    let src = node.src || node.getAttribute("src") || "";
+    if (src && intaIsOwnScriptUrl(src)) return false;
+    let category = src ? intaClassifyScriptContent(src) : intaClassifyScriptContent(node.textContent || "");
+    if (!category || intaScriptCategoryConsented(category)) return false;
+    intaNeutralizeScriptNode(node);
+    return true;
+}
+
+(function intaInstallSyncScriptGuard() {
+    if (window.__intaScriptGuardInstalled) return;
+    window.__intaScriptGuardInstalled = true;
+
+    let nodeProto = Node.prototype;
+    let origAppendChild = nodeProto.appendChild;
+    let origInsertBefore = nodeProto.insertBefore;
+
+    nodeProto.appendChild = function (child) {
+        if (child && child.tagName === "SCRIPT") intaGuardScriptNode(child);
+        return origAppendChild.call(this, child);
+    };
+
+    nodeProto.insertBefore = function (child, ref) {
+        if (child && child.tagName === "SCRIPT") intaGuardScriptNode(child);
+        return origInsertBefore.call(this, child, ref);
+    };
+
+    // Defense in depth: catches `s.src = url` set *after* the node is already connected.
+    let scriptSrcDescriptor = Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, "src");
+    if (scriptSrcDescriptor && scriptSrcDescriptor.set) {
+        Object.defineProperty(HTMLScriptElement.prototype, "src", {
+            configurable: true,
+            enumerable: scriptSrcDescriptor.enumerable,
+            get: scriptSrcDescriptor.get,
+            set: function (value) {
+                if (!this.isConnected || (typeof isGtmMode !== "undefined" && isGtmMode) || intaIsOwnScriptUrl(value)) {
+                    return scriptSrcDescriptor.set.call(this, value);
+                }
+                let category = intaClassifyScriptContent(value);
+                if (!category || intaScriptCategoryConsented(category)) {
+                    return scriptSrcDescriptor.set.call(this, value);
+                }
+                intaNeutralizeScriptNode(this, value);
+            }
+        });
+    }
+})();
+/* ── End synchronous script-injection guard ───────────────────────────── */
+
 let __intaCookieEventFlushTimer = null;
 let __intaCookieEventPendingByKey = new Map();
 let INTA_COOKIE_EVENT_DEBOUNCE_MS = 5000;
@@ -1263,7 +1377,7 @@ function intaGuessIntastellarScriptSrc() {
         if (!src) {
             continue;
         }
-        if (/uc\.js|\/uc\.js|consents\.cdn|intastellar-consents|gdpr\.dev|\/cb\.js|\/cb\.dev|floating\.js/i.test(src)) {
+        if (/uc\.js|\/uc\.js|consents\.cdn|intastellar-consents|gdpr\.dev|\/cb\.js|\/cb\.dev|premium\.js/i.test(src)) {
             return src;
         }
     }
@@ -1284,6 +1398,78 @@ function findScriptParameter(value) {
 }
 
 let isGtmMode = findScriptParameter("ref") === "gtm";
+
+/** Google Consent Mode default — must fire before GTM/gtag.js can load and fire any tag,
+ *  so this runs synchronously here rather than waiting for uc-core. */
+window.dataLayer = window.dataLayer || [];
+function gtag() {
+    dataLayer.push(arguments);
+}
+function intaSetGtagConsentDefaults() {
+    if (isGtmMode || window._gtagDefaultFired || typeof gtag !== 'function') {
+        return;
+    }
+    if (window.google_tag_manager && window.google_tag_manager['consent_default_set']) {
+        return;
+    }
+    gtag('consent', 'default', {
+        "ad_storage": 'denied',
+        "personalization_storage": 'denied',
+        "analytics_storage": 'denied',
+        "functionality_storage": 'denied',
+        "ads_data_redaction": 'granted',
+        "ad_user_data": 'denied',
+        "ad_personalization": 'denied',
+        "security_storage": 'granted',
+        "url_passthrough": true,
+        "wait_for_update": 500,
+        "region": ['EU', 'UK', 'CH', 'NO', 'IS', 'LI', 'CA', 'BR', 'ZA', 'TR', 'AR', 'IL', 'TH', 'AU', 'SA']
+    });
+    gtag('consent', 'default', {
+        "ad_storage": 'granted',
+        "personalization_storage": 'granted',
+        "analytics_storage": 'granted',
+        "functionality_storage": 'granted',
+        "ads_data_redaction": 'denied',
+        "ad_user_data": 'granted',
+        "ad_personalization": 'granted',
+        "security_storage": 'granted',
+        "url_passthrough": true,
+        "wait_for_update": 500,
+        "region": ['US-CA', 'US-VA', 'US-CO', 'US-UT', 'US-CT']
+    });
+    gtag('consent', 'default', {
+        'ad_storage': 'denied',
+        'personalization_storage': 'denied',
+        'analytics_storage': 'denied',
+        'functionality_storage': 'denied',
+        'ads_data_redaction': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'security_storage': 'granted',
+        'url_passthrough': true,
+        'wait_for_update': 500,
+    });
+    window._gtagDefaultFired = true;
+}
+intaSetGtagConsentDefaults();
+
+// OpenAI Ads consent default — runs sync in uc-boot (same reason as intaSetGtagConsentDefaults).
+// defineProperty getter returns falsy so the oaiq IIFE doesn't bail; setter prepends consent:false.
+(function () {
+    if (window.oaiq) return;
+    Object.defineProperty(window, 'oaiq', {
+        configurable: true,
+        get: function () { return undefined; },
+        set: function (stub) {
+            Object.defineProperty(window, 'oaiq', { configurable: true, writable: true, value: stub });
+            if (stub && Array.isArray(stub.q)) {
+                stub.q.unshift((function () { return arguments; })('consent', false));
+            }
+        }
+    });
+}());
+
 let isWordPress = document.getElementById('intastellar-gdpr-settings-js') !== null;
 let FunctionalCheckbox = document.querySelector("#functional");
 let StaticsCheckBox = document.querySelector("#statics");
@@ -1662,52 +1848,77 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
 
     // Minimal TCModel
     function TCModel() {
+        this.cmpId = 0; // REQUIRED: set to your IAB Europe-registered CMP ID before encoding (0 is not a valid registered ID)
+        this.cmpVersion = 1;
+        this.consentScreen = 0;
+        // dev/gvl-local.json vendorListVersion as of its lastUpdated date. Keep in sync with
+        // whatever GVL version consent was actually collected against; a live GVL loader
+        // should override this at runtime once one exists.
+        this.vendorListVersion = 137;
+        this.isServiceSpecific = true; // this CMP issues one string per site, not a Global Consent string
         this.purposeConsents = [];
+        this.purposeLegitimateInterests = [];
         this.vendorConsents = [];
         this.vendorLegitimateInterests = [];
         this.disclosedVendors = []; // TCF 2.3: vendors disclosed to user in CMP
     }
 
+    /** MaxVendorId(16) + IsRangeEncoding(1, always 0/bitfield here) + one bit per vendor 1..maxVendorId. */
+    function encodeVendorBitfieldSection(maxVendorId, flags) {
+        let bits = padBits(maxVendorId, 16);
+        bits += padBits(0, 1); // IsRangeEncoding: 0 = bitfield
+        for (let i = 0; i < maxVendorId; i++) bits += (flags && flags[i]) ? "1" : "0";
+        return bits;
+    }
+
     /** TCF 2.3: Encode Disclosed Vendors segment (segment type 1). */
     function encodeDisclosedVendorsSegment(maxVendorId, disclosed) {
         if (maxVendorId <= 0) return '';
-        let bits = '';
-        bits += padBits(1, 3);   // segment type 1 = vendorsDisclosed
-        bits += padBits(maxVendorId, 16);
-        for (let i = 0; i < maxVendorId; i++) bits += (disclosed && disclosed[i]) ? '1' : '0';
+        let bits = padBits(1, 3); // segment type 1 = vendorsDisclosed
+        bits += encodeVendorBitfieldSection(maxVendorId, disclosed);
         let bytes = [];
         for (let i = 0; i < bits.length; i += 8) bytes.push(parseInt(bits.substr(i, 8).padEnd(8, '0'), 2));
         return base64UrlEncode(bytes);
     }
 
-    // Minimal TCString encoder
+    // TCF 2.2+: Purposes 3-6 may never carry a legitimate-interest legal basis.
+    var PURPOSES_WITHOUT_LEGITIMATE_INTEREST = [3, 4, 5, 6];
+
     var TCString = {
         encode: function (tcModel) {
-            // Support all vendors (not just first 24)
             let bits = "";
             bits += padBits(2, 6); // Version
             let now = Math.floor(Date.now() / 100); // 0.1s increments
             bits += padBits(now, 36); // Created
             bits += padBits(now, 36); // LastUpdated
-            bits += padBits(1, 12); // CmpId
-            bits += padBits(1, 12); // CmpVersion
-            bits += padBits(0, 6); // ConsentScreen
+            bits += padBits(tcModel.cmpId || 0, 12);
+            bits += padBits(tcModel.cmpVersion || 0, 12);
+            bits += padBits(tcModel.consentScreen || 0, 6);
             bits += strToBits("EN"); // ConsentLanguage
-            bits += padBits(1, 12); // VendorListVersion
-            bits += padBits(3, 6); // TCFPolicyVersion 3 = TCF 2.3
-            bits += padBits(0, 1); // IsServiceSpecific
-            bits += padBits(0, 1); // UseNonStandardStacks
+            bits += padBits(tcModel.vendorListVersion || 0, 12);
+            bits += padBits(5, 6); // TcfPolicyVersion: 5 = TCF v2.3 (GVL specification v3)
+            bits += padBits(tcModel.isServiceSpecific === false ? 0 : 1, 1);
+            bits += padBits(0, 1); // UseNonStandardStacks/Texts
             bits += padBits(0, 12); // SpecialFeatureOptIns
             // PurposeConsents (24 bits)
             for (let i = 0; i < 24; i++) bits += tcModel.purposeConsents && tcModel.purposeConsents[i] ? "1" : "0";
-            // PurposeLegitInterests (24 bits, all 0)
-            bits += "0".repeat(24);
+            // PurposesLITransparency (24 bits) — purposes 3-6 are forced to 0 regardless of input.
+            for (let i = 0; i < 24; i++) {
+                let purposeId = i + 1;
+                let isLi = tcModel.purposeLegitimateInterests && tcModel.purposeLegitimateInterests[i];
+                bits += (isLi && PURPOSES_WITHOUT_LEGITIMATE_INTEREST.indexOf(purposeId) === -1) ? "1" : "0";
+            }
             bits += padBits(0, 1); // PurposeOneTreatment
             bits += strToBits("EN"); // PublisherCC
-            // VendorConsents (maxVendorId, 16 bits for maxVendorId, then maxVendorId bits for consents)
+
             let maxVendorId = (tcModel.vendorConsents && tcModel.vendorConsents.length) || 0;
-            bits += padBits(maxVendorId, 16);
-            for (let i = 0; i < maxVendorId; i++) bits += tcModel.vendorConsents && tcModel.vendorConsents[i] ? "1" : "0";
+            bits += encodeVendorBitfieldSection(maxVendorId, tcModel.vendorConsents);
+
+            let maxVendorIdLI = (tcModel.vendorLegitimateInterests && tcModel.vendorLegitimateInterests.length) || 0;
+            bits += encodeVendorBitfieldSection(maxVendorIdLI, tcModel.vendorLegitimateInterests);
+
+            bits += padBits(0, 12); // NumPubRestrictions: this CMP doesn't set per-publisher vendor restrictions
+
             // Convert bits to bytes
             let bytes = [];
             for (let i = 0; i < bits.length; i += 8) {
@@ -1735,6 +1946,24 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
                 offset += len;
                 return val;
             }
+            /** MaxVendorId(16) + IsRangeEncoding(1); reads a bitfield or expands a range list either way. */
+            function readVendorSection() {
+                let maxVendorId = parseInt(read(16), 2);
+                let isRangeEncoding = parseInt(read(1), 2);
+                if (isRangeEncoding) {
+                    let numEntries = parseInt(read(12), 2);
+                    let vendors = [];
+                    for (let e = 0; e < numEntries; e++) {
+                        let isRange = parseInt(read(1), 2);
+                        let start = parseInt(read(16), 2);
+                        let end = isRange ? parseInt(read(16), 2) : start;
+                        for (let v = start; v <= end; v++) vendors[v - 1] = true;
+                    }
+                    return { maxVendorId: maxVendorId, vendors: vendors };
+                }
+                let vendorBits = maxVendorId > 0 ? read(maxVendorId) : '';
+                return { maxVendorId: maxVendorId, vendors: vendorBits.split('').map(function (b) { return b === '1'; }) };
+            }
             let version = parseInt(read(6), 2);
             let created = parseInt(read(36), 2);
             let lastUpdated = parseInt(read(36), 2);
@@ -1748,12 +1977,12 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
             let useNonStandardStacks = !!parseInt(read(1), 2);
             let specialFeatureOptIns = read(12);
             let purposes = read(24).split('').map(b => b === '1');
-            let purposeLegitInterests = read(24);
+            let purposeLegitInterests = read(24).split('').map(b => b === '1');
             let purposeOneTreatment = !!parseInt(read(1), 2);
             let publisherCC = String.fromCharCode(parseInt(read(6), 2) + 65, parseInt(read(6), 2) + 65);
-            let maxVendorId = parseInt(read(16), 2);
-            let vendorBits = maxVendorId > 0 ? read(maxVendorId) : '';
-            let vendors = vendorBits.split('').map(b => b === '1');
+            let vendorSection = readVendorSection();
+            let vendorLiSection = readVendorSection();
+            let numPubRestrictions = parseInt(read(12), 2);
             return {
                 version,
                 created,
@@ -1768,8 +1997,14 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
                 useNonStandardStacks,
                 specialFeatureOptIns,
                 purposes,
-                maxVendorId,
-                vendors
+                purposeLegitInterests,
+                purposeOneTreatment,
+                publisherCC,
+                maxVendorId: vendorSection.maxVendorId,
+                vendors: vendorSection.vendors,
+                maxVendorIdLI: vendorLiSection.maxVendorId,
+                vendorsLI: vendorLiSection.vendors,
+                numPubRestrictions
             };
         }
     };
@@ -1801,6 +2036,7 @@ let ALLOWLIST = [
     'https://www.intastellarconsents.com',
     "https://consents.intastellarsolutions.com",
     "https://www.consentsmanagement.com",
+    "https://analytics.consentsmanagement.com",
     "https://vendor-list.consensu.org",
     "/dev/gvl-local.json",
     "https://forms.hsforms.com",
@@ -3590,7 +3826,7 @@ let cookieBannerStyles = {
     banner: "banner.css",
     bannerV2: "bannerV2.css",
     overlay: "overlay.css",
-    floating: "floating.css"
+    premium: "premium.css"
 };
 
 window.INTA.settings.language = typeof window.INTA?.settings?.language === "undefined" ?
@@ -4005,12 +4241,12 @@ function intaExperimentChannelMatches(exp, expKey) {
 
 let intastellarCreateBanner = document.createElement("script");
 intastellarCreateBanner.src = "https://consents.cdn.intastellarsolutions.com/cb.js";
-if (window.INTA.settings.design === "floating") {
-    intastellarCreateBanner.src = "https://consents.cdn.intastellarsolutions.com/floating.js";
+if (window.INTA.settings.design === "premium") {
+    intastellarCreateBanner.src = "https://consents.cdn.intastellarsolutions.com/premium.js";
 }
 if (intastellarDevMode) {
-    if (window.INTA.settings.design === "floating") {
-        intastellarCreateBanner.src = "../../dev/styles/floating.js";
+    if (window.INTA.settings.design === "premium") {
+        intastellarCreateBanner.src = "../../dev/styles/premium.js";
     } else {
         intastellarCreateBanner.src = "../../dev/cb.dev.js";
     }
@@ -4063,6 +4299,32 @@ function intaUcResolveCmpLocaleSlug() {
             if (lang === "afrikaans") return "af";
             if (lang === "arabic") return "ar";
             if (lang === "estonian") return "et";
+            if (lang === "hindi") return "hi";
+            if (lang === "turkish") return "tr";
+            if (lang === "vietnamese") return "vi";
+            if (lang === "indonesian") return "id";
+            if (lang === "filipino") return "tl";
+            if (lang === "malay") return "ms";
+            if (lang === "ukrainian") return "uk";
+            if (lang === "hebrew") return "he";
+            if (lang === "czech") return "cs";
+            if (lang === "slovak") return "sk";
+            if (lang === "hungarian") return "hu";
+            if (lang === "romanian") return "ro";
+            if (lang === "bulgarian") return "bg";
+            if (lang === "croatian") return "hr";
+            if (lang === "slovenian") return "sl";
+            if (lang === "lithuanian") return "lt";
+            if (lang === "latvian") return "lv";
+            if (lang === "irish") return "ga";
+            if (lang === "maltese") return "mt";
+            if (lang === "icelandic") return "is";
+            if (lang === "serbian") return "sr";
+            if (lang === "persian") return "fa";
+            if (lang === "urdu") return "ur";
+            if (lang === "bengali") return "bn";
+            if (lang === "swahili") return "sw";
+            if (lang === "tamil") return "ta";
             return lang.split("-")[0];
         }
     }
@@ -4264,7 +4526,7 @@ function recordCookie(value) {
 function ConsentsBlock(logo, textLanguage, btnText, datatype, img) {
     let p = "";
     if (window.location.host.indexOf("intastellarsolutions.com") == -1) {
-        p = `<a class="inta-poweredBy" href='https://www.intastellarsolutions.com' target='_blank' rel='noopener' style="align-items: center; text-decoration: none;font-size: 11.5px; color: #000 !important; display: flex; justify-content: center;">powered by <img width="90px" height="40px" style="width: 170px !important; height: 40px !important;margin-left: 10px;" src="https://www.intastellarsolutions.com/assets/logos/intastellar-consents-logo.svg" alt="Intastellar Consents"></a>`;
+        p = `<a class="inta-poweredBy" href='https://www.intastellarsolutions.com' target='_blank' rel='noopener' style="align-items: center; text-decoration: none; font-size: 11.5px; display: flex; justify-content: center;">powered by <img class="inta-poweredByImg" src="https://www.intastellarsolutions.com/assets/logos/intastellar-consents-logo.svg" alt="Intastellar Consents"></a>`;
     }
     if (img !== undefined && img != "") {
         return `
@@ -4742,12 +5004,22 @@ function updateNotRequiredRegexp() {
 function processExistingScripts() {
     // Process blocked scripts that should now be allowed
     document.querySelectorAll('script[type="text/blocked"]').forEach(script => {
-        let src = script.src || '';
-        if (!notRequired.test(src) && !notRequired.test(script.innerText)) {
+        // Scripts neutralized by the sync guard's src-setter path never had a real
+        // src assigned — the intended URL lives in data-inta-pending-src instead.
+        let pendingSrc = script.getAttribute('data-inta-pending-src');
+        let src = pendingSrc || script.src || '';
+        let stillBlocked;
+        if (script.getAttribute('data-inta-blocked') === '1') {
+            let category = src ? intaClassifyScriptContent(src) : intaClassifyScriptContent(script.textContent || '');
+            stillBlocked = category ? !intaScriptCategoryConsented(category) : false;
+        } else {
+            stillBlocked = notRequired.test(src) || notRequired.test(script.innerText);
+        }
+        if (!stillBlocked) {
             // This script should now be allowed - replace it
             let newScript = document.createElement('script');
             newScript.type = 'text/javascript';
-            if (script.src) newScript.src = script.src;
+            if (src) newScript.src = src;
             if (script.innerText) newScript.text = script.innerText;
             script.parentNode?.replaceChild(newScript, script);
         }
@@ -5142,52 +5414,80 @@ function intaRunUcCoreIntegrations() {
     window.pintrk.queue = window.pintrk.queue || [];
     pintrk('setconsent', false);
 
+    // OpenAI Ads measurement consent mode
+    window.oaiq = window.oaiq || function () {
+        window.oaiq.q = window.oaiq.q || [];
+        window.oaiq.q.push(arguments);
+    };
+    oaiq('consent', false);
+
+    // Amazon Ads consent signal (ACS) — loads Amazon's own amzn-consent.js library and drives
+    // it via the (Amazon-recommended) Builder Pattern; the library itself writes the 1P
+    // amzn_consent cookie and fires the amznConsentChange event for amzn.js to pick up, so we
+    // never hand-roll the cookie's wire format ourselves.
+    // https://advertising.amazon.com/help/GKJQ7E8SE9BRG73Q
+    // Only fires when an Amazon Ads tag is actually present — checks both live <script src>
+    // and our own pre-consent-blocked scripts (real URL lives in data-inta-pending-src, see
+    // intaNeutralizeScriptNode) so nothing Amazon-related loads on sites that don't use Amazon Ads.
+    function intaIsAmazonAdsContext() {
+        if (typeof window.apstag !== "undefined" || typeof window.amzn_aax !== "undefined") {
+            return true;
+        }
+        return !!document.querySelector(
+            'script[src*="amazon-adsystem"], script[data-inta-pending-src*="amazon-adsystem"], script[data-src*="amazon-adsystem"]'
+        );
+    }
+    function intaApplyAmazonConsentSignal(granted) {
+        try {
+            // setEnableAdStorage/setEnableUserData require an actual boolean (the shipped
+            // amzn-consent.js throws a TypeError otherwise, despite Amazon's own doc example
+            // showing 'GRANTED'/'DENIED' strings — verified against the live script).
+            var g = !!granted;
+            var builder = window.amznConsent().setEnableAdStorage(g).setEnableUserData(g);
+            var country = window._intaGeo && window._intaGeo.country;
+            if (country && /^[A-Za-z]{2}$/.test(country)) {
+                builder.setCountryCode(country);
+            }
+            builder.build();
+        } catch (e) { /* ignore */ }
+    }
+    function intaSetAmazonConsentSignal(granted) {
+        if (!intaIsAmazonAdsContext()) {
+            return;
+        }
+        if (typeof window.amznConsent === 'function') {
+            intaApplyAmazonConsentSignal(granted);
+            return;
+        }
+        if (window.__intaAmznConsentLoading) {
+            window.__intaAmznConsentQueue = window.__intaAmznConsentQueue || [];
+            window.__intaAmznConsentQueue.push(granted);
+            return;
+        }
+        window.__intaAmznConsentLoading = true;
+        var s = document.createElement('script');
+        s.src = 'https://c.amazon-adsystem.com/aat/amzn-consent.js';
+        s.async = true;
+        s.onload = function () {
+            intaApplyAmazonConsentSignal(granted);
+            var queued = window.__intaAmznConsentQueue || [];
+            for (var i = 0; i < queued.length; i++) {
+                intaApplyAmazonConsentSignal(queued[i]);
+            }
+            window.__intaAmznConsentQueue = [];
+        };
+        intaAppendToDocumentHead(s);
+    }
+    intaSetAmazonConsentSignal(false);
+
     updateVwoConsent(window.intaCookieConsents);
 
     intaWpEnsureConsentTypeOptinAnnouncedOnce();
 
-    if (!isGtmMode && !window._gtagDefaultFired && typeof gtag === 'function') {
-        if (!window.google_tag_manager || !window.google_tag_manager['consent_default_set']) {
-            gtag('consent', 'default', {
-                "ad_storage": 'denied',
-                "personalization_storage": 'denied',
-                "analytics_storage": 'denied',
-                "functionality_storage": 'denied',
-                "ads_data_redaction": 'granted',
-                "ad_user_data": 'denied',
-                "ad_personalization": 'denied',
-                "security_storage": 'granted',
-                "url_passthrough": true,
-                "wait_for_update": 500,
-                "region": ['EU', 'UK', 'CH', 'NO', 'IS', 'LI', 'CA', 'BR', 'ZA', 'TR', 'AR', 'IL', 'TH', 'AU', 'SA']
-            });
-            gtag('consent', 'default', {
-                "ad_storage": 'granted',
-                "personalization_storage": 'granted',
-                "analytics_storage": 'granted',
-                "functionality_storage": 'granted',
-                "ads_data_redaction": 'denied',
-                "ad_user_data": 'granted',
-                "ad_personalization": 'granted',
-                "security_storage": 'granted',
-                "url_passthrough": true,
-                "wait_for_update": 500,
-                "region": ['US-CA', 'US-VA', 'US-CO', 'US-UT', 'US-CT']
-            });
-            gtag('consent', 'default', {
-                'ad_storage': 'denied',
-                'personalization_storage': 'denied',
-                'analytics_storage': 'denied',
-                'functionality_storage': 'denied',
-                'ads_data_redaction': 'denied',
-                'ad_user_data': 'denied',
-                'ad_personalization': 'denied',
-                'security_storage': 'granted',
-                'url_passthrough': true,
-                'wait_for_update': 500,
-            });
-            window._gtagDefaultFired = true;
-        }
+    // Already fired synchronously in uc-boot (see intaSetGtagConsentDefaults); this is a no-op
+    // safety net in case boot ran before isGtmMode/gtag were ready for some reason.
+    if (typeof intaSetGtagConsentDefaults === 'function') {
+        intaSetGtagConsentDefaults();
     }
 
     if (typeof fbq === "undefined" || typeof fbq === "null") {
@@ -5212,6 +5512,12 @@ function intaRunUcCoreIntegrations() {
                 pintrk('setconsent', true);
             } catch (e) { /* ignore */ }
         }
+        if (typeof oaiq === 'function') {
+            try {
+                oaiq('consent', true);
+            } catch (e) { /* ignore */ }
+        }
+        intaSetAmazonConsentSignal(true);
         window.uetq.push('consent', 'update', {
             'ad_storage': 'granted'
         });

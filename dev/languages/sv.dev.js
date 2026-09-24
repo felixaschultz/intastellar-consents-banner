@@ -10,7 +10,7 @@
         description: "Funktionella cookies gör det möjligt att spara information som ändrar hur webbplatsen visas eller fungerar. Till exempel ditt föredragna språk eller region."
     },
     statisic: {
-        title: "Statistik",
+        title: "Analys",
         description: "Vi vill ständigt förbättra användarvänligheten och prestandan på våra webbplatser. Därför använder vi analys tekniker (inklusive cookies) som pseudonymt mäter och utvärderar vilka funktioner och innehåll på våra webbplatser som används, hur och hur ofta. På denna grund kan vi förbättra våra webbplatser för användarna."
     },
     marketing: {
@@ -33,7 +33,7 @@
             + "<p>Vi och våra affärspartners använder teknik, inklusive cookies, för att samla in information om dig för olika ändamål, inklusive:</p>"
             + "<ol>"
             + "<li>Funktionell</li>"
-            + "<li>Statistik</li>"
+            + "<li>Analys</li>"
             + "<li>Marknadsföring</li>"
             + "</ol>"
             + "<p>Genom att klicka på \"Acceptera\" ger du ditt samtycke till alla dessa ändamål. Du kan också välja att specificera de ändamål du samtycker till genom att markera rutan bredvid ändamålet och klicka på \"Spara inställningar\".</p>"

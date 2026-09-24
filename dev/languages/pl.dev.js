@@ -10,7 +10,7 @@
         description: "Pliki cookie funkcjonalne umożliwiają przechowywanie informacji, które zmieniają wygląd lub działanie strony. Na przykład preferowany język lub region."
     },
     statisic: {
-        title: "Statystyki",
+        title: "Analityka",
         description: "Stale dążymy do poprawy użyteczności i wydajności naszych stron internetowych. Dlatego korzystamy z technologii analitycznych (w tym plików cookie), które pseudonimizują pomiar i ocenę, które funkcje i treści naszych stron są używane, jak i jak często. Na tej podstawie możemy poprawić nasze strony dla użytkowników."
     },
     marketing: {
@@ -33,7 +33,7 @@
             + "<p>My i nasi partnerzy biznesowi wykorzystujemy technologie, w tym pliki cookie, do zbierania informacji o Tobie w różnych celach, w tym:</p>"
             + "<ol>"
             + "<li>Funkcjonalność</li>"
-            + "<li>Statystyki</li>"
+            + "<li>Analityka</li>"
             + "<li>Reklama</li>"
             + "</ol>"
             + "<p>Klikając „Akceptuj”, wyrażasz zgodę na wszystkie te cele. Możesz także zdecydować, które cele chcesz zatwierdzić, zaznaczając pole wyboru obok celu i klikając „Zapisz ustawienia”.</p>"

@@ -37,25 +37,25 @@ const lines = fs.readFileSync(srcPath, "utf8").split("\n");
  */
 const BOOT_RANGES = [
     [1, 7],
-    [174, 505],
-    [531, 532],
-    [986, 991],
-    [997, 1020],
-    [1035, 1048],
-    [1050, 1121],
-    [1124, 1219],
-    [1234, 1247],
-    [1251, 1284],
-    [1286, 1290],
-    [1476, 1494],
-    [1501, 1529],
-    [1729, 2020],
-    [2074, 2101],
-    [4191, 4442],
-    [4708, 5017],
+    [174, 618], // includes sync script-injection guard (was 174-505; guard inserted after 505, +114 lines)
+    [645, 646],
+    [1100, 1105],
+    [1111, 1134],
+    [1149, 1162],
+    [1164, 1235],
+    [1238, 1333],
+    [1348, 1361],
+    [1365, 1398],
+    [1400, 1471], // includes intaSetGtagConsentDefaults() + oaiq consent intercept — both must fire sync, before uc-core
+    [1717, 1735],
+    [1742, 1770],
+    [2019, 2311], // +49 lines: TCF encoder rewrite (IsRangeEncoding, VLI section, PublisherRestrictions); +1 analytics allowlist entry
+    [2381, 2408],
+    [4498, 4749],
+    [5025, 5334],
 ];
 
-const CORE_SKIP_LINES = new Set([5255, 5256, 5257]);
+const CORE_SKIP_LINES = new Set([5523, 5524, 5525]);
 
 function lineDepth(line) {
     let d = 0;

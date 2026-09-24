@@ -841,7 +841,7 @@ function intaCbFetchTextOverridePresetFromApiIfNeeded() {
             console.warn("[Intastellar] CMP preset fetch failed:", slug, err && err.message ? err.message : err);
         });
 }
-/* const poweredBy = `<a class="inta-poweredBy" href='https://www.intastellarsolutions.com?utm_source=${encodeURI(window.location.href)}&utm_content=powered_by&utm_medium=referral&utm_campaign=Consents+Block&utm_term=gdpr_banner_logo' target='_blank' rel='noopener' style="align-items: center; text-decoration: none;font-size: 11.5px; color: #000 !important; display: flex; justify-content: center;">powered by <img width="109px" height="20px" style="width: 109px !important; height: 20px !important;margin-left: 10px;" src="https://www.intastellarsolutions.com/assets/intastellar_solutions.svg" alt="Intastellar Solutions, International"></a>`; */
+/* const poweredBy = `<a class="inta-poweredBy" href='https://www.intastellar.eu?utm_source=${encodeURI(window.location.href)}&utm_content=powered_by&utm_medium=referral&utm_campaign=Consents+Block&utm_term=gdpr_banner_logo' target='_blank' rel='noopener' style="align-items: center; text-decoration: none;font-size: 11.5px; color: #000 !important; display: flex; justify-content: center;">powered by <img width="109px" height="20px" style="width: 109px !important; height: 20px !important;margin-left: 10px;" src="https://www.intastellarsolutions.com/assets/intastellar_solutions.svg" alt="Intastellar Solutions, International"></a>`; */
 const banner = document.createElement("inta-consents-settings-btn");
 const bannerContent = document.createElement("button");
 const intastellarLogoLight = "https://www.intastellarsolutions.com/assets/logos/intastellar-consents-logo-white.svg";
@@ -872,17 +872,34 @@ window.platform = findScriptParameter("utm_source") === undefined ? "Manual" : f
 
 
 /**
+ * Single on/off switch for the whole TCF surface (window.__tcfapi, __tcfapiLocator,
+ * tcString generation). Intastellar Consents is not currently an IAB Europe-registered
+ * CMP, so there is no valid CmpId to issue — emitting a well-formed TC string anyway
+ * would misrepresent TCF participation to vendors and compliance scanners alike.
+ * Once registered, set window.INTA.settings.cmpId to the real registered ID; every
+ * TCF code path below keys off this one flag and turns on automatically.
+ */
+function intaTcfIsRegistered() {
+    return !!(window.INTA && window.INTA.settings && window.INTA.settings.cmpId > 0);
+}
+
+/**
  * Generates a valid TCF 2.x TC string using the minimal IAB encoder bundle.
  * TCF 2.3: includes the mandatory Disclosed Vendors segment (required for new/updated signals from Feb 28, 2026).
+ * Returns null while Intastellar isn't IAB-registered (see intaTcfIsRegistered).
  * @param {Object} consentObj - {purposes: [bool,...], vendors: [bool,...], disclosedVendors?: [bool,...]}
- * @returns {string} Encoded TC string (core.disclosedVendors)
+ * @returns {string|null} Encoded TC string (core.disclosedVendors), or null if TCF is not enabled
  */
 function generateTcString(consentObj) {
+    if (!intaTcfIsRegistered()) {
+        return null;
+    }
     if (!window.IABTCF || !window.IABTCF.TCModel || !window.IABTCF.TCString) {
         throw new Error('IAB TCF encoder bundle not loaded.');
     }
     let model = new window.IABTCF.TCModel();
-    model.cmpId = 1;
+    model.cmpId = window.INTA.settings.cmpId;
+    model.cmpVersion = window.INTA.settings.cmpVersion || model.cmpVersion;
     // Set purposes and vendors as boolean arrays (first 24)
     model.purposeConsents = (consentObj.purposes || []).slice(0, 24);
     model.vendorConsents = (consentObj.vendors || []).slice(0);
@@ -1761,7 +1778,7 @@ function intaApplyCmpVisibilityFromCookie() {
     var overlay = window._IntastellarConsentsBanner;
     var root = window.intaconsents;
     var hasConsent = intaHasStoredConsentCookie();
-    var isFloating = window.INTA && window.INTA.settings && window.INTA.settings.design === 'floating';
+    var isFloating = window.INTA && window.INTA.settings && window.INTA.settings.design === 'premium';
     var design = window.INTA && window.INTA.settings && window.INTA.settings.design;
 
     if (hasConsent) {
@@ -2003,6 +2020,9 @@ if (typeof window.denyAllCookies === 'function') {
 
 
 // --- TCF 2.2 API stub with event listener registry and dynamic dispatch ---
+// Not exposed at all until intaTcfIsRegistered() is true — a page with no window.__tcfapi
+// correctly signals "no CMP here" rather than a fake one with an unregistered CmpId.
+if (intaTcfIsRegistered()) {
 (function () {
     // TCF event listener registry
     let tcfListeners = {};
@@ -2087,6 +2107,7 @@ if (typeof window.denyAllCookies === 'function') {
         dispatchTCFEvent(eventStatus);
     };
 })();
+}
 
 // Recommended approach for monitoring: use addEventListener to detect user consent actions
 if (typeof window.__tcfapi === 'function') {
@@ -2168,6 +2189,12 @@ moreSettings.setAttribute("class", "intastellarCookieConstents");
 moreSettingsContent.setAttribute("class", "intastellarCookieConstents__content");
 moreintHeader.setAttribute("class", "intastellarCookieConstents__content-intHeader");
 moreFooter.setAttribute("class", "intastellarCookieConstents__content-footer");
+moreFooter.addEventListener("click", (e) => {
+    const btn = e.target.closest(".intaExpandCookieList");
+    if (!btn || !moreFooter.contains(btn)) return;
+    btn.querySelector(".intastellar__arrow")?.classList.toggle("open");
+    btn.parentElement.querySelector(".intaCookieListOverview")?.classList.toggle("view");
+});
 
 moreContentText.setAttribute("class", "intastellarCookieConstents__content-main");;
 
@@ -2416,8 +2443,8 @@ function intaInsertStylesheetLinkInHead(stylesheetLink) {
     }
 }
 
-if (window.location.host.indexOf("intastellarsolutions") == -1) {
-    poweredBy = "<span class='intastellarCookie-settings__poweredBy' alt='This cookie banner is powered by Intastellar Consents Solutions'>Powered by <a class='intastellarCookie-settings__poweredByLink' href='https://www.intastellarsolutions.com' target='_blank' rel='noopener'><img class='intastellarCookie-settings__poweredByImg' width='100px' height='100px' src='" + intastellarLogo + "' alt='Intastellar Solutions, International'></a></span>";
+if (window.location.host.indexOf("intastellar") == -1) {
+    poweredBy = "<span class='intastellarCookie-settings__poweredBy' alt='This cookie banner is powered by Intastellar Consents Solutions'>Powered by <a class='intastellarCookie-settings__poweredByLink' href='https://www.intastellar.eu' target='_blank' rel='noopener'><img class='intastellarCookie-settings__poweredByImg' width='100px' height='100px' src='" + intastellarLogo + "' alt='Intastellar Solutions, International'></a></span>";
 }
 if (arrange == "ltr") {
     bannerContent.classList.add("intastellarCookie-settingsContainer--otherSide");
@@ -2442,12 +2469,12 @@ function setIntastellarPartnerDomain() {
 }
 
 function generatePoweredBy() {
-    if (window.location.host.indexOf("intastellarsolutions") == -1) {
+    if (window.location.host.indexOf("intastellar") == -1) {
         let intastellarLogo = intastellarLogoLight;
         if (window.INTA.settings.design == "bannerV2") {
             intastellarLogo = intastellarLogoDark;
         }
-        poweredBy = "<span class='intastellarCookie-settings__poweredBy' alt='This cookie banner is powered by Intastellar Consents Solutions'>Powered by <a class='intastellarCookie-settings__poweredByLink' href='https://www.intastellarsolutions.com' target='_blank' rel='noopener'><img class='intastellarCookie-settings__poweredByImg' width='100px' height='100px' src='" + intastellarLogo + "' alt='Intastellar Solutions, International'></a></span>";
+        poweredBy = "<span class='intastellarCookie-settings__poweredBy' alt='This cookie banner is powered by Intastellar Consents Solutions'>Powered by <a class='intastellarCookie-settings__poweredByLink' href='https://www.intastellar.eu' target='_blank' rel='noopener'><img class='intastellarCookie-settings__poweredByImg' width='100px' height='100px' src='" + intastellarLogo + "' alt='Intastellar Solutions, International'></a></span>";
     }
     return `<section class="intSettingsPoweredBy" > ${poweredBy}</section>`;
 }
@@ -2788,6 +2815,9 @@ function intaCbShopifySyncFromBannerCheckboxes() {
 
 function IntaSaveSettings() {
     recordTimeToDecision('save_settings');
+    const FunctionalCheckbox = document.querySelector("#functional");
+    const StaticsCheckBox = document.querySelector("#statics");
+    const MarketingCheckBox = document.querySelector("#marketing");
     const accepted = [];
     if (FunctionalCheckbox?.checked) {
         gtag('consent', 'update', {
@@ -2809,11 +2839,8 @@ function IntaSaveSettings() {
     if (StaticsCheckBox?.checked) {
         gtag('consent', 'update', {
             'analytics_storage': 'granted',
-            'ad_storage': 'granted',
-            'ad_user_data': 'granted',
         })
         window.clarity && window.clarity('consentv2', {
-            ad_Storage: "denied",
             analytics_Storage: "granted"
         });
         accepted.push("staticsticCookies");
@@ -2826,7 +2853,6 @@ function IntaSaveSettings() {
         _paq.push(['forgetConsentGiven']);
 
         window.clarity && window.clarity('consentv2', {
-            ad_Storage: "denied",
             analytics_Storage: "denied"
         });
 
@@ -2858,6 +2884,12 @@ function IntaSaveSettings() {
                 pintrk('setconsent', true);
             } catch (e) { /* ignore */ }
         }
+        // OpenAI Ads measurement consent mode
+        if (typeof oaiq === 'function') {
+            try {
+                oaiq('consent', true);
+            } catch (e) { /* ignore */ }
+        }
         updateVwoConsent(intaConsentsObjectVariable.consents);
 
     } else if (!MarketingCheckBox?.checked || intastellar) {
@@ -2877,6 +2909,12 @@ function IntaSaveSettings() {
         if (typeof pintrk === 'function') {
             try {
                 pintrk('setconsent', false);
+            } catch (e) { /* ignore */ }
+        }
+        // OpenAI Ads measurement consent mode
+        if (typeof oaiq === 'function') {
+            try {
+                oaiq('consent', false);
             } catch (e) { /* ignore */ }
         }
 
@@ -2977,6 +3015,12 @@ function IntaAcceptAll() {
             pintrk('setconsent', true);
         } catch (e) { /* ignore */ }
     }
+    // OpenAI Ads measurement consent mode
+    if (typeof oaiq === 'function') {
+        try {
+            oaiq('consent', true);
+        } catch (e) { /* ignore */ }
+    }
 
     window._hsp.push(['doNotTrack', false]);
     window._hsp.push(['setHubSpotCookieConsent', {
@@ -3041,6 +3085,12 @@ function IntaSaveNeccessary() {
     if (typeof pintrk === 'function') {
         try {
             pintrk('setconsent', false);
+        } catch (e) { /* ignore */ }
+    }
+    // OpenAI Ads measurement consent mode
+    if (typeof oaiq === 'function') {
+        try {
+            oaiq('consent', false);
         } catch (e) { /* ignore */ }
     }
     dataLayer.push({
@@ -3191,8 +3241,9 @@ function updateSaveButtonText() {
 
 onWindowLoad(function () {
 
-    // TCF API locator frame (required for cross-frame communication)
-    if (!window.frames['__tcfapiLocator']) {
+    // TCF API locator frame (required for cross-frame communication).
+    // Only created once intaTcfIsRegistered() is true — see generateTcString().
+    if (intaTcfIsRegistered() && !window.frames['__tcfapiLocator']) {
         let tcfApiLocator = document.createElement('iframe');
         tcfApiLocator.style.display = 'none';
         tcfApiLocator.name = '__tcfapiLocator';
@@ -3271,15 +3322,6 @@ onWindowLoad(function () {
 
         intaApplyCmpVisibilityFromCookie();
 
-        document.addEventListener("click", (e) => {
-            const btn = e.target.closest(".intaExpandCookieList");
-            if (!btn) return;
-            const allBtns = Array.from(document.querySelectorAll(".intaExpandCookieList"));
-            const i = allBtns.indexOf(btn);
-            if (i === -1) return;
-            document.querySelectorAll(".intastellar__arrow")[i].classList.toggle("open");
-            document.querySelectorAll(".intaCookieListOverview")[i].classList.toggle("view");
-        })
 
         // --- Banner and settings direct references ---
         /* if (!window._intaCookieBanner) {
@@ -3760,6 +3802,20 @@ function allStorage() {
     }
 
     return values;
+}
+
+/* Total individual cookies across all vendors in a category's cookie list */
+function intaCountCookiesInList(list) {
+    if (!Array.isArray(list)) return 0;
+    return list.reduce(function (sum, vendor) {
+        return sum + (vendor && Array.isArray(vendor.cookies) ? vendor.cookies.length : 0);
+    }, 0);
+}
+
+/* Updates the "(N)" cookie count badge next to a category heading */
+function intaSetCookieCountBadge(cat, count) {
+    var badge = document.getElementById('inta-cookie-count-' + cat);
+    if (badge) badge.textContent = '(' + count + ')';
 }
 
 /* Helper function to list all cookies */
@@ -4779,8 +4835,9 @@ function intaApplyCookieBannerApiData(data) {
 
     Object.keys(categories).forEach(function (cat) {
         var el = document.getElementById('inta-cookie-list-' + cat);
-        if (!el) return;
         var list = categories[cat];
+        intaSetCookieCountBadge(cat, intaCountCookiesInList(list));
+        if (!el) return;
         el.innerHTML = list.length ? listAllCookies(list) : '';
     });
 }
@@ -4793,6 +4850,7 @@ function intaRenderFallbackCookieLists() {
     };
     Object.keys(map).forEach(function (cat) {
         var el = document.getElementById('inta-cookie-list-' + cat);
+        intaSetCookieCountBadge(cat, intaCountCookiesInList(map[cat]));
         if (el) el.innerHTML = listAllCookies(map[cat]);
     });
 }
@@ -5114,9 +5172,6 @@ function updateConsents(consent, type = null) {
 
 function saveINTCookieSettings(consent, type = null) {
     recordTimeToDecision(type || 'save_settings');
-    document.querySelector("html").classList.remove("noScroll");
-    window._IntastellarConsentsBanner.classList.remove("--active");
-    intaApplyCmpVisibilityFromCookie();
     const FunctionalCheckbox = document.querySelector("#functional");
     const StaticsCheckBox = document.querySelector("#statics");
     const MarketingCheckBox = document.querySelector("#marketing");
@@ -5238,9 +5293,6 @@ function saveINTCookieSettings(consent, type = null) {
         });
         gtag('consent', 'update', {
             'analytics_storage': 'granted',
-            'ad_storage': 'granted',
-            'ad_user_data': 'granted',
-            'ad_personalization': 'granted',
             'url_passthrough': true,
         })
         window._hsp.push(['doNotTrack', false]);
@@ -5270,14 +5322,9 @@ function saveINTCookieSettings(consent, type = null) {
         window._hsp.push(['revokeCookieConsent']);
         gtag('consent', 'update', {
             'analytics_storage': 'denied',
-            'ad_user_data': 'denied',
-            'ad_personalization': 'denied',
             'url_passthrough': true,
         })
 
-        window.uetq.push('consent', 'update', {
-            'ad_storage': 'denied'
-        });
         window.clarity && window.clarity('consent', false);
         /* window.allScripts.map((script) => {
             if (script.type == "statics") {
@@ -5311,6 +5358,7 @@ function saveINTCookieSettings(consent, type = null) {
         "; path=/; " +
         intCookieDomain +
         "";
+    intaApplyCmpVisibilityFromCookie();
     /*window.location.reload();*/
     updateConsents(consent, type);
     setTimeout(() => {

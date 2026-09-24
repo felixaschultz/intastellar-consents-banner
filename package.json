@@ -1,0 +1,19 @@
+{
+  "name": "intastellar-cookie-solutions",
+  "private": true,
+  "scripts": {
+    "test": "jest --testPathPattern=tests/regulations",
+    "test-on-site": "jest --testPathPattern=tests/test-on-site",
+    "generate-locale-files": "node scripts/generate-cmp-locales.mjs"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "roots": ["<rootDir>/tests"],
+    "testMatch": [
+      "**/tests/regulations/**/*.test.js"
+    ]
+  }
+}

@@ -10,7 +10,7 @@
         description: "Funktsionaalsed küpsised võimaldavad salvestada teavet, mis muudab veebisaidi välimust või käitumist. Näiteks teie eelistatud keel või piirkond."
     },
     statisic: {
-        title: "Statistika",
+        title: "Analüütika",
         description: "Soovime pidevalt parandada meie veebisaitide kasutatavust ja jõudlust. Selleks kasutame analüüsitehnoloogiaid (sealhulgas küpsiseid), mis mõõdavad ja hindavad anonüümselt, milliseid funktsioone ja sisu meie veebisaitidel kasutatakse, kuidas ja kui sageli. Selle alusel saame oma veebisaite kasutajatele paremaks muuta."
     },
     marketing: {
@@ -33,7 +33,7 @@
             + "<p>Meie ja meie äripartnerid kasutame tehnoloogiaid, sealhulgas küpsiseid, et koguda teavet teie kohta erinevatel eesmärkidel, sealhulgas:</p>"
             + "<ol>"
             + "<li>Funktsionaalsus</li>"
-            + "<li>Statistika</li>"
+            + "<li>Analüütika</li>"
             + "<li>Reklaam</li>"
             + "</ol>"
             + "<p>Klikkides \"Nõustu\", annate nõusoleku kõikidele nendele eesmärkidele. Samuti saate valida, millistele eesmärkidele te nõustute, märkides ruudud eesmärkide kõrval ja klõpsates \"Salvesta seaded\".</p>"

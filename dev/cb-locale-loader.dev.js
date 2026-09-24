@@ -35,7 +35,22 @@
         estonian: "et", et: "et", "et-ee": "et",
         vietnamese: "vi", vi: "vi", "vi-vn": "vi",
         indonesian: "id", id: "id", "id-id": "id",
-        malay: "ms", ms: "ms", "ms-my": "ms"
+        malay: "ms", ms: "ms", "ms-my": "ms",
+        filipino: "tl", tl: "tl", "tl-ph": "tl",
+        slovak: "sk", sk: "sk", "sk-sk": "sk",
+        croatian: "hr", hr: "hr", "hr-hr": "hr",
+        slovenian: "sl", sl: "sl", "sl-si": "sl",
+        lithuanian: "lt", lt: "lt", "lt-lt": "lt",
+        latvian: "lv", lv: "lv", "lv-lv": "lv",
+        irish: "ga", ga: "ga", "ga-ie": "ga",
+        maltese: "mt", mt: "mt", "mt-mt": "mt",
+        icelandic: "is", is: "is", "is-is": "is",
+        serbian: "sr", sr: "sr", "sr-rs": "sr",
+        persian: "fa", fa: "fa", "fa-ir": "fa",
+        urdu: "ur", ur: "ur", "ur-pk": "ur",
+        bengali: "bn", bn: "bn", "bn-bd": "bn", "bn-in": "bn",
+        swahili: "sw", sw: "sw", "sw-ke": "sw", "sw-tz": "sw",
+        tamil: "ta", ta: "ta", "ta-in": "ta", "ta-lk": "ta"
     };
 
     function intaNormalizeLocaleToken(v) {
@@ -202,13 +217,13 @@
             + '<section class="intastellar_privacyPolicy"></section>'
             + '<article class="intReadMore">'
             + '<section class="required">' + uidHtml
-            + '<h3 class="intaExpandCookieList">' + C.necessary.title + ' <i class="intastellar__arrow"></i></h3><p>' + C.necessary.description + '</p>'
+            + '<h3 class="intaExpandCookieList">' + C.necessary.title + ' <span class="intaCookieCount">(' + intaCountCookiesInList(inta_requiredCookieList) + ')</span> <i class="intastellar__arrow"></i></h3><p>' + C.necessary.description + '</p>'
             + '<article class="intaCookieListOverview">' + listAllCookies(inta_requiredCookieList) + "</article></section>"
-            + "<section><h3 class=\"intaExpandCookieList\">" + C.functional.title + ' <i class="intastellar__arrow"></i></h3><p>' + C.functional.description + '</p>'
+            + "<section><h3 class=\"intaExpandCookieList\">" + C.functional.title + ' <span class="intaCookieCount" id="inta-cookie-count-functional"></span> <i class="intastellar__arrow"></i></h3><p>' + C.functional.description + '</p>'
             + '<article class="intaCookieListOverview" id="inta-cookie-list-functional"></article></section>'
-            + "<section><h3 class=\"intaExpandCookieList\">" + C.statisic.title + ' <i class="intastellar__arrow"></i></h3><p>' + C.statisic.description + '</p>'
+            + "<section><h3 class=\"intaExpandCookieList\">" + C.statisic.title + ' <span class="intaCookieCount" id="inta-cookie-count-statistics"></span> <i class="intastellar__arrow"></i></h3><p>' + C.statisic.description + '</p>'
             + '<article class="intaCookieListOverview" id="inta-cookie-list-statistics"></article></section>'
-            + "<section><h3 class=\"intaExpandCookieList\">" + C.marketing.title + ' <i class="intastellar__arrow"></i></h3><p>' + C.marketing.description + '</p>'
+            + "<section><h3 class=\"intaExpandCookieList\">" + C.marketing.title + ' <span class="intaCookieCount" id="inta-cookie-count-marketing"></span> <i class="intastellar__arrow"></i></h3><p>' + C.marketing.description + '</p>'
             + '<article class="intaCookieListOverview" id="inta-cookie-list-marketing"></article></section>'
             + "</article>";
     };
@@ -255,7 +270,7 @@
                     description: "Functional cookies allow us to store information that alters how the website appears or behaves, such as your preferred language or region."
                 },
                 statisic: {
-                    title: "Statics",
+                    title: "Analytics",
                     description: "We strive to continuously enhance the user experience and performance of our website. To achieve this, we use analytical technologies (including cookies) that pseudonymously track and assess how, when, and which features and content of our website are used. This data helps us improve our site for users."
                 },
                 marketing: {

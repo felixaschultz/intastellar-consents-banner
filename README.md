@@ -38,7 +38,7 @@ You can implement the cookie banner by loading the following script into your we
       logo: "Link to your logo",
       rootDomain: "example.com",
       arrange: "ltr or rtl",
-      design: "banner | bannerV2 | overlay"
+      design: "banner | bannerV2 | overlay | premium"
     }
   }
 </script>
@@ -51,20 +51,57 @@ With this project I wanted to build my own cookie banner witch is free to use. I
 As an indie webdev and front-end developer I´ve decided to start building my own little banner and it evolved to this project.
 This cookie banner is also available in diffrent language:
 
-Available languages:
+Available languages (47 total, including all 24 official EU languages):
 
-- German
+- Afrikaans
+- Arabic
+- Bengali
+- Bulgarian
+- Chinese
+- Croatian
+- Czech
 - Danish
-- English
-- Spanish
-- French
-- Swedish
-- Norwegian
-- Finnish
-- Italian
-- Russian
 - Dutch
+- English
+- Estonian
+- Filipino
+- Finnish
+- French
+- German
+- Greek
+- Hebrew
+- Hindi
+- Hungarian
+- Icelandic
+- Indonesian
+- Irish
+- Italian
+- Japanese
+- Korean
+- Latvian
+- Lithuanian
+- Malay
+- Maltese
+- Norwegian
+- Persian
+- Polish
 - Portuguese
+- Romanian
+- Russian
+- Serbian
+- Slovak
+- Slovenian
+- Spanish
+- Swahili
+- Swedish
+- Tamil
+- Thai
+- Turkish
+- Ukrainian
+- Urdu
+- Vietnamese
+
+Newly added: Bengali, Bulgarian, Croatian, Czech, Filipino, Hebrew, Hindi, Hungarian, Icelandic, Indonesian, Irish, Latvian, Lithuanian, Malay, Maltese, Persian, Romanian, Serbian, Slovak, Slovenian, Swahili, Tamil, Turkish, Ukrainian, Urdu, Vietnamese.
 
 You can read more about the cookie banner under: https://www.intastellarsolutions.com/solutions/cookie-consents.
 This banner is free to use as long as the powered by logo is not removed. We are glad if you want to contribuate to this project so we can develop it further and we can make it secure.
@@ -121,7 +158,7 @@ You can add and load it direct via loading https://consents.cdn.intastellarsolut
       logo: "Link to your logo",
       rootDomain: "example.com",
       arrange: "ltr or rtl",
-      design: "banner | bannerV2 | overlay"
+      design: "banner | bannerV2 | overlay | premium"
     }
   }
 </script>
@@ -141,6 +178,8 @@ We support the following trackers and consents mode:
 | VWO | VWO is a conversion rate optimization platform that allows you to test and optimize your website. | [VWO Cookie Consent API](https://vwo.com/docs/api/cookie-consent/) |
 | Pintrk | Pintrk is a platform that allows you to track your website visitors and retarget them with ads. | [Pintrk Consent Mode](https://www.pintrk.com/docs/consent-mode/) |
 | Microsoft Clarity | Microsoft Clarity is a web analytics service that helps you understand your website visitors and improve your website. | [Microsoft Clarity Consent Mode](https://clarity.microsoft.com/docs/consent-mode/) |
+| OpenAI Ads | OpenAI Ads measurement API used to track conversions and attribution for ads served via OpenAI surfaces. | OpenAI Ads Consent Mode (`oaiq("consent", true\|false)`) |
+| Amazon Ads | Amazon Ads' advertising and measurement products (e.g. Amazon DSP, Amazon Marketing Cloud) used to track conversions and attribution for ads served via Amazon surfaces. | [Amazon Consent Signal (ACS)](https://advertising.amazon.com/help/GKJQ7E8SE9BRG73Q) — `window.amznConsent()` builder API |
 
 ## Support
 
