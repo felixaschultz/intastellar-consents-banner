@@ -3095,6 +3095,11 @@ function intaExperimentChannelMatches(exp, expKey) {
 
 let intastellarCreateBanner = document.createElement("script");
 intastellarCreateBanner.src = "https://consents.cdn.intastellarsolutions.com/cb.js";
+
+if(window.INTA.settings && window.INTA.settings.design === "premium") {
+    intastellarCreateBanner.src = "https://consents.cdn.intastellarsolutions.com/premium.js";
+}
+
 if (intastellarDevMode) {
     intastellarCreateBanner.src = "../../dev/cb.dev.js";
 }
