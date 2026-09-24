@@ -4241,15 +4241,8 @@ function intaExperimentChannelMatches(exp, expKey) {
 
 let intastellarCreateBanner = document.createElement("script");
 intastellarCreateBanner.src = "https://consents.cdn.intastellarsolutions.com/cb.js";
-if (window.INTA.settings.design === "premium") {
-    intastellarCreateBanner.src = "https://consents.cdn.intastellarsolutions.com/premium.js";
-}
 if (intastellarDevMode) {
-    if (window.INTA.settings.design === "premium") {
-        intastellarCreateBanner.src = "../../dev/styles/premium.js";
-    } else {
-        intastellarCreateBanner.src = "../../dev/cb.dev.js";
-    }
+    intastellarCreateBanner.src = "../../dev/cb.dev.js";
 }
 
 intastellarCreateBanner.async = true;

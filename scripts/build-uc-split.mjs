@@ -51,11 +51,11 @@ const BOOT_RANGES = [
     [1742, 1770],
     [2019, 2311], // +49 lines: TCF encoder rewrite (IsRangeEncoding, VLI section, PublisherRestrictions); +1 analytics allowlist entry
     [2381, 2408],
-    [4524, 4775], // was 4498-4749; +26 lines from new locale slug entries inserted at line 4299
-    [5051, 5360], // was 5025-5334; +26 lines from new locale slug entries inserted at line 4299
+    [4517, 4768], // was 4524-4775; -7 lines from removing the premium.js script-src special-case
+    [5044, 5353], // was 5051-5360; -7 lines from removing the premium.js script-src special-case
 ];
 
-const CORE_SKIP_LINES = new Set([5549, 5550, 5551]); // was 5523-5525; +26 lines from new locale slug entries inserted at line 4299
+const CORE_SKIP_LINES = new Set([5542, 5543, 5544]); // was 5549-5551; -7 lines from removing the premium.js script-src special-case
 
 function lineDepth(line) {
     let d = 0;
