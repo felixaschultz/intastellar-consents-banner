@@ -2893,7 +2893,7 @@ onWindowLoad(function () {
                     'ad_storage': 'granted',
                     'ad_user_data': 'granted',
                 })
-                window.clarity('consentv2', {
+                window.clarity && window.clarity('consentv2', {
                     ad_Storage: "denied",
                     analytics_Storage: "granted"
                 });
@@ -2903,7 +2903,7 @@ onWindowLoad(function () {
                     'analytics_storage': 'denied',
                 })
 
-                window.clarity('consentv2', {
+                window.clarity && window.clarity('consentv2', {
                     ad_Storage: "denied",
                     analytics_Storage: "denied"
                 });
@@ -2925,7 +2925,7 @@ onWindowLoad(function () {
                 window.uetq.push('consent', 'update', {
                     'ad_storage': 'granted'
                 });
-                window.clarity('consentv2', {
+                window.clarity && window.clarity('consentv2', {
                     ad_Storage: "granted",
                     analytics_Storage: "denied"
                 });
@@ -2942,7 +2942,7 @@ onWindowLoad(function () {
                     'ad_personalization': 'denied',
                 });
 
-                window.clarity('consent', false);
+                window.clarity && window.clarity('consent', false);
 
                 const index = accepted.indexOf("advertisementCookies");
                 if (index > -1) { // only splice array when item is found
@@ -2963,6 +2963,7 @@ onWindowLoad(function () {
         if (button__acceptAll != null || button__acceptAll != undefined) {
             button__acceptAll.addEventListener("click", function () {
 
+                recordTimeToDecision('accept_all');
                 var cV = 0;
                 intaConsentsObjectVariable.consents = {
                     staticsticCookies: "checked",
@@ -3007,7 +3008,7 @@ onWindowLoad(function () {
                 window.uetq.push('consent', 'update', {
                     'ad_storage': 'granted'
                 });
-                window.clarity('consentv2', {
+                window.clarity && window.clarity('consentv2', {
                     ad_Storage: "granted",
                     analytics_Storage: "granted"
                 });
@@ -3018,7 +3019,15 @@ onWindowLoad(function () {
                     advertisement: true,
                     functionality: true,
                 }]);
+                if (typeof pintrk === 'function') {
+                    try { pintrk('setconsent', true); } catch (e) { /* ignore */ }
+                }
+                if (typeof oaiq === 'function') {
+                    try { oaiq('consent', true); } catch (e) { /* ignore */ }
+                }
+                intaShopifySetTrackingConsentSafe({ analytics: true, marketing: true, preferences: true }, function () {});
                 updateConsents("all");
+                dispatchTCFConsentChangedIfAvailable();
                 /*window.location.reload();*/
             });
         }
@@ -3026,6 +3035,7 @@ onWindowLoad(function () {
         if (button__acceptAll != null || button__acceptAll != undefined) {
             button__acceptAll.addEventListener("click", function () {
 
+                recordTimeToDecision('accept_all');
                 var cV = 1;
                 intaConsentsObjectVariable.consents = {
                     staticsticCookies: "checked",
@@ -3084,18 +3094,27 @@ onWindowLoad(function () {
                     advertisement: true,
                     functionality: true,
                 }]);
-                window.clarity('consentv2', {
+                window.clarity && window.clarity('consentv2', {
                     ad_Storage: "granted",
                     analytics_Storage: "granted"
                 });
                 dataLayer.push({ 'event': 'cookie_consent_update', 'cookie_consent': intaConsentsObjectVariable.consents });
+                if (typeof pintrk === 'function') {
+                    try { pintrk('setconsent', true); } catch (e) { /* ignore */ }
+                }
+                if (typeof oaiq === 'function') {
+                    try { oaiq('consent', true); } catch (e) { /* ignore */ }
+                }
+                intaShopifySetTrackingConsentSafe({ analytics: true, marketing: true, preferences: true }, function () {});
                 updateConsents("all");
+                dispatchTCFConsentChangedIfAvailable();
                 /*window.location.reload();*/
             });
         }
 
         if (button__acceptAll != null || button__acceptAll != undefined) {
             button__acceptAllNecessary.addEventListener("click", function () {
+                recordTimeToDecision('decline_all');
                 intaConsentsObjectVariable.consents = {
                     staticsticCookies: false,
                     functionalCookies: false,
@@ -3146,11 +3165,19 @@ onWindowLoad(function () {
                     advertisement: false,
                     functionality: false,
                 }]);
-                window.clarity('consentv2', {
+                window.clarity && window.clarity('consentv2', {
                     ad_Storage: "granted",
                     analytics_Storage: "granted"
                 });
                 dataLayer.push({ 'event': 'cookie_consent_update', 'cookie_consent': intaConsentsObjectVariable.consents });
+                if (typeof pintrk === 'function') {
+                    try { pintrk('setconsent', false); } catch (e) { /* ignore */ }
+                }
+                if (typeof oaiq === 'function') {
+                    try { oaiq('consent', false); } catch (e) { /* ignore */ }
+                }
+                intaShopifySetTrackingConsentSafe({ analytics: false, marketing: false, preferences: false }, function () {});
+                dispatchTCFConsentChangedIfAvailable();
                 /*window.location.reload();*/
 
             });
@@ -3196,6 +3223,7 @@ onWindowLoad(function () {
             ness.forEach((n) => {
                 n.addEventListener("click", function () {
 
+                    recordTimeToDecision('decline_all');
                     intaConsentsObjectVariable.consents = {
                         staticsticCookies: false,
                         functionalCookies: false,
@@ -3245,16 +3273,25 @@ onWindowLoad(function () {
                         advertisement: false,
                         functionality: false,
                     }]);
-                    window.clarity('consent', false);
+                    window.clarity && window.clarity('consent', false);
                     document.querySelector("#marketing").checked = false;
                     document.querySelector("#statics").checked = false;
                     document.querySelector("#functional").checked = false;
+                    if (typeof pintrk === 'function') {
+                        try { pintrk('setconsent', false); } catch (e) { /* ignore */ }
+                    }
+                    if (typeof oaiq === 'function') {
+                        try { oaiq('consent', false); } catch (e) { /* ignore */ }
+                    }
+                    intaShopifySetTrackingConsentSafe({ analytics: false, marketing: false, preferences: false }, function () {});
+                    dispatchTCFConsentChangedIfAvailable();
                     /*window.location.reload();*/
                 });
             });
 
             all.forEach((a) => {
                 a.addEventListener("click", function () {
+                    recordTimeToDecision('accept_all');
                     intaConsentsObjectVariable.consents = {
                         staticsticCookies: "checked",
                         functionalCookies: "checked",
@@ -3302,7 +3339,7 @@ onWindowLoad(function () {
                     window.uetq.push('consent', 'update', {
                         'ad_storage': 'granted'
                     });
-                    window.clarity('consentv2', {
+                    window.clarity && window.clarity('consentv2', {
                         ad_Storage: "granted",
                         analytics_Storage: "granted"
                     });
@@ -3319,6 +3356,14 @@ onWindowLoad(function () {
                     document.querySelector("#marketing").checked = true;
                     document.querySelector("#statics").checked = true;
                     document.querySelector("#functional").checked = true;
+                    if (typeof pintrk === 'function') {
+                        try { pintrk('setconsent', true); } catch (e) { /* ignore */ }
+                    }
+                    if (typeof oaiq === 'function') {
+                        try { oaiq('consent', true); } catch (e) { /* ignore */ }
+                    }
+                    intaShopifySetTrackingConsentSafe({ analytics: true, marketing: true, preferences: true }, function () {});
+                    dispatchTCFConsentChangedIfAvailable();
                     /*window.location.reload();*/
                 })
             });
@@ -3408,7 +3453,7 @@ onWindowLoad(function () {
                         advertisement: false,
                         functionality: false,
                     }]);
-                    window.clarity('consent', false);
+                    window.clarity && window.clarity('consent', false);
 
                     dataLayer.push({ 'event': 'cookie_consent_update', 'cookie_consent': intaConsentsObjectVariable.consents });
                     /*window.location.reload();*/
@@ -3472,7 +3517,7 @@ onWindowLoad(function () {
                         functionality: true,
                     }]);
 
-                    window.clarity('consentv2', {
+                    window.clarity && window.clarity('consentv2', {
                         ad_Storage: "granted",
                         analytics_Storage: "granted"
                     });
@@ -4759,6 +4804,7 @@ function updateConsents(consent, type = null) {
 }
 
 function saveINTCookieSettings(consent, type = null) {
+    recordTimeToDecision(consent || 'save_settings');
     document.querySelector("html").classList.remove("noScroll");
     document.querySelector(".intastellarCookieConstents").classList.remove("--active");
     intaApplyCmpVisibilityFromCookie();
@@ -4782,7 +4828,7 @@ function saveINTCookieSettings(consent, type = null) {
         window.uetq.push('consent', 'update', {
             'ad_storage': 'granted'
         });
-        window.clarity('consentv2', {
+        window.clarity && window.clarity('consentv2', {
             ad_Storage: "granted",
             analytics_Storage: "denied"
         });
@@ -4813,7 +4859,7 @@ function saveINTCookieSettings(consent, type = null) {
         window.uetq.push('consent', 'update', {
             'ad_storage': 'denied'
         });
-        window.clarity('consent', false);
+        window.clarity && window.clarity('consent', false);
         /* window.allScripts.map((script) => {
             if (script.type == "marketing") {
                 script.scripts.forEach((src) => {
@@ -4835,7 +4881,7 @@ function saveINTCookieSettings(consent, type = null) {
             'url_passthrough': true,
         })
 
-        window.clarity('consent', false);
+        window.clarity && window.clarity('consent', false);
 
         window._hsp.push(['doNotTrack', false]);
         /* window.allScripts.map((script) => {
@@ -4854,7 +4900,7 @@ function saveINTCookieSettings(consent, type = null) {
     } else {
         window._hsp.push(['doNotTrack']);
         window._hsp.push(['revokeCookieConsent']);
-        window.clarity('consent', false);
+        window.clarity && window.clarity('consent', false);
         gtag('consent', 'update', {
             'functionality_storage': 'denied',
         })
@@ -4882,7 +4928,7 @@ function saveINTCookieSettings(consent, type = null) {
             'url_passthrough': true,
         })
         window._hsp.push(['doNotTrack', false]);
-        window.clarity('consentv2', {
+        window.clarity && window.clarity('consentv2', {
             ad_Storage: "denied",
             analytics_Storage: "granted"
         });
@@ -4914,7 +4960,7 @@ function saveINTCookieSettings(consent, type = null) {
         window.uetq.push('consent', 'update', {
             'ad_storage': 'denied'
         });
-        window.clarity('consent', false);
+        window.clarity && window.clarity('consent', false);
 
         /* window.allScripts.map((script) => {
             if (script.type == "statics") {
@@ -4948,11 +4994,37 @@ function saveINTCookieSettings(consent, type = null) {
     }, 1000);
     document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
         .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+    dispatchTCFConsentChangedIfAvailable(true);
 }
 
-/* Bound via onclick on the ".--save" button (generateCookieSettingsButton) — saveINTCookieSettings
-   already reads the checkbox states straight from the DOM and does the full save/persist/dispatch
-   flow, so there's nothing else for this to do. */
+/* Time-to-decision: ported from cb.dev.js — ships its own timestamp bookkeeping via
+   window._intaBannerShownAt (already set elsewhere in this file when the banner shows)
+   and only touches globals (intaConsentsObjectVariable, window.dataLayer) that already
+   exist here, so it's a straight port. */
+function recordTimeToDecision(decisionType) {
+    let shownAt = window._intaBannerShownAt;
+    if (typeof shownAt !== 'number') return;
+    let elapsed = Math.round(Date.now() - shownAt);
+    window._intaBannerShownAt = undefined;
+    if (typeof intaConsentsObjectVariable !== 'undefined') {
+        intaConsentsObjectVariable.time_to_decision = elapsed;
+    }
+    if (window.dataLayer) {
+        window.dataLayer.push({ event: 'intastellar_consent_decision', time_to_decision_ms: elapsed, decision_type: decisionType });
+    }
+    return elapsed;
+}
+
+/* Ported from cb.dev.js. premium.js doesn't load the TCF/IAB machinery this checks for,
+   so the guard inside makes every call here a safe no-op — kept for parity so a future
+   TCF integration (or a site that injects __tcfapi itself) picks it up automatically. */
+function dispatchTCFConsentChangedIfAvailable(wasUserInteraction) {
+    if (typeof window.__tcfapiDispatchConsentChanged === 'function') {
+        let eventStatus = (wasUserInteraction === false || wasUserInteraction === 'tcloaded') ? 'tcloaded' : 'useractioncomplete';
+        window.__tcfapiDispatchConsentChanged(eventStatus);
+    }
+}
+
 function IntaSaveSettings() {
     recordTimeToDecision('save_settings');
     const FunctionalCheckbox = document.querySelector("#functional");
@@ -4984,13 +5056,14 @@ function IntaSaveSettings() {
             analytics_Storage: "granted"
         });
         accepted.push("staticsticCookies");
-        _paq.push(['setConsentGiven']);
+        // Matomo (only present on sites that load it themselves — window._paq = window._paq || [])
+        window._paq && window._paq.push(['setConsentGiven']);
     } else if (!StaticsCheckBox?.checked) {
         gtag('consent', 'update', {
             'analytics_storage': 'denied',
         })
 
-        _paq.push(['forgetConsentGiven']);
+        window._paq && window._paq.push(['forgetConsentGiven']);
 
         window.clarity && window.clarity('consentv2', {
             analytics_Storage: "denied"
