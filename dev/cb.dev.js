@@ -2760,7 +2760,7 @@ function intaCbApplyMainBannerDomAndInitialize() {
     let CompanyLogoName = cookieLogo == intCookieIcon ? "Cookie Icon" : `${document.domain} logo`;
 
     moreintHeader.innerHTML = `
-    ${typeof window?.INTA?.settings.logo != "undefined" ? '<img onerror="this.onerror=null; this.style.display:none;" class="intSettingsCompanyLogo" src="' + window?.INTA?.settings.logo + '" alt="' + CompanyLogoName + '" title="' + CompanyLogoName + '">' : ``}
+    ${(window.INTA.settings.design != "premium" && typeof window?.INTA?.settings.logo != "undefined") ? '<img onerror="this.onerror=null; this.style.display:none;" class="intSettingsCompanyLogo" src="' + window?.INTA?.settings.logo + '" alt="' + CompanyLogoName + '" title="' + CompanyLogoName + '">' : ``}
     ${(window.INTA.settings.design == "overlay" || window.INTA.settings.design == undefined || window.innerWidth < 900) ? `<section class="intSettingsPoweredBy">${poweredBy}</section>` : ""}
     `;
 
@@ -3320,16 +3320,6 @@ onWindowLoad(function () {
         document.querySelectorAll(".intCookie_ConsentLogo").forEach((logo) => {
             logo.src = window?.INTA?.settings.logo;
         });
-        /* - - - Helper function for learn more click - - - */
-        /* document.querySelectorAll(".intLearnMoreBtn").forEach((btn) => {
-            btn.addEventListener("click", function (e) {
-                learnMore(this);
-            })
-        }) */
-
-        /* if (window.INTA.settings.tcf) {
-            document.querySelector(".openVendorList").addEventListener("click", openVendorList);
-        } */
 
         window?.INTA?.settings?.partnerDomain?.forEach((domain) => {
             intaConsentsObjectVariable.sharingDomains.push(domain);

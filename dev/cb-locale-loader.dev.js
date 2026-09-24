@@ -173,10 +173,22 @@
             + ((window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2" && window.INTA.settings.logo && window.INTA.settings.logo != "")
                 ? '<img class="intSettingsCompanyLogo" src="' + window.INTA.settings.logo + '" alt="Intastellar Solutions, International">' : "")
             + generateCookieSettingsButton(C.saveSettings, acceptShort)
-            + '<button class="intLearnMoreBtn" onclick="learnMore(this)">' + intastellarShowHideDetailsText + '</button>'
-            + '<button class="openVendorList" onclick="openVendorList()">' + intaVendorListButtonLabel() + '</button>'
+            + '<button class="intLearnMoreBtn">' + intastellarShowHideDetailsText + '</button>'
+            + '<button class="openVendorList">' + intaVendorListButtonLabel() + '</button>'
             + (window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 ? generatePoweredBy() : "")
             + "</section>";
+        /* Wired via addEventListener rather than an onclick="" attribute: many production sites run a
+           Content-Security-Policy without 'unsafe-inline', which silently drops inline event handlers
+           (the buttons render but do nothing when clicked) while leaving script-attached listeners like
+           this one unaffected. */
+        var intaLearnMoreBtnEl = intastellarCookieButtons.querySelector(".intLearnMoreBtn");
+        if (intaLearnMoreBtnEl) {
+            intaLearnMoreBtnEl.addEventListener("click", function () { learnMore(this); });
+        }
+        var intaOpenVendorListBtnEl = intastellarCookieButtons.querySelector(".openVendorList");
+        if (intaOpenVendorListBtnEl) {
+            intaOpenVendorListBtnEl.addEventListener("click", function () { openVendorList(); });
+        }
         moreFooter.innerHTML = intaBuildCmpSettingsFooterHtml(C);
         window.intaCmpUiState = {
             message: builtMessage,

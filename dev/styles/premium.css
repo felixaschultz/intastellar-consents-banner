@@ -109,6 +109,22 @@
     font-size: 12px;
 }
 
+/* POPIA/LGPD/"Intastellar Solutions, International privacy policy" toggles reuse this class
+   but render as <button> elements (unlike the plain <a> policy link next to them) — without
+   this reset they keep the browser's native button chrome (grey fill, outset border, box padding)
+   instead of reading as a plain underlined text link. */
+button.intastellarCookie-settings__privacyLink {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
 /* Category detail panel (checkboxes + cookie category list) — a separate popout card,
    not an inline expansion of the compact consent card. Hidden by default; revealed by
    learnMore() adding "view" (the "Show details" button). Anchored to the top of the
@@ -593,9 +609,12 @@
     object-fit: contain;
 }
 
-/* .intLearnMoreBtn ("Show/Hide details") — a lighter-weight text button, distinct
-   from the primary accept/decline/settings actions above it. */
-.intLearnMoreBtn {
+/* .intLearnMoreBtn ("Show/Hide details") and .openVendorList ("Vendor list") — both
+   lighter-weight text buttons, distinct from the primary accept/decline/settings
+   actions above them. Un-styled <button>s here would otherwise keep the browser's
+   native button chrome (grey background, outset border, cramped padding). */
+.intLearnMoreBtn,
+.openVendorList {
     display: block;
     width: 100%;
     margin-top: 4px;
@@ -608,9 +627,11 @@
     text-decoration: underline;
     cursor: pointer;
     box-sizing: border-box;
+    font-family: inherit;
 }
 
-.intLearnMoreBtn:hover {
+.intLearnMoreBtn:hover,
+.openVendorList:hover {
     color: var(--inta-premium-fg);
 }
 
