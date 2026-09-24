@@ -4667,7 +4667,7 @@ function updateConsents(consent, type = null) {
         deleteAllCookies();
 
         window.allScripts.map((script) => {
-            console.log(script);
+            
             if (script.type == "statics") {
                 script.scripts.forEach((src) => {
                     document.querySelectorAll("script").forEach((script) => {
@@ -4804,10 +4804,7 @@ function updateConsents(consent, type = null) {
 }
 
 function saveINTCookieSettings(consent, type = null) {
-    recordTimeToDecision(consent || 'save_settings');
-    document.querySelector("html").classList.remove("noScroll");
-    document.querySelector(".intastellarCookieConstents").classList.remove("--active");
-    intaApplyCmpVisibilityFromCookie();
+    recordTimeToDecision(type || 'save_settings');
     const FunctionalCheckbox = document.querySelector("#functional");
     const StaticsCheckBox = document.querySelector("#statics");
     const MarketingCheckBox = document.querySelector("#marketing");
@@ -4860,6 +4857,7 @@ function saveINTCookieSettings(consent, type = null) {
             'ad_storage': 'denied'
         });
         window.clarity && window.clarity('consent', false);
+
         /* window.allScripts.map((script) => {
             if (script.type == "marketing") {
                 script.scripts.forEach((src) => {
@@ -4884,6 +4882,7 @@ function saveINTCookieSettings(consent, type = null) {
         window.clarity && window.clarity('consent', false);
 
         window._hsp.push(['doNotTrack', false]);
+
         /* window.allScripts.map((script) => {
             if (script.type == "functional") {
                 script.scripts.forEach((src) => {
@@ -4904,6 +4903,7 @@ function saveINTCookieSettings(consent, type = null) {
         gtag('consent', 'update', {
             'functionality_storage': 'denied',
         })
+
         /* window.allScripts.map((script) => {
             if (script.type == "functional") {
                 script.scripts.forEach((src) => {
@@ -4920,11 +4920,12 @@ function saveINTCookieSettings(consent, type = null) {
     }
 
     if (StaticsCheckBox?.checked) {
+        window["optimizely"].push({
+            "type": "optOut",
+            "isOptOut": false
+        });
         gtag('consent', 'update', {
             'analytics_storage': 'granted',
-            'ad_storage': 'granted',
-            'ad_user_data': 'granted',
-            'ad_personalization': 'granted',
             'url_passthrough': true,
         })
         window._hsp.push(['doNotTrack', false]);
@@ -4932,7 +4933,6 @@ function saveINTCookieSettings(consent, type = null) {
             ad_Storage: "denied",
             analytics_Storage: "granted"
         });
-
         /* window.allScripts.map((script) => {
             if (script.type == "statics") {
                 script.scripts.forEach((src) => {
@@ -4947,21 +4947,18 @@ function saveINTCookieSettings(consent, type = null) {
             }
         }) */
     } else {
-
+        window["optimizely"].push({
+            "type": "optOut",
+            "isOptOut": true
+        });
         window._hsp.push(['doNotTrack']);
         window._hsp.push(['revokeCookieConsent']);
         gtag('consent', 'update', {
             'analytics_storage': 'denied',
-            'ad_user_data': 'denied',
-            'ad_personalization': 'denied',
             'url_passthrough': true,
         })
 
-        window.uetq.push('consent', 'update', {
-            'ad_storage': 'denied'
-        });
         window.clarity && window.clarity('consent', false);
-
         /* window.allScripts.map((script) => {
             if (script.type == "statics") {
                 script.scripts.forEach((src) => {
@@ -4980,20 +4977,30 @@ function saveINTCookieSettings(consent, type = null) {
         functionalCookies: (FunctionalCheckbox?.checked) ? "checked" : false,
         advertisementCookies: (MarketingCheckBox?.checked) ? "checked" : false,
     };
-    dataLayer.push({ 'event': 'cookie_consent_update', 'cookie_consent': intaConsentsObjectVariable.consents });
+    window.intaCookieConsents = intaConsentsObjectVariable.consents;
+    /* One full-matrix Shopify sync (per-category calls removed — they caused multiple consent log entries). */
+    intaCbShopifySyncFromBannerCheckboxes();
+    dataLayer.push({
+        'event': 'cookie_consent_update',
+        'cookie_consent': intaConsentsObjectVariable.consents,
+        'time_to_decision_ms': intaConsentsObjectVariable.time_to_decision
+    });
     intaConsentsObjectVariable.time = new Date().getTime()
 
     document.cookie = int_hideCookieBannerName + "=__inta1." + encodeIntaConsentsObject(JSON.stringify(intaConsentsObjectVariable), randomIntFromInterval(20, 34)) + "; expires=" + cookieLifeTime +
         "; path=/; " +
         intCookieDomain +
         "";
+    intaApplyCmpVisibilityFromCookie();
     /*window.location.reload();*/
     updateConsents(consent, type);
     setTimeout(() => {
         restartObserver();
     }, 1000);
-    document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-        .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+    if (document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]") != null) {
+        document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
+            .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+    }
     dispatchTCFConsentChangedIfAvailable(true);
 }
 
