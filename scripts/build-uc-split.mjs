@@ -51,11 +51,11 @@ const BOOT_RANGES = [
     [1742, 1770],
     [2019, 2311], // +49 lines: TCF encoder rewrite (IsRangeEncoding, VLI section, PublisherRestrictions); +1 analytics allowlist entry
     [2381, 2408],
-    [4498, 4749],
-    [5025, 5334],
+    [4524, 4775], // was 4498-4749; +26 lines from new locale slug entries inserted at line 4299
+    [5051, 5360], // was 5025-5334; +26 lines from new locale slug entries inserted at line 4299
 ];
 
-const CORE_SKIP_LINES = new Set([5523, 5524, 5525]);
+const CORE_SKIP_LINES = new Set([5549, 5550, 5551]); // was 5523-5525; +26 lines from new locale slug entries inserted at line 4299
 
 function lineDepth(line) {
     let d = 0;
