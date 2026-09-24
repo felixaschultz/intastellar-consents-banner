@@ -2656,11 +2656,10 @@ intaCookieBannerStyle.innerHTML = "" +
     ".intastellarCookieConstents{border-top: 3px solid " + cookieColor + " !important;}" +
     ".intastellarCookie-settings__container{border-top: 3px solid " + cookieColor + " !important;}" +
     ".intastellarCookieConstents__content-footer.view{border-top: 3px solid " + cookieColor + " !important;}" +
+    ".intCookie_ConsentContainer-content{border-top: 3px solid " + cookieColor + " !important;}" +
     ".intastellarCookieConstents__content-footer,.intastellarCookieConstents__content{border-color: " + cookieColorSoftBorder + ";}" +
     ".intastellarCookie-settings__btn.--bg{background-color:" + cookieColorSoftBg + " !important;color: " + cookieColor + " !important;border: 1px solid " + cookieColorSoftBorder + " !important;}" +
     ".intastellarCookie-settings__btn.--bg:hover{background-color: " + cookieColor + " !important;color: #fff !important;}" +
-    ".intCookie_ConsentLogo-container{border-color: #fff; background: linear-gradient(#fff 0 0) padding-box, " + cookieColor + " border-box;}" +
-    ".intCookie_ConsentContainer-content{border-color: #fff; background: linear-gradient(#fff 0 0) padding-box, " + cookieColor + " border-box;}" +
     ".intastellarCookie-settings__btn.--changePermission{background: transparent !important; color: " + cookieColor + " !important; border: 1px solid " + cookieColorSoftBorder + " !important; transition: background .2s ease-in-out, color .2s ease-in-out; width: max-content; margin-inline: auto !important;}" +
     ".intastellarCookie-settings__btn.--changePermission:hover{background: " + cookieColorSoftBg + " !important; color: " + cookieColor + " !important; border-color: " + cookieColor + " !important;}" +
     ".intCookieSetting__checkbox:checked ~ .checkmark{background: " + checkMarkColor + ";}" +
