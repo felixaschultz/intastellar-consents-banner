@@ -4837,16 +4837,34 @@ function intaTriggerCookieBannerScan(domain) {
         });
 }
 
-function intaApplyCookieBannerApiData(data) {
-    var categories = { functional: [], statistics: [], marketing: [] };
+/* Maps the live cookie-banner-scan API's category keys onto our internal category
+   keys ("analytics" -> "statistics"). "security" has no matching UI category (yet)
+   and is intentionally left out of the badges/lists below. */
+var INTA_API_CATEGORY_TO_INTERNAL = { necessary: 'necessary', functional: 'functional', analytics: 'statistics', statistics: 'statistics', marketing: 'marketing' };
 
-    if (Array.isArray(data)) {
+function intaApplyCookieBannerApiData(data) {
+    var categories = { necessary: [], functional: [], statistics: [], marketing: [] };
+    var counts = { necessary: null, functional: null, statistics: null, marketing: null };
+
+    var apiCategories = data && typeof data === 'object' && !Array.isArray(data) ? data.categories : null;
+    if (apiCategories && typeof apiCategories === 'object') {
+        /* Real API shape: { categories: { necessary|functional|analytics|marketing|security: { count, cookies, vendors } } }
+           `count` is server-computed — use it directly instead of re-deriving it from the vendor list. */
+        Object.keys(apiCategories).forEach(function (apiCat) {
+            var internalCat = INTA_API_CATEGORY_TO_INTERNAL[apiCat];
+            if (!internalCat) return;
+            var entry = apiCategories[apiCat] || {};
+            var vendors = Array.isArray(entry.vendors) ? entry.vendors : [];
+            categories[internalCat] = vendors;
+            counts[internalCat] = (typeof entry.count === 'number') ? entry.count : intaCountCookiesInList(vendors);
+        });
+    } else if (Array.isArray(data)) {
         data.forEach(function (vendor) {
             var cat = String(vendor.type || vendor.category || 'marketing').toLowerCase();
             if (categories[cat]) categories[cat].push(vendor);
             else categories.marketing.push(vendor);
         });
-    } else {
+    } else if (data) {
         if (Array.isArray(data.functional))  categories.functional  = data.functional;
         if (Array.isArray(data.statistics))  categories.statistics  = data.statistics;
         if (Array.isArray(data.marketing))   categories.marketing   = data.marketing;
@@ -4859,9 +4877,19 @@ function intaApplyCookieBannerApiData(data) {
     Object.keys(categories).forEach(function (cat) {
         var el = document.getElementById('inta-cookie-list-' + cat);
         var list = categories[cat];
-        intaSetCookieCountBadge(cat, intaCountCookiesInList(list));
+        var count = (counts[cat] !== null) ? counts[cat] : intaCountCookiesInList(list);
+        intaSetCookieCountBadge(cat, count);
         if (!el) return;
-        el.innerHTML = list.length ? listAllCookies(list) : '';
+        /* listAllCookies() still expects the older vendor.domains/vendor.cookies[].cookie shape
+           and can throw on the live API's vendor.hosts/vendor.cookies[].name shape — isolate that
+           so one category's list-rendering failure can't take down the count badge for the rest. */
+        try {
+            el.innerHTML = list.length ? listAllCookies(list) : '';
+        } catch (e) {
+            if (typeof intastellarDevMode !== "undefined" && intastellarDevMode) {
+                console.error('[intaApplyCookieBannerApiData] listAllCookies failed for "' + cat + '":', e);
+            }
+        }
     });
 }
 

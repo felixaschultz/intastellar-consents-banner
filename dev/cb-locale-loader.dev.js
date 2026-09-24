@@ -217,7 +217,7 @@
             + '<section class="intastellar_privacyPolicy"></section>'
             + '<article class="intReadMore">'
             + '<section class="required">' + uidHtml
-            + '<h3 class="intaExpandCookieList">' + C.necessary.title + ' <span class="intaCookieCount">(' + intaCountCookiesInList(inta_requiredCookieList) + ')</span> <i class="intastellar__arrow"></i></h3><p>' + C.necessary.description + '</p>'
+            + '<h3 class="intaExpandCookieList">' + C.necessary.title + ' <span class="intaCookieCount" id="inta-cookie-count-necessary">(' + intaCountCookiesInList(inta_requiredCookieList) + ')</span> <i class="intastellar__arrow"></i></h3><p>' + C.necessary.description + '</p>'
             + '<article class="intaCookieListOverview">' + listAllCookies(inta_requiredCookieList) + "</article></section>"
             + "<section><h3 class=\"intaExpandCookieList\">" + C.functional.title + ' <span class="intaCookieCount" id="inta-cookie-count-functional"></span> <i class="intastellar__arrow"></i></h3><p>' + C.functional.description + '</p>'
             + '<article class="intaCookieListOverview" id="inta-cookie-list-functional"></article></section>'
