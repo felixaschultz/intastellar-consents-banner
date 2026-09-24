@@ -10,7 +10,7 @@
         description: "Funksjonelle informasjonskapsler gjør det mulig å lagre informasjon som endrer måten nettstedet vises eller fungerer på. For eksempel ditt foretrukne språk eller region."
     },
     statisic: {
-        title: "Statistikk",
+        title: "Analyse",
         description: "Vi ønsker å forbedre brukervennligheten og ytelsen til nettstedene våre kontinuerlig. Derfor bruker vi analyse teknologier (inkludert informasjonskapsler) som måler og evaluerer pseudonymt hvilke funksjoner og innhold på nettstedene våre som brukes, hvordan og hvor ofte. På denne bakgrunn kan vi forbedre nettstedene våre for brukerne."
     },
     marketing: {
@@ -33,7 +33,7 @@
             + "<p>Vi og våre forretningspartnere bruker teknologi, inkludert informasjonskapsler, for å samle inn informasjon om deg for ulike formål, inkludert:</p>"
             + "<ol>"
             + "<li>Funksjonell</li>"
-            + "<li>Statistikk</li>"
+            + "<li>Analyse</li>"
             + "<li>Markedsføring</li>"
             + "</ol>"
             + "<p>Ved å klikke på \"Godta\", gir du ditt samtykke til alle disse formålene. Du kan også velge å spesifisere formålene du samtykker til ved å krysse av i boksen ved siden av formålet og klikke på \"Lagre innstillinger\".</p>"

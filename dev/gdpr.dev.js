@@ -4299,6 +4299,23 @@ function intaUcResolveCmpLocaleSlug() {
             if (lang === "afrikaans") return "af";
             if (lang === "arabic") return "ar";
             if (lang === "estonian") return "et";
+            if (lang === "hindi") return "hi";
+            if (lang === "turkish") return "tr";
+            if (lang === "vietnamese") return "vi";
+            if (lang === "indonesian") return "id";
+            if (lang === "filipino") return "tl";
+            if (lang === "malay") return "ms";
+            if (lang === "ukrainian") return "uk";
+            if (lang === "hebrew") return "he";
+            if (lang === "czech") return "cs";
+            if (lang === "slovak") return "sk";
+            if (lang === "hungarian") return "hu";
+            if (lang === "romanian") return "ro";
+            if (lang === "bulgarian") return "bg";
+            if (lang === "croatian") return "hr";
+            if (lang === "slovenian") return "sl";
+            if (lang === "lithuanian") return "lt";
+            if (lang === "latvian") return "lv";
             return lang.split("-")[0];
         }
     }

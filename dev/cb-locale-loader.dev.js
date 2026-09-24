@@ -35,7 +35,13 @@
         estonian: "et", et: "et", "et-ee": "et",
         vietnamese: "vi", vi: "vi", "vi-vn": "vi",
         indonesian: "id", id: "id", "id-id": "id",
-        malay: "ms", ms: "ms", "ms-my": "ms"
+        malay: "ms", ms: "ms", "ms-my": "ms",
+        filipino: "tl", tl: "tl", "tl-ph": "tl",
+        slovak: "sk", sk: "sk", "sk-sk": "sk",
+        croatian: "hr", hr: "hr", "hr-hr": "hr",
+        slovenian: "sl", sl: "sl", "sl-si": "sl",
+        lithuanian: "lt", lt: "lt", "lt-lt": "lt",
+        latvian: "lv", lv: "lv", "lv-lv": "lv"
     };
 
     function intaNormalizeLocaleToken(v) {
@@ -255,7 +261,7 @@
                     description: "Functional cookies allow us to store information that alters how the website appears or behaves, such as your preferred language or region."
                 },
                 statisic: {
-                    title: "Statics",
+                    title: "Analytics",
                     description: "We strive to continuously enhance the user experience and performance of our website. To achieve this, we use analytical technologies (including cookies) that pseudonymously track and assess how, when, and which features and content of our website are used. This data helps us improve our site for users."
                 },
                 marketing: {

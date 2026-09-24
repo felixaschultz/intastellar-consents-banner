@@ -10,7 +10,7 @@
         description: "Funksionele koekies maak dit moontlik om inligting te stoor wat die voorkoms of gedrag van die webwerf verander. Byvoorbeeld, u voorkeurtaal of -streek."
     },
     statisic: {
-        title: "Statistiek",
+        title: "Analise",
         description: "Ons wil die bruikbaarheid en prestasie van ons webwerwe voortdurend verbeter. Daarom gebruik ons analise tegnologieë (insluitend koekies) wat pseudoniem meet en evalueer watter funksies en inhoud van ons webwerwe gebruik word, hoe en hoe gereeld. Op hierdie basis kan ons ons webwerwe vir gebruikers verbeter."
     },
     marketing: {

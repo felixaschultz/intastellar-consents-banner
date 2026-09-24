@@ -10,7 +10,7 @@
         description: "I cookie funzionali consentono di salvare informazioni che modificano l'aspetto o il comportamento del sito web. Ad esempio, la tua lingua o regione preferita."
     },
     statisic: {
-        title: "Statistiche",
+        title: "Analitica",
         description: "Vogliamo migliorare costantemente l'usabilità e le prestazioni dei nostri siti web. Per questo motivo utilizziamo tecnologie di analisi (compresi i cookie) che misurano e valutano in modo pseudonimo quali funzioni e contenuti dei nostri siti web vengono utilizzati, come e con quale frequenza. Su questa base possiamo migliorare i nostri siti web per gli utenti."
     },
     marketing: {
@@ -33,7 +33,7 @@
             + "<p>Noi e i nostri partner commerciali utilizziamo tecnologie, tra cui i cookie, per raccogliere informazioni su di te per vari scopi, tra cui:</p>"
             + "<ol>"
             + "<li>Funzionale</li>"
-            + "<li>Statistiche</li>"
+            + "<li>Analitica</li>"
             + "<li>Pubblicità</li>"
             + "</ol>"
             + "<p>Cliccando su \"Accetta\", dai il tuo consenso per tutti questi scopi. Puoi anche decidere a quali scopi acconsentire spuntando la casella accanto allo scopo e cliccando su \"Salva impostazioni\".</p>"

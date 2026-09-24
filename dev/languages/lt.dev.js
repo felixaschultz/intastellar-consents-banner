@@ -1,0 +1,44 @@
+(function () {
+    var categories = {
+    saveSettings: "Atmesti viską",
+    necessary: {
+        title: "Būtini",
+        description: "Būtinos interneto technologijos ir slapukai yra būtini, kad mūsų svetainė būtų jums prieinama ir veiktų tinkamai. Jie leidžia naudotis pagrindinėmis funkcijomis, tokiomis kaip navigacija, teisingas rodymas naršyklėje ir sutikimo nuostatų valdymas. Be šių technologijų ir slapukų mūsų svetainė negali tinkamai veikti."
+    },
+    functional: {
+        title: "Funkciniai",
+        description: "Funkciniai slapukai leidžia mums saugoti informaciją, keičiančią svetainės išvaizdą ar veikimą, pavyzdžiui, jūsų pageidaujamą kalbą ar regioną."
+    },
+    statisic: {
+        title: "Analitika",
+        description: "Nuolat siekiame gerinti naudotojų patirtį ir mūsų svetainės veikimą. Tam naudojame analitines technologijas (įskaitant slapukus), kurios pseudonimiškai matuoja ir vertina, kurios mūsų svetainės funkcijos ir turinys naudojami, kaip ir kaip dažnai. Šie duomenys padeda mums tobulinti svetainę naudotojams."
+    },
+    marketing: {
+        title: "Rinkodara",
+        description: "Naudojame patikimų partnerių interneto technologijas (įskaitant slapukus), kad pateiktume jums specialiai pritaikytą turinį ir reklamas svetainėse bei socialinių tinklų platformose. Šis turinys parenkamas ir rodomas atsižvelgiant į jūsų naršymo elgseną. Reklamos ir rinkodaros slapukai naudojami rodyti aktualias reklamas ir kampanijas, sekti lankytojus įvairiose svetainėse ir rinkti informaciją, kad būtų galima pateikti personalizuotas reklamas."
+    }
+};
+    var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "kairiajame" : "dešiniajame";
+    window.__intaCmpLocalePayload = {
+        slug: "lt",
+        cookieSettingsLabel: "Slapukų nustatymai",
+        showHideDetails: "Rodyti išsamią informaciją",
+        acceptLabel: "Sutinku",
+        acceptShortLabel: "Sutinku",
+        declineLabel: "Atmesti viską",
+        settingsLabel: "Nustatymai",
+        policyLinkLabel: "Mūsų privatumo ir slapukų politika",
+        bannerMessage: "Priimdami visus slapukus, jūs padedate " + document.domain + " sukurti geresnį sprendimą jums.</p><p>Pasirinkite, ar norite leisti tik būtinus slapukus, ar leisti visus slapukus.",
+        settingsMessage: "<h3 style=\"    font-size: 25px;\">Jūs turite kontrolę</h3>"
+            + "<p>Mes ir mūsų patikimi partneriai naudojame technologijas, tokias kaip slapukai, informacijai rinkti įvairiais tikslais, įskaitant:</p>"
+            + "<ol>"
+            + "<li>Funkciniai</li>"
+            + "<li>Analitika</li>"
+            + "<li>Rinkodara</li>"
+            + "</ol>"
+            + "<p>Spustelėję „Sutinku“, sutinkate su visais šiais tikslais. Taip pat galite pasirinkti konkrečius tikslus, su kuriais sutinkate, pažymėdami žymimuosius langelius ir spustelėdami „Išsaugoti nustatymus“.</p>"
+            + "<p>Savo sutikimą galite atšaukti bet kuriuo metu spustelėję mažą piktogramą apatiniame " + arrangeWord + " svetainės kampe.</p>",
+        settingsMessageSuffix: '<button onClick="showPrivacy()" class="intastellarCookie-settings__privacyLink">Intastellar Solutions, International privatumo politika</button>',
+        categories: categories
+    };
+})();
