@@ -2680,7 +2680,7 @@ let cookieBannerStyles = {
     banner: "banner.css",
     bannerV2: "bannerV2.css",
     overlay: "overlay.css",
-    floating: "floating.css"
+    premium: "premium.css"
 };
 
 window.INTA.settings.language = typeof window.INTA?.settings?.language === "undefined" ?
@@ -3095,12 +3095,12 @@ function intaExperimentChannelMatches(exp, expKey) {
 
 let intastellarCreateBanner = document.createElement("script");
 intastellarCreateBanner.src = "https://consents.cdn.intastellarsolutions.com/cb.js";
-if (window.INTA.settings.design === "floating") {
-    intastellarCreateBanner.src = "https://consents.cdn.intastellarsolutions.com/floating.js";
+if (window.INTA.settings.design === "premium") {
+    intastellarCreateBanner.src = "https://consents.cdn.intastellarsolutions.com/premium.js";
 }
 if (intastellarDevMode) {
-    if (window.INTA.settings.design === "floating") {
-        intastellarCreateBanner.src = "../../dev/styles/floating.js";
+    if (window.INTA.settings.design === "premium") {
+        intastellarCreateBanner.src = "../../dev/styles/premium.js";
     } else {
         intastellarCreateBanner.src = "../../dev/cb.dev.js";
     }
