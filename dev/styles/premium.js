@@ -118,7 +118,7 @@ function intaApplyCmpVisibilityFromCookie() {
     var overlay = document.querySelector('.intastellarCookieConstents');
     var root = document.querySelector('intastellarconsents');
     var hasConsent = intaHasStoredConsentCookie();
-    var isFloating = window.INTA && window.INTA.settings && window.INTA.settings.design === 'floating';
+    var isFloating = window.INTA && window.INTA.settings && window.INTA.settings.design === 'premium';
     var design = window.INTA && window.INTA.settings && window.INTA.settings.design;
 
     if (hasConsent) {
@@ -516,7 +516,7 @@ function setIntastellarPartnerDomain() {
 function generatePoweredBy() {
     if (window.location.host.indexOf("intastellar") == -1) {
         let intastellarLogo = intastellarLogoLight;
-        if (window.INTA.settings.design == "bannerV2" || window.INTA.settings.design == "floating") {
+        if (window.INTA.settings.design == "bannerV2" || window.INTA.settings.design == "premium") {
             intastellarLogo = intastellarLogoDark;
         }
         poweredBy = "<span class='intastellarCookie-settings__poweredBy' alt='This cookie banner is powered by Intastellar Consents Solutions'>Powered by <a class='intastellarCookie-settings__poweredByLink' href='https://www.intastellar.eu' target='_blank' rel='noopener'><img class='intastellarCookie-settings__poweredByImg' width='100px' height='100px' src='" + intastellarLogo + "' alt='Intastellar Solutions, International'></a></span>";
@@ -809,7 +809,7 @@ const settingsMessagesLanguages = {
  * refactor (see dev/cb-locale-loader.dev.js) and still reads category copy from a global
  * `intastellarSupportedLanguages.<language>.<category>` object that no longer exists
  * anywhere else in the codebase — every access below used to throw a ReferenceError,
- * so the floating banner never rendered at all, in any language.
+ * so the premium banner never rendered at all, in any language.
  * This stub keeps every language key resolving to the same English category copy so the
  * banner renders instead of crashing. It is not a real localization of these labels —
  * porting this file onto the modern locale-loader (like cb.dev.js) is a separate task.
@@ -856,14 +856,14 @@ if (intastellarCookieLanguage != null) {
         + `<section class="intCookieSaveSettingsContainer">
         ${generateCookieSettingsButton(intastellarSupportedLanguages.danish.saveSettings, 'Accepter')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = generateCookieButtons('Accepter', 'Afvis', 'Indstillinger');
         intastellarCookieButtons.innerHTML = `<section class="intCookieSaveSettingsContainer">
         ${(window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2" && window.INTA.settings.logo && window.INTA.settings.logo != "") ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.danish.saveSettings, 'Accepter')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)">${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         moreFooter.innerHTML =
             `
@@ -955,7 +955,7 @@ if (intastellarCookieLanguage != null) {
         ${(window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2" && window.INTA.settings.logo && window.INTA.settings.logo != "") ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.german.saveSettings, 'Akzeptieren')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
         ${window.INTA.settings.logo && window.INTA.settings.logo != "" ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
@@ -1054,7 +1054,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.english.saveSettings, 'Accept')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
         ${window.INTA.settings.logo && window.INTA.settings.logo != "" ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
@@ -1152,7 +1152,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.spanish.saveSettings, 'Aceptar')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
         ${window.INTA.settings.logo && window.INTA.settings.logo != "" ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
@@ -1246,7 +1246,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.french.saveSettings, 'Accepter')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
         ${window.INTA.settings.logo && window.INTA.settings.logo != "" ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
@@ -1343,7 +1343,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.swedish.saveSettings, 'Acceptera')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
         ${window.INTA.settings.logo && window.INTA.settings.logo != "" ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
@@ -1441,7 +1441,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.norwegian.saveSettings, 'Godta')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
         ${window.INTA.settings.logo && window.INTA.settings.logo != "" ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
@@ -1452,7 +1452,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.danish.saveSettings, 'Accept')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
 
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
@@ -1549,7 +1549,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.dutch.saveSettings, 'Accepteren')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
         ${window.INTA.settings.logo && window.INTA.settings.logo != "" ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
@@ -1645,7 +1645,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.italian.saveSettings, 'Accetta')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
         ${window.INTA.settings.logo && window.INTA.settings.logo != "" ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
@@ -1741,7 +1741,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.finnish.saveSettings, 'Hyväksy')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
         ${window.INTA.settings.logo && window.INTA.settings.logo != "" ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
@@ -1837,7 +1837,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.russian.saveSettings, 'Принять')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
         ${window.INTA.settings.logo && window.INTA.settings.logo != "" ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
@@ -1933,7 +1933,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.polish.saveSettings, 'Zaakceptuj')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
         ${window.INTA.settings.logo && window.INTA.settings.logo != "" ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
@@ -2029,7 +2029,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.afrikaans.saveSettings, 'Aanvaar')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
         ${window.INTA.settings.logo && window.INTA.settings.logo != "" ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
@@ -2125,7 +2125,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.korean.saveSettings, '동의')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
         ${window.INTA.settings.logo && window.INTA.settings.logo != "" ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
@@ -2222,7 +2222,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.arabic.saveSettings, 'قبول')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
         ${window.INTA.settings.logo && window.INTA.settings.logo != "" ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
@@ -2319,7 +2319,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.estonian.saveSettings, 'Nõustu')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
         ${window.INTA.settings.logo && window.INTA.settings.logo != "" ? `<img class="intSettingsCompanyLogo" src="${window.INTA.settings.logo}" alt="Intastellar Solutions, International">` : ""}
@@ -2414,7 +2414,7 @@ if (intastellarCookieLanguage != null) {
                 : ""}
         ${generateCookieSettingsButton(intastellarSupportedLanguages.danish.saveSettings, 'Accept')}
         <button class="intLearnMoreBtn" onclick="learnMore(this)" >${intastellarShowHideDetailsText}</button>
-        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "floating" || window.INTA.settings.design == "floating" ? generatePoweredBy() : "")}
+        ${(window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 || window.INTA.settings.design == "premium" || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")}
     </section>`;
 
         cookieBtn = (window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2") + `
@@ -2585,8 +2585,8 @@ let withText = `
     height: 55px;
 }
 `;
-/* Note: unlike the immersive designs, the floating card's body text color is intentionally
-   NOT forced here — it's owned by floating.css so it can follow prefers-color-scheme. */
+/* Note: unlike the immersive designs, the premium card's body text color is intentionally
+   NOT forced here — it's owned by premium.css so it can follow prefers-color-scheme. */
 let position = "--right";
 let text = "";
 let cookieSize = "100%";
@@ -2647,9 +2647,9 @@ if (textSettings) {
     text = " <span class=''>Cookie notice</span>";
     cookieSize = "25%";
 }
-/* Gentle brand-color treatment for the floating design: tinted/outlined buttons and a thin
+/* Gentle brand-color treatment for the premium design: tinted/outlined buttons and a thin
    top-border accent instead of the solid, full-strength color blocks the other designs use.
-   Background color is intentionally left to floating.css (device light/dark theme), not forced here. */
+   Background color is intentionally left to premium.css (device light/dark theme), not forced here. */
 let cookieColorSoftBg = pSBC(0.88, cookieColor);   // heavily lightened tint for button backgrounds
 let cookieColorSoftBorder = pSBC(0.55, cookieColor); // lightened tint for resting borders
 intaCookieBannerStyle.innerHTML = "" +
@@ -2670,7 +2670,7 @@ intaCookieBannerStyle.innerHTML = "" +
     ".intastellarCookie-settingsMoreContainer{display:none;position: fixed; top: 50%; left: 50%; background: #fff; padding: 15px;z-index: 1000; transform: translate(-50%,-50%);}" +
     withText;
 /* Note: main text colors (body copy, headings) are intentionally NOT forced here —
-   floating.css owns them via prefers-color-scheme so light/dark mode works correctly. */
+   premium.css owns them via prefers-color-scheme so light/dark mode works correctly. */
 intaGetDocumentHead().appendChild(intaCookieBannerStyle);
 
 /* Checking for CCPA "Do not sell my personal data" is enabled if so create an info link on the right side of the screen  */
@@ -2745,7 +2745,7 @@ bannerContent.innerHTML = '<img class="intCookieIcon-openSettings" style="filter
 banner.appendChild(bannerContent);
 /* moreFooter (settings checkboxes + category list) must live inside the card, not as a
    loose top-level sibling — otherwise it renders inline in the page instead of inside the
-   floating panel, and never gets hidden/shown along with the rest of the card. */
+   premium panel, and never gets hidden/shown along with the rest of the card. */
 intastellarCookieConstents__Container.appendChild(moreFooter);
 moreSettings.appendChild(moreSettingsContent);
 intaconsents.classList.add('inta-cmp-not-ready');

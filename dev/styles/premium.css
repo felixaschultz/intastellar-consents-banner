@@ -1,38 +1,38 @@
 /*
- * "floating" CMP design — a small, non-immersive corner card.
+ * "premium" CMP design — a small, non-immersive corner card.
  * No full-screen scrim/overlay: the banner floats above the page content,
  * anchored to a bottom corner, and follows the visitor's OS light/dark theme.
  *
  * Corner side is driven by `window.INTA.settings.arrange`:
  *   arrange: "ltr" -> floats bottom-left  (".../*--otherSide" modifier present)
  *   arrange: "rtl" (default) -> floats bottom-right
- * (see dev/styles/floating.js, which adds the --otherSide modifier for "ltr")
+ * (see dev/styles/premium.js, which adds the --otherSide modifier for "ltr")
  *
- * Brand color (window.INTA.settings.color) is applied gently by floating.js via an
+ * Brand color (window.INTA.settings.color) is applied gently by premium.js via an
  * inline <style> tag (tinted button backgrounds, a thin top-border accent) — this
  * file only owns layout, size, background/text theme, and chrome (shadow, radius).
  */
 
 :root {
     color-scheme: light dark;
-    --inta-floating-bg: #ffffff;
-    --inta-floating-fg: #1a1a1a;
-    --inta-floating-fg-muted: #64646b;
-    --inta-floating-border: rgba(20, 20, 30, 0.09);
-    --inta-floating-shadow: 0 1px 2px rgba(20, 20, 30, 0.04), 0 8px 24px rgba(20, 20, 30, 0.10), 0 24px 60px rgba(20, 20, 30, 0.12);
-    --inta-floating-radius: 18px;
-    --inta-floating-gap: 24px;
-    --inta-floating-width: 360px;
-    --inta-floating-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --inta-premium-bg: #ffffff;
+    --inta-premium-fg: #1a1a1a;
+    --inta-premium-fg-muted: #64646b;
+    --inta-premium-border: rgba(20, 20, 30, 0.09);
+    --inta-premium-shadow: 0 1px 2px rgba(20, 20, 30, 0.04), 0 8px 24px rgba(20, 20, 30, 0.10), 0 24px 60px rgba(20, 20, 30, 0.12);
+    --inta-premium-radius: 18px;
+    --inta-premium-gap: 24px;
+    --inta-premium-width: 360px;
+    --inta-premium-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --inta-floating-bg: #1c1c1f;
-        --inta-floating-fg: #f2f2f4;
-        --inta-floating-fg-muted: #97979e;
-        --inta-floating-border: rgba(255, 255, 255, 0.09);
-        --inta-floating-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35), 0 24px 60px rgba(0, 0, 0, 0.45);
+        --inta-premium-bg: #1c1c1f;
+        --inta-premium-fg: #f2f2f4;
+        --inta-premium-fg-muted: #97979e;
+        --inta-premium-border: rgba(255, 255, 255, 0.09);
+        --inta-premium-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35), 0 24px 60px rgba(0, 0, 0, 0.45);
     }
 }
 
@@ -41,20 +41,20 @@
 .intastellarCookieConstents {
     position: fixed;
     z-index: 2147483000;
-    bottom: var(--inta-floating-gap);
-    right: var(--inta-floating-gap);
+    bottom: var(--inta-premium-gap);
+    right: var(--inta-premium-gap);
     left: auto;
-    width: calc(100% - (var(--inta-floating-gap) * 2));
-    max-width: var(--inta-floating-width);
-    max-height: calc(100vh - (var(--inta-floating-gap) * 2));
+    width: calc(100% - (var(--inta-premium-gap) * 2));
+    max-width: var(--inta-premium-width);
+    max-height: calc(100vh - (var(--inta-premium-gap) * 2));
     overflow: hidden auto;
-    background: var(--inta-floating-bg);
-    color: var(--inta-floating-fg);
-    border-radius: var(--inta-floating-radius);
-    box-shadow: var(--inta-floating-shadow);
-    border: 1px solid var(--inta-floating-border);
+    background: var(--inta-premium-bg);
+    color: var(--inta-premium-fg);
+    border-radius: var(--inta-premium-radius);
+    box-shadow: var(--inta-premium-shadow);
+    border: 1px solid var(--inta-premium-border);
     box-sizing: border-box;
-    font-family: var(--inta-floating-font);
+    font-family: var(--inta-premium-font);
     /* The card must set its own alignment explicitly — it must never inherit
        text-align from the host page's <body>/<html> (center, right, whatever the
        site itself uses elsewhere), only ever its own left-aligned default. */
@@ -63,7 +63,7 @@
 
 .intastellarCookieConstents--otherSide {
     right: auto;
-    left: var(--inta-floating-gap);
+    left: var(--inta-premium-gap);
 }
 
 .intastellarCookieConstents__content {
@@ -73,18 +73,18 @@
 }
 
 .intastellarCookieConstents__content-main {
-    color: var(--inta-floating-fg);
+    color: var(--inta-premium-fg);
     font-size: 13px;
     line-height: 1.55;
     text-align: left;
 }
 
-/* !important here matches the specificity floating.js's own inline <style> tag uses for
+/* !important here matches the specificity premium.js's own inline <style> tag uses for
    this content, and is needed to win the cascade regardless of injection order. */
 .intastellarCookieConstents__content-main p,
 .intastellarCookieConstents__content-main h3,
 .intastellarCookieConstents__content-main ol li {
-    color: var(--inta-floating-fg) !important;
+    color: var(--inta-premium-fg) !important;
     text-align: left !important;
 }
 
@@ -105,7 +105,7 @@
 }
 
 .intastellarCookieConstents__content-main .intastellarCookie-settings__privacyLink {
-    color: var(--inta-floating-fg-muted) !important;
+    color: var(--inta-premium-fg-muted) !important;
     font-size: 12px;
 }
 
@@ -122,33 +122,33 @@
     display: block;
     position: fixed;
     z-index: 2147483001;
-    top: var(--inta-floating-gap);
+    top: var(--inta-premium-gap);
     bottom: auto;
-    right: var(--inta-floating-gap);
+    right: var(--inta-premium-gap);
     left: auto;
-    width: calc(100% - (var(--inta-floating-gap) * 2));
-    max-width: var(--inta-floating-width);
-    max-height: calc(100vh - (var(--inta-floating-gap) * 2));
+    width: calc(100% - (var(--inta-premium-gap) * 2));
+    max-width: var(--inta-premium-width);
+    max-height: calc(100vh - (var(--inta-premium-gap) * 2));
     overflow-y: auto;
     box-sizing: border-box;
     padding: 44px 20px 20px;
-    background: var(--inta-floating-bg);
-    color: var(--inta-floating-fg);
-    border-radius: var(--inta-floating-radius);
-    box-shadow: var(--inta-floating-shadow);
-    border: 1px solid var(--inta-floating-border);
-    border-top: 3px solid var(--inta-floating-border);
-    font-family: var(--inta-floating-font);
+    background: var(--inta-premium-bg);
+    color: var(--inta-premium-fg);
+    border-radius: var(--inta-premium-radius);
+    box-shadow: var(--inta-premium-shadow);
+    border: 1px solid var(--inta-premium-border);
+    border-top: 3px solid var(--inta-premium-border);
+    font-family: var(--inta-premium-font);
     text-align: left;
 }
 
 .intastellarCookieConstents--otherSide .intastellarCookieConstents__content-footer.view {
     right: auto;
-    left: var(--inta-floating-gap);
+    left: var(--inta-premium-gap);
 }
 
 .intaExpandCookieList {
-    color: var(--inta-floating-fg);
+    color: var(--inta-premium-fg);
     font-size: 14px;
     cursor: pointer;
     display: flex;
@@ -160,16 +160,16 @@
 .intastellarCookieConstents__content-footer p,
 .intaCookieListOverview-heading,
 .intaCookieList-CookieName {
-    color: var(--inta-floating-fg);
+    color: var(--inta-premium-fg);
 }
 
 .intastellarCookieConstents__content-footer .intaCookieCount,
 .intastellarCookieConstents__content-footer .intastellarCookieConstents__content-main + p {
-    color: var(--inta-floating-fg-muted);
+    color: var(--inta-premium-fg-muted);
 }
 
 .intaCookieCount {
-    color: var(--inta-floating-fg-muted);
+    color: var(--inta-premium-fg-muted);
     font-weight: normal;
     font-size: 12px;
 }
@@ -178,8 +178,8 @@
     display: inline-block;
     width: 8px;
     height: 8px;
-    border-right: 1.5px solid var(--inta-floating-fg-muted);
-    border-bottom: 1.5px solid var(--inta-floating-fg-muted);
+    border-right: 1.5px solid var(--inta-premium-fg-muted);
+    border-bottom: 1.5px solid var(--inta-premium-fg-muted);
     transform: rotate(45deg);
     transition: transform 0.15s ease-in-out;
 }
@@ -215,7 +215,7 @@
 }
 
 /* Same general shape as the other designs' buttons (overlay.css) — full-width,
-   stacked — just smaller/quieter and with the floating design's gentle tint colors
+   stacked — just smaller/quieter and with the premium design's gentle tint colors
    instead of solid brand-color blocks; this card is meant to read as compact chrome,
    not a full-screen dialog. */
 .intastellarCookie-settings__btn {
@@ -231,33 +231,33 @@
     line-height: 18px;
     cursor: pointer;
     background: transparent;
-    color: var(--inta-floating-fg);
-    border: 1px solid var(--inta-floating-border);
+    color: var(--inta-premium-fg);
+    border: 1px solid var(--inta-premium-border);
     box-sizing: border-box;
     transition: background 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 
 .intastellarCookie-settings__btn:hover {
-    border-color: var(--inta-floating-fg-muted);
+    border-color: var(--inta-premium-fg-muted);
 }
 
 /* .--bg (primary/accept) and .--changePermission (secondary) get their brand-color
-   tint/outline from floating.js; only shared box-model rules live here. */
+   tint/outline from premium.js; only shared box-model rules live here. */
 
 /* ── Persistent reopen bubble ────────────────────────────────────────────── */
 
 .intastellarCookie-settingsContainer {
     position: fixed;
     z-index: 2147483000;
-    bottom: var(--inta-floating-gap);
-    right: var(--inta-floating-gap);
+    bottom: var(--inta-premium-gap);
+    right: var(--inta-premium-gap);
     left: auto;
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: var(--inta-floating-bg);
-    box-shadow: var(--inta-floating-shadow);
-    border: 1px solid var(--inta-floating-border);
+    background: var(--inta-premium-bg);
+    box-shadow: var(--inta-premium-shadow);
+    border: 1px solid var(--inta-premium-border);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -267,7 +267,7 @@
 
 .intastellarCookie-settingsContainer--otherSide {
     right: auto;
-    left: var(--inta-floating-gap);
+    left: var(--inta-premium-gap);
 }
 
 .intastellarCookie-settingsContainer img,
@@ -281,8 +281,8 @@
     bottom: calc(100% + 8px);
     right: 0;
     white-space: nowrap;
-    background: var(--inta-floating-fg);
-    color: var(--inta-floating-bg);
+    background: var(--inta-premium-fg);
+    color: var(--inta-premium-bg);
     font-size: 12px;
     padding: 6px 10px;
     border-radius: 8px;
@@ -298,25 +298,25 @@
 .intastellarCookie-settings__container {
     position: fixed;
     z-index: 2147483000;
-    bottom: calc(48px + var(--inta-floating-gap) + 12px);
-    right: var(--inta-floating-gap);
+    bottom: calc(48px + var(--inta-premium-gap) + 12px);
+    right: var(--inta-premium-gap);
     left: auto;
-    width: calc(100% - (var(--inta-floating-gap) * 2));
-    max-width: var(--inta-floating-width);
-    max-height: calc(100vh - (var(--inta-floating-gap) * 2) - 60px);
+    width: calc(100% - (var(--inta-premium-gap) * 2));
+    max-width: var(--inta-premium-width);
+    max-height: calc(100vh - (var(--inta-premium-gap) * 2) - 60px);
     overflow: hidden auto;
-    background: var(--inta-floating-bg);
-    border-radius: var(--inta-floating-radius);
-    box-shadow: var(--inta-floating-shadow);
-    border: 1px solid var(--inta-floating-border);
+    background: var(--inta-premium-bg);
+    border-radius: var(--inta-premium-radius);
+    box-shadow: var(--inta-premium-shadow);
+    border: 1px solid var(--inta-premium-border);
     box-sizing: border-box;
-    font-family: var(--inta-floating-font);
+    font-family: var(--inta-premium-font);
     text-align: left;
 }
 
 .intastellarCookie-settings__container--otherSide {
     right: auto;
-    left: var(--inta-floating-gap);
+    left: var(--inta-premium-gap);
 }
 
 .intastellarCookie-settings__content {
@@ -328,7 +328,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    color: var(--inta-floating-fg);
+    color: var(--inta-premium-fg);
     margin-bottom: 12px;
 }
 
@@ -339,14 +339,14 @@
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    background: var(--inta-floating-border);
+    background: var(--inta-premium-border);
 }
 
 .intastellarSettings__control {
     display: flex;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid var(--inta-floating-border);
+    border-bottom: 1px solid var(--inta-premium-border);
 }
 
 .intastellarSettings__control:last-of-type {
@@ -364,7 +364,7 @@
 }
 
 .intSettingsTitle {
-    color: var(--inta-floating-fg);
+    color: var(--inta-premium-fg);
     font-size: 14px;
     white-space: nowrap;
 }
@@ -393,7 +393,7 @@
 .intCheckmarkSliderContainer .checkmark.round {
     position: absolute;
     inset: 0;
-    background: var(--inta-floating-border);
+    background: var(--inta-premium-border);
     border-radius: 999px;
     transition: background 0.15s ease-in-out;
     pointer-events: none;
@@ -429,32 +429,32 @@
        so the --otherSide mirroring below still applies despite breaking out visually. */
     position: fixed;
     z-index: 2147483002;
-    top: calc(var(--inta-floating-gap) + 12px);
-    right: calc(var(--inta-floating-gap) + 12px);
+    top: calc(var(--inta-premium-gap) + 12px);
+    right: calc(var(--inta-premium-gap) + 12px);
     left: auto;
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    border: 1px solid var(--inta-floating-border);
-    background: var(--inta-floating-bg);
-    color: var(--inta-floating-fg-muted);
+    border: 1px solid var(--inta-premium-border);
+    background: var(--inta-premium-bg);
+    color: var(--inta-premium-fg-muted);
     font-size: 18px;
     line-height: 1;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--inta-floating-shadow);
+    box-shadow: var(--inta-premium-shadow);
 }
 
 .intaFloatingDetailsClose:hover {
-    color: var(--inta-floating-fg);
-    border-color: var(--inta-floating-fg-muted);
+    color: var(--inta-premium-fg);
+    border-color: var(--inta-premium-fg-muted);
 }
 
 .intastellarCookieConstents--otherSide .intaFloatingDetailsClose {
     right: auto;
-    left: calc(var(--inta-floating-gap) + 12px);
+    left: calc(var(--inta-premium-gap) + 12px);
 }
 
 /* ── Powered-by / privacy footer text ───────────────────────────────────── */
@@ -464,7 +464,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--inta-floating-fg-muted);
+    color: var(--inta-premium-fg-muted);
     font-size: 12px;
     margin-top: 12px;
 }
@@ -491,7 +491,7 @@
     padding: 10px 0;
     background: transparent;
     border: none;
-    color: var(--inta-floating-fg-muted);
+    color: var(--inta-premium-fg-muted);
     font-size: 13px;
     font-weight: 600;
     text-decoration: underline;
@@ -500,7 +500,7 @@
 }
 
 .intLearnMoreBtn:hover {
-    color: var(--inta-floating-fg);
+    color: var(--inta-premium-fg);
 }
 
 /* ── Blocked embed placeholders (YouTube/Facebook/etc. swapped out until the visitor
@@ -519,12 +519,12 @@
     padding: 32px 28px;
     box-sizing: border-box;
     text-align: center;
-    background: var(--inta-floating-bg);
-    color: var(--inta-floating-fg);
-    border: 1px solid var(--inta-floating-border);
-    border-top: 3px solid var(--inta-floating-border);
-    border-radius: var(--inta-floating-radius);
-    box-shadow: var(--inta-floating-shadow);
+    background: var(--inta-premium-bg);
+    color: var(--inta-premium-fg);
+    border: 1px solid var(--inta-premium-border);
+    border-top: 3px solid var(--inta-premium-border);
+    border-radius: var(--inta-premium-radius);
+    box-shadow: var(--inta-premium-shadow);
     overflow: hidden;
 }
 
@@ -545,7 +545,7 @@
 }
 
 .intCookie_ConsentContainer-info p {
-    color: var(--inta-floating-fg);
+    color: var(--inta-premium-fg);
     font-size: 15px;
     font-weight: 600;
     line-height: 1.4;
@@ -571,8 +571,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--inta-floating-bg);
-    border: 1px solid var(--inta-floating-border);
+    background: var(--inta-premium-bg);
+    border: 1px solid var(--inta-premium-border);
 }
 
 .intCookie_ConsentLogo {
@@ -582,7 +582,7 @@
 }
 
 .inta-poweredBy {
-    color: var(--inta-floating-fg-muted) !important;
+    color: var(--inta-premium-fg-muted) !important;
     font-size: 11px !important;
     margin-top: 0;
 }
@@ -598,8 +598,8 @@
 
 @media (max-width: 480px) {
     :root {
-        --inta-floating-gap: 12px;
-        --inta-floating-width: none;
+        --inta-premium-gap: 12px;
+        --inta-premium-width: none;
     }
 
     .intastellarCookieConstents,
