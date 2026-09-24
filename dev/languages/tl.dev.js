@@ -1,0 +1,44 @@
+(function () {
+    var categories = {
+    saveSettings: "Tanggihan Lahat",
+    necessary: {
+        title: "Kinakailangan",
+        description: "Ang mga kinakailangang teknolohiya sa web at cookies ay mahalaga upang gawing naa-access at gumagana ang aming website para sa iyo. Pinapagana nila ang mga pangunahing tampok tulad ng pag-navigate, tamang pagpapakita sa iyong browser, at pamamahala ng iyong mga kagustuhan sa pahintulot. Kung wala ang mga teknolohiya at cookies na ito, hindi gagana nang maayos ang aming website."
+    },
+    functional: {
+        title: "Functional",
+        description: "Ang mga functional na cookies ay nagbibigay-daan sa amin na mag-imbak ng impormasyong nagbabago sa hitsura o gawi ng website, tulad ng iyong ginustong wika o rehiyon."
+    },
+    statisic: {
+        title: "Analytics",
+        description: "Patuloy naming sinisikap na pahusayin ang karanasan at performance ng aming website para sa mga user. Upang magawa ito, gumagamit kami ng mga teknolohiya sa analytics (kasama ang cookies) na sukdulang anonymous na sumusukat at sumusuri kung aling mga tampok at nilalaman ng aming website ang ginagamit, paano, at gaano kadalas. Tumutulong ang datos na ito para mapahusay namin ang aming site para sa mga user."
+    },
+    marketing: {
+        title: "Marketing",
+        description: "Gumagamit kami ng mga teknolohiya sa web (kasama ang cookies) mula sa mga pinagkakatiwalaang kasosyo upang maghatid ng nilalaman at mga advertisement na espesyal na iniangkop para sa iyo sa mga website at social media platform. Pinipili at ipinapakita ang nilalamang ito batay sa iyong pag-uugali sa pag-browse. Ginagamit ang mga cookies sa advertising at marketing upang magpakita ng mga kaugnay na ad at kampanya, subaybayan ang mga bisita sa iba't ibang site, at mangalap ng impormasyon upang magbigay ng mga personalized na ad."
+    }
+};
+    var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "kaliwa" : "kanan";
+    window.__intaCmpLocalePayload = {
+        slug: "tl",
+        cookieSettingsLabel: "Mga Setting ng Cookie",
+        showHideDetails: "Ipakita ang mga detalye",
+        acceptLabel: "Tanggapin",
+        acceptShortLabel: "Tanggapin",
+        declineLabel: "Tanggihan Lahat",
+        settingsLabel: "Mga Setting",
+        policyLinkLabel: "Aming Patakaran sa Privacy at Cookie",
+        bannerMessage: "Sa pagtanggap ng lahat ng cookies, sinusuportahan mo ang " + document.domain + " sa pagbuo ng mas mahusay na solusyon para sa iyo.</p><p>Piliin kung nais mo lang payagan ang mga kinakailangang cookies o payagan ang lahat ng cookies.",
+        settingsMessage: "<h3 style=\"    font-size: 25px;\">Ikaw ang may kontrol</h3>"
+            + "<p>Kami at ang aming mga pinagkakatiwalaang kasosyo ay gumagamit ng mga teknolohiya, tulad ng cookies, upang mangalap ng impormasyon para sa iba't ibang layunin, kabilang ang:</p>"
+            + "<ol>"
+            + "<li>Functional</li>"
+            + "<li>Analytics</li>"
+            + "<li>Marketing</li>"
+            + "</ol>"
+            + "<p>Sa pag-click ng 'Tanggapin', sumasang-ayon ka sa lahat ng layuning ito. Bilang alternatibo, maaari mong piliin ang mga tiyak na layunin na sinasang-ayunan mo sa pamamagitan ng pag-check sa mga checkbox at pag-click sa 'I-save ang mga Setting'.</p>"
+            + "<p>Maaari mong bawiin ang iyong pahintulot anumang oras sa pamamagitan ng pag-click sa maliit na icon sa ibabang " + arrangeWord + " sulok ng website.</p>",
+        settingsMessageSuffix: '<button onClick="showPrivacy()" class="intastellarCookie-settings__privacyLink">Patakaran sa privacy ng Intastellar Solutions, International</button>',
+        categories: categories
+    };
+})();

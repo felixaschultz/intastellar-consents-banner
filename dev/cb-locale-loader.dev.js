@@ -35,7 +35,13 @@
         estonian: "et", et: "et", "et-ee": "et",
         vietnamese: "vi", vi: "vi", "vi-vn": "vi",
         indonesian: "id", id: "id", "id-id": "id",
-        malay: "ms", ms: "ms", "ms-my": "ms"
+        malay: "ms", ms: "ms", "ms-my": "ms",
+        filipino: "tl", tl: "tl", "tl-ph": "tl",
+        slovak: "sk", sk: "sk", "sk-sk": "sk",
+        croatian: "hr", hr: "hr", "hr-hr": "hr",
+        slovenian: "sl", sl: "sl", "sl-si": "sl",
+        lithuanian: "lt", lt: "lt", "lt-lt": "lt",
+        latvian: "lv", lv: "lv", "lv-lv": "lv"
     };
 
     function intaNormalizeLocaleToken(v) {

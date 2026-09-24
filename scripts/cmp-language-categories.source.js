@@ -399,5 +399,328 @@ module.exports = {
             title: "Turundus",
             description: "Kasutame valitud partnerite veebitehnoloogiaid (ka küpsiseid), et näidata teile sisu ja reklaame, mis on spetsiaalselt teie jaoks kohandatud veebisaitidel ja sotsiaalmeedias. See sisu valitakse ja kuvatakse vastavalt teie kasutuskäitumisele. Reklaami- või turundusküpsiseid kasutatakse külastajatele asjakohaste reklaamide ja turunduskampaaniate pakkumiseks. Need küpsised jälgivad külastajaid erinevatel veebisaitidel ja koguvad teavet isikupärastatud reklaamide esitamiseks."
         }
+    },
+    hindi: {
+        saveSettings: "सभी अस्वीकार करें",
+        necessary: {
+            title: "आवश्यक",
+            description: "आवश्यक वेब तकनीकें और कुकीज़ हमारी वेबसाइट को आपके लिए सुलभ और कार्यात्मक बनाने के लिए आवश्यक हैं। ये नेविगेशन, आपके ब्राउज़र में सही प्रदर्शन, और आपकी सहमति प्राथमिकताओं के प्रबंधन जैसी प्रमुख सुविधाओं को सक्षम करती हैं। इन तकनीकों और कुकीज़ के बिना, हमारी वेबसाइट ठीक से काम नहीं कर सकती।"
+        },
+        functional: {
+            title: "कार्यात्मक",
+            description: "कार्यात्मक कुकीज़ हमें ऐसी जानकारी संग्रहीत करने देती हैं जो वेबसाइट के दिखने या व्यवहार करने के तरीके को बदल देती है, जैसे आपकी पसंदीदा भाषा या क्षेत्र।"
+        },
+        statisic: {
+            title: "एनालिटिक्स",
+            description: "हम अपनी वेबसाइट के उपयोगकर्ता अनुभव और प्रदर्शन को लगातार बेहतर बनाने का प्रयास करते हैं। इसके लिए, हम विश्लेषणात्मक तकनीकों (कुकीज़ सहित) का उपयोग करते हैं जो गुमनाम रूप से मापती और आकलन करती हैं कि हमारी वेबसाइट की कौन सी सुविधाओं और सामग्री का उपयोग कैसे, कब और कितनी बार किया जाता है। यह डेटा हमें उपयोगकर्ताओं के लिए अपनी साइट बेहतर बनाने में मदद करता है।"
+        },
+        marketing: {
+            title: "मार्केटिंग",
+            description: "हम विश्वसनीय साझेदारों की वेब तकनीकों (कुकीज़ सहित) का उपयोग वेबसाइटों और सोशल मीडिया प्लेटफ़ॉर्म पर आपके लिए विशेष रूप से तैयार की गई सामग्री और विज्ञापन प्रदान करने के लिए करते हैं। यह सामग्री आपके ब्राउज़िंग व्यवहार के आधार पर चुनी और प्रदर्शित की जाती है। विज्ञापन और मार्केटिंग कुकीज़ का उपयोग प्रासंगिक विज्ञापन और अभियान दिखाने, विभिन्न साइटों पर आगंतुकों को ट्रैक करने, और व्यक्तिगत विज्ञापन प्रस्तुत करने के लिए जानकारी एकत्र करने हेतु किया जाता है।"
+        }
+    },
+    turkish: {
+        saveSettings: "Tümünü Reddet",
+        necessary: {
+            title: "Gerekli",
+            description: "Gerekli web teknolojileri ve çerezler, web sitemizi sizin için erişilebilir ve işlevsel hale getirmek için gereklidir. Gezinme, tarayıcınızda doğru görüntüleme ve onay tercihlerinizin yönetilmesi gibi temel işlevleri sağlarlar. Bu teknolojiler ve çerezler olmadan web sitemiz düzgün çalışamaz."
+        },
+        functional: {
+            title: "İşlevsel",
+            description: "İşlevsel çerezler, tercih ettiğiniz dil veya bölge gibi web sitesinin görünümünü veya davranışını değiştiren bilgileri saklamamızı sağlar."
+        },
+        statisic: {
+            title: "Analitik",
+            description: "Web sitemizin kullanıcı deneyimini ve performansını sürekli olarak geliştirmeye çalışıyoruz. Bunu başarmak için, web sitemizin hangi özelliklerinin ve içeriklerinin nasıl, ne zaman ve ne sıklıkla kullanıldığını takma ad altında ölçen ve değerlendiren analitik teknolojiler (çerezler dahil) kullanıyoruz. Bu veriler, sitemizi kullanıcılar için geliştirmemize yardımcı olur."
+        },
+        marketing: {
+            title: "Pazarlama",
+            description: "Web sitelerinde ve sosyal medya platformlarında size özel olarak hazırlanmış içerik ve reklamlar sunmak için güvenilir ortaklardan gelen web teknolojilerini (çerezler dahil) kullanıyoruz. Bu içerik, gezinme davranışınıza göre seçilir ve görüntülenir. Reklam ve pazarlama çerezleri, ilgili reklamları ve kampanyaları göstermek, ziyaretçileri siteler arasında takip etmek ve kişiselleştirilmiş reklamlar sunmak için bilgi toplamak amacıyla kullanılır."
+        }
+    },
+    vietnamese: {
+        saveSettings: "Từ chối tất cả",
+        necessary: {
+            title: "Cần thiết",
+            description: "Các công nghệ web và cookie cần thiết giúp trang web của chúng tôi có thể truy cập và hoạt động được đối với bạn. Chúng cho phép các chức năng chính như điều hướng, hiển thị đúng trên trình duyệt của bạn và quản lý các tùy chọn đồng ý của bạn. Nếu không có các công nghệ và cookie này, trang web của chúng tôi không thể hoạt động đúng cách."
+        },
+        functional: {
+            title: "Chức năng",
+            description: "Cookie chức năng cho phép chúng tôi lưu trữ thông tin làm thay đổi giao diện hoặc hành vi của trang web, chẳng hạn như ngôn ngữ hoặc khu vực bạn ưa thích."
+        },
+        statisic: {
+            title: "Phân tích",
+            description: "Chúng tôi luôn cố gắng cải thiện trải nghiệm người dùng và hiệu suất của trang web. Để làm được điều này, chúng tôi sử dụng các công nghệ phân tích (bao gồm cookie) để đo lường và đánh giá một cách ẩn danh cách thức, thời điểm và những tính năng, nội dung nào trên trang web được sử dụng. Dữ liệu này giúp chúng tôi cải thiện trang web cho người dùng."
+        },
+        marketing: {
+            title: "Tiếp thị",
+            description: "Chúng tôi sử dụng các công nghệ web (bao gồm cookie) từ các đối tác đáng tin cậy để cung cấp nội dung và quảng cáo được thiết kế riêng cho bạn trên các trang web và nền tảng mạng xã hội. Nội dung này được lựa chọn và hiển thị dựa trên hành vi duyệt web của bạn. Cookie quảng cáo và tiếp thị được sử dụng để hiển thị quảng cáo và chiến dịch phù hợp, theo dõi khách truy cập trên nhiều trang web và thu thập thông tin để đưa ra quảng cáo được cá nhân hóa."
+        }
+    },
+    indonesian: {
+        saveSettings: "Tolak Semua",
+        necessary: {
+            title: "Penting",
+            description: "Teknologi web dan cookie penting sangat diperlukan agar situs web kami dapat diakses dan berfungsi untuk Anda. Cookie ini memungkinkan fitur utama, seperti navigasi, tampilan yang benar di browser Anda, dan pengelolaan preferensi persetujuan Anda. Tanpa teknologi dan cookie ini, situs web kami tidak dapat berfungsi dengan baik."
+        },
+        functional: {
+            title: "Fungsional",
+            description: "Cookie fungsional memungkinkan kami menyimpan informasi yang mengubah tampilan atau perilaku situs web, seperti bahasa atau wilayah pilihan Anda."
+        },
+        statisic: {
+            title: "Analitik",
+            description: "Kami berupaya terus meningkatkan pengalaman pengguna dan performa situs web kami. Untuk itu, kami menggunakan teknologi analitik (termasuk cookie) yang secara anonim mengukur dan menilai fitur dan konten mana dari situs web kami yang digunakan, bagaimana, dan seberapa sering. Data ini membantu kami meningkatkan situs kami bagi pengguna."
+        },
+        marketing: {
+            title: "Pemasaran",
+            description: "Kami menggunakan teknologi web (termasuk cookie) dari mitra tepercaya untuk menyajikan konten dan iklan yang disesuaikan khusus untuk Anda di situs web dan platform media sosial. Konten ini dipilih dan ditampilkan berdasarkan perilaku menjelajah Anda. Cookie iklan dan pemasaran digunakan untuk menampilkan iklan dan kampanye yang relevan, melacak pengunjung di berbagai situs, dan mengumpulkan informasi untuk menyajikan iklan yang dipersonalisasi."
+        }
+    },
+    filipino: {
+        saveSettings: "Tanggihan Lahat",
+        necessary: {
+            title: "Kinakailangan",
+            description: "Ang mga kinakailangang teknolohiya sa web at cookies ay mahalaga upang gawing naa-access at gumagana ang aming website para sa iyo. Pinapagana nila ang mga pangunahing tampok tulad ng pag-navigate, tamang pagpapakita sa iyong browser, at pamamahala ng iyong mga kagustuhan sa pahintulot. Kung wala ang mga teknolohiya at cookies na ito, hindi gagana nang maayos ang aming website."
+        },
+        functional: {
+            title: "Functional",
+            description: "Ang mga functional na cookies ay nagbibigay-daan sa amin na mag-imbak ng impormasyong nagbabago sa hitsura o gawi ng website, tulad ng iyong ginustong wika o rehiyon."
+        },
+        statisic: {
+            title: "Analytics",
+            description: "Patuloy naming sinisikap na pahusayin ang karanasan at performance ng aming website para sa mga user. Upang magawa ito, gumagamit kami ng mga teknolohiya sa analytics (kasama ang cookies) na sukdulang anonymous na sumusukat at sumusuri kung aling mga tampok at nilalaman ng aming website ang ginagamit, paano, at gaano kadalas. Tumutulong ang datos na ito para mapahusay namin ang aming site para sa mga user."
+        },
+        marketing: {
+            title: "Marketing",
+            description: "Gumagamit kami ng mga teknolohiya sa web (kasama ang cookies) mula sa mga pinagkakatiwalaang kasosyo upang maghatid ng nilalaman at mga advertisement na espesyal na iniangkop para sa iyo sa mga website at social media platform. Pinipili at ipinapakita ang nilalamang ito batay sa iyong pag-uugali sa pag-browse. Ginagamit ang mga cookies sa advertising at marketing upang magpakita ng mga kaugnay na ad at kampanya, subaybayan ang mga bisita sa iba't ibang site, at mangalap ng impormasyon upang magbigay ng mga personalized na ad."
+        }
+    },
+    malay: {
+        saveSettings: "Tolak Semua",
+        necessary: {
+            title: "Perlu",
+            description: "Teknologi web dan kuki yang perlu adalah penting untuk menjadikan laman web kami boleh diakses dan berfungsi untuk anda. Ia membolehkan ciri utama seperti navigasi, paparan yang betul dalam pelayar anda, dan pengurusan pilihan persetujuan anda. Tanpa teknologi dan kuki ini, laman web kami tidak dapat berfungsi dengan baik."
+        },
+        functional: {
+            title: "Fungsian",
+            description: "Kuki fungsian membolehkan kami menyimpan maklumat yang mengubah rupa atau tingkah laku laman web, seperti bahasa atau wilayah pilihan anda."
+        },
+        statisic: {
+            title: "Analitik",
+            description: "Kami sentiasa berusaha untuk meningkatkan pengalaman pengguna dan prestasi laman web kami. Untuk mencapai ini, kami menggunakan teknologi analitik (termasuk kuki) yang secara tanpa nama mengukur dan menilai ciri dan kandungan laman web kami yang digunakan, bagaimana, dan berapa kerap. Data ini membantu kami meningkatkan laman web kami untuk pengguna."
+        },
+        marketing: {
+            title: "Pemasaran",
+            description: "Kami menggunakan teknologi web (termasuk kuki) daripada rakan kongsi yang dipercayai untuk menyampaikan kandungan dan iklan yang disesuaikan khas untuk anda di laman web dan platform media sosial. Kandungan ini dipilih dan dipaparkan berdasarkan tingkah laku pelayaran anda. Kuki iklan dan pemasaran digunakan untuk memaparkan iklan dan kempen yang relevan, menjejaki pelawat merentas laman, dan mengumpul maklumat untuk menyampaikan iklan yang diperibadikan."
+        }
+    },
+    ukrainian: {
+        saveSettings: "Відхилити все",
+        necessary: {
+            title: "Необхідні",
+            description: "Необхідні веб-технології та файли cookie є важливими для того, щоб зробити наш сайт доступним і функціональним для вас. Вони забезпечують основні функції, такі як навігація, правильне відображення у вашому браузері та керування вашими налаштуваннями згоди. Без цих технологій і файлів cookie наш сайт не може працювати належним чином."
+        },
+        functional: {
+            title: "Функціональні",
+            description: "Функціональні файли cookie дозволяють нам зберігати інформацію, яка змінює вигляд або поведінку сайту, наприклад вашу бажану мову чи регіон."
+        },
+        statisic: {
+            title: "Аналітика",
+            description: "Ми прагнемо постійно покращувати досвід користувачів і продуктивність нашого сайту. Для цього ми використовуємо аналітичні технології (включно з файлами cookie), які анонімно вимірюють і оцінюють, які функції та вміст нашого сайту використовуються, як і як часто. Ці дані допомагають нам покращувати сайт для користувачів."
+        },
+        marketing: {
+            title: "Маркетинг",
+            description: "Ми використовуємо веб-технології (включно з файлами cookie) від надійних партнерів, щоб надавати вам вміст і рекламу, спеціально підібрані для вас на веб-сайтах і в соціальних мережах. Цей вміст вибирається та відображається на основі вашої поведінки перегляду. Рекламні та маркетингові файли cookie використовуються для показу відповідних оголошень і кампаній, відстеження відвідувачів на різних сайтах і збору інформації для показу персоналізованої реклами."
+        }
+    },
+    hebrew: {
+        saveSettings: "דחה הכול",
+        necessary: {
+            title: "הכרחי",
+            description: "טכנולוגיות אינטרנט ועוגיות הכרחיות חיוניות כדי להפוך את האתר שלנו לנגיש ופונקציונלי עבורך. הן מאפשרות פונקציות מרכזיות כגון ניווט, תצוגה נכונה בדפדפן שלך וניהול העדפות ההסכמה שלך. ללא טכנולוגיות ועוגיות אלה, האתר שלנו אינו יכול לפעול כראוי."
+        },
+        functional: {
+            title: "פונקציונלי",
+            description: "עוגיות פונקציונליות מאפשרות לנו לשמור מידע המשנה את האופן שבו האתר נראה או מתפקד, כגון השפה או האזור המועדפים עליך."
+        },
+        statisic: {
+            title: "אנליטיקה",
+            description: "אנו שואפים לשפר באופן מתמיד את חוויית המשתמש והביצועים של האתר שלנו. לשם כך, אנו משתמשים בטכנולוגיות אנליטיות (כולל עוגיות) שמודדות ומעריכות באופן אנונימי אילו תכונות ותוכן באתר שלנו נמצאים בשימוש, כיצד ובאיזו תדירות. נתונים אלה עוזרים לנו לשפר את האתר עבור המשתמשים."
+        },
+        marketing: {
+            title: "שיווק",
+            description: "אנו משתמשים בטכנולוגיות אינטרנט (כולל עוגיות) משותפים מהימנים כדי להציג עבורך תוכן ופרסומות המותאמים אישית באתרים וברשתות חברתיות. תוכן זה נבחר ומוצג בהתבסס על התנהגות הגלישה שלך. עוגיות פרסום ושיווק משמשות להצגת מודעות וקמפיינים רלוונטיים, למעקב אחר מבקרים באתרים שונים ולאיסוף מידע להצגת פרסומות מותאמות אישית."
+        }
+    },
+    czech: {
+        saveSettings: "Odmítnout vše",
+        necessary: {
+            title: "Nezbytné",
+            description: "Nezbytné webové technologie a soubory cookie jsou nutné k tomu, aby byl náš web pro vás přístupný a funkční. Umožňují klíčové funkce, jako je navigace, správné zobrazení ve vašem prohlížeči a správa vašich preferencí souhlasu. Bez těchto technologií a souborů cookie nemůže náš web fungovat správně."
+        },
+        functional: {
+            title: "Funkční",
+            description: "Funkční soubory cookie nám umožňují ukládat informace, které mění vzhled nebo chování webu, například váš preferovaný jazyk nebo region."
+        },
+        statisic: {
+            title: "Analytika",
+            description: "Neustále se snažíme zlepšovat uživatelský zážitek a výkon našeho webu. K tomu využíváme analytické technologie (včetně souborů cookie), které pseudonymně měří a vyhodnocují, které funkce a obsah našeho webu jsou používány, jak a jak často. Tato data nám pomáhají web pro uživatele zlepšovat."
+        },
+        marketing: {
+            title: "Marketing",
+            description: "Využíváme webové technologie (včetně souborů cookie) od důvěryhodných partnerů k poskytování obsahu a reklam přizpůsobených právě vám na webových stránkách a platformách sociálních médií. Tento obsah je vybírán a zobrazován na základě vašeho chování při procházení. Reklamní a marketingové soubory cookie se používají k zobrazování relevantních reklam a kampaní, sledování návštěvníků napříč weby a shromažďování informací pro zobrazení personalizovaných reklam."
+        }
+    },
+    slovak: {
+        saveSettings: "Odmietnuť všetko",
+        necessary: {
+            title: "Nevyhnutné",
+            description: "Nevyhnutné webové technológie a súbory cookie sú potrebné na to, aby bola naša webová stránka pre vás prístupná a funkčná. Umožňujú kľúčové funkcie, ako je navigácia, správne zobrazenie vo vašom prehliadači a správa vašich preferencií súhlasu. Bez týchto technológií a súborov cookie nemôže naša webová stránka správne fungovať."
+        },
+        functional: {
+            title: "Funkčné",
+            description: "Funkčné súbory cookie nám umožňujú ukladať informácie, ktoré menia vzhľad alebo správanie webovej stránky, napríklad váš preferovaný jazyk alebo región."
+        },
+        statisic: {
+            title: "Analytika",
+            description: "Neustále sa snažíme zlepšovať používateľský zážitok a výkon našej webovej stránky. Na dosiahnutie tohto cieľa používame analytické technológie (vrátane súborov cookie), ktoré pseudonymne merajú a vyhodnocujú, ktoré funkcie a obsah našej webovej stránky sú používané, ako a ako často. Tieto údaje nám pomáhajú zlepšovať stránku pre používateľov."
+        },
+        marketing: {
+            title: "Marketing",
+            description: "Používame webové technológie (vrátane súborov cookie) od dôveryhodných partnerov na poskytovanie obsahu a reklám prispôsobených práve vám na webových stránkach a platformách sociálnych médií. Tento obsah je vyberaný a zobrazovaný na základe vášho správania pri prehliadaní. Reklamné a marketingové súbory cookie sa používajú na zobrazovanie relevantných reklám a kampaní, sledovanie návštevníkov naprieč stránkami a zhromažďovanie informácií na zobrazenie personalizovaných reklám."
+        }
+    },
+    hungarian: {
+        saveSettings: "Összes elutasítása",
+        necessary: {
+            title: "Szükséges",
+            description: "A szükséges webes technológiák és cookie-k elengedhetetlenek ahhoz, hogy weboldalunk elérhető és működőképes legyen az Ön számára. Olyan alapvető funkciókat tesznek lehetővé, mint a navigáció, a böngészőben történő megfelelő megjelenítés, valamint a hozzájárulási beállítások kezelése. Ezen technológiák és cookie-k nélkül weboldalunk nem tud megfelelően működni."
+        },
+        functional: {
+            title: "Funkcionális",
+            description: "A funkcionális cookie-k lehetővé teszik, hogy olyan információkat tároljunk, amelyek megváltoztatják a weboldal megjelenését vagy viselkedését, például az Ön preferált nyelvét vagy régióját."
+        },
+        statisic: {
+            title: "Analitika",
+            description: "Folyamatosan törekszünk weboldalunk felhasználói élményének és teljesítményének javítására. Ennek érdekében analitikai technológiákat (beleértve a cookie-kat is) használunk, amelyek álnevesítve mérik és értékelik, hogy weboldalunk mely funkcióit és tartalmait, hogyan és milyen gyakran használják. Ezek az adatok segítenek nekünk javítani oldalunkat a felhasználók számára."
+        },
+        marketing: {
+            title: "Marketing",
+            description: "Megbízható partnereink webes technológiáit (beleértve a cookie-kat is) használjuk arra, hogy kifejezetten Önnek szabott tartalmakat és hirdetéseket jelenítsünk meg weboldalakon és közösségi médiaplatformokon. Ezt a tartalmat böngészési viselkedése alapján választjuk ki és jelenítjük meg. A hirdetési és marketing cookie-kat releváns hirdetések és kampányok megjelenítésére, a látogatók oldalak közötti nyomon követésére, valamint a személyre szabott hirdetések megjelenítéséhez szükséges információk gyűjtésére használjuk."
+        }
+    },
+    romanian: {
+        saveSettings: "Respinge tot",
+        necessary: {
+            title: "Necesare",
+            description: "Tehnologiile web și cookie-urile necesare sunt esențiale pentru a face site-ul nostru accesibil și funcțional pentru dvs. Acestea permit funcții esențiale, precum navigarea, afișarea corectă în browser și gestionarea preferințelor dvs. de consimțământ. Fără aceste tehnologii și cookie-uri, site-ul nostru nu poate funcționa corect."
+        },
+        functional: {
+            title: "Funcționale",
+            description: "Cookie-urile funcționale ne permit să stocăm informații care modifică modul în care arată sau se comportă site-ul, cum ar fi limba sau regiunea preferată."
+        },
+        statisic: {
+            title: "Analitice",
+            description: "Ne străduim să îmbunătățim continuu experiența utilizatorilor și performanța site-ului nostru. Pentru a realiza acest lucru, folosim tehnologii analitice (inclusiv cookie-uri) care măsoară și evaluează în mod pseudonim ce funcții și conținut ale site-ului nostru sunt utilizate, cum și cât de des. Aceste date ne ajută să îmbunătățim site-ul pentru utilizatori."
+        },
+        marketing: {
+            title: "Marketing",
+            description: "Folosim tehnologii web (inclusiv cookie-uri) de la parteneri de încredere pentru a livra conținut și reclame adaptate special pentru dvs. pe site-uri web și platforme de socializare. Acest conținut este selectat și afișat în funcție de comportamentul dvs. de navigare. Cookie-urile de publicitate și marketing sunt utilizate pentru a afișa reclame și campanii relevante, pentru a urmări vizitatorii pe diferite site-uri și pentru a colecta informații în vederea afișării de reclame personalizate."
+        }
+    },
+    bulgarian: {
+        saveSettings: "Отхвърли всички",
+        necessary: {
+            title: "Необходими",
+            description: "Необходимите уеб технологии и бисквитки са от съществено значение, за да направят нашия уебсайт достъпен и функционален за вас. Те осигуряват основни функции, като навигация, правилно показване в браузъра ви и управление на предпочитанията ви за съгласие. Без тези технологии и бисквитки нашият уебсайт не може да функционира правилно."
+        },
+        functional: {
+            title: "Функционални",
+            description: "Функционалните бисквитки ни позволяват да съхраняваме информация, която променя начина, по който изглежда или се държи уебсайтът, като например предпочитания от вас език или регион."
+        },
+        statisic: {
+            title: "Аналитика",
+            description: "Стремим се непрекъснато да подобряваме потребителското изживяване и производителността на нашия уебсайт. За тази цел използваме аналитични технологии (включително бисквитки), които псевдонимно измерват и оценяват кои функции и съдържание на нашия уебсайт се използват, как и колко често. Тези данни ни помагат да подобряваме сайта за потребителите."
+        },
+        marketing: {
+            title: "Маркетинг",
+            description: "Използваме уеб технологии (включително бисквитки) от доверени партньори, за да предоставяме съдържание и реклами, специално съобразени с вас, в уебсайтове и платформи на социалните медии. Това съдържание се избира и показва въз основа на вашето поведение при разглеждане. Рекламните и маркетинговите бисквитки се използват за показване на подходящи реклами и кампании, проследяване на посетители в различни сайтове и събиране на информация за представяне на персонализирани реклами."
+        }
+    },
+    croatian: {
+        saveSettings: "Odbij sve",
+        necessary: {
+            title: "Nužni",
+            description: "Nužne web tehnologije i kolačići neophodni su kako bi naša web stranica bila dostupna i funkcionalna za vas. Omogućuju ključne funkcije poput navigacije, ispravnog prikaza u vašem pregledniku i upravljanja vašim postavkama privole. Bez ovih tehnologija i kolačića naša web stranica ne može ispravno funkcionirati."
+        },
+        functional: {
+            title: "Funkcionalni",
+            description: "Funkcionalni kolačići omogućuju nam pohranu informacija koje mijenjaju izgled ili ponašanje web stranice, poput vašeg preferiranog jezika ili regije."
+        },
+        statisic: {
+            title: "Analitika",
+            description: "Nastojimo neprestano poboljšavati korisničko iskustvo i performanse naše web stranice. Kako bismo to postigli, koristimo analitičke tehnologije (uključujući kolačiće) koje pseudonimno mjere i procjenjuju koje se značajke i sadržaj naše web stranice koriste, kako i koliko često. Ovi podaci nam pomažu poboljšati stranicu za korisnike."
+        },
+        marketing: {
+            title: "Marketing",
+            description: "Koristimo web tehnologije (uključujući kolačiće) pouzdanih partnera kako bismo vam pružili sadržaj i oglase posebno prilagođene vama na web stranicama i platformama društvenih medija. Ovaj sadržaj se odabire i prikazuje na temelju vašeg ponašanja pri pregledavanju. Oglasni i marketinški kolačići koriste se za prikaz relevantnih oglasa i kampanja, praćenje posjetitelja na različitim stranicama i prikupljanje informacija za prikaz personaliziranih oglasa."
+        }
+    },
+    slovenian: {
+        saveSettings: "Zavrni vse",
+        necessary: {
+            title: "Nujni",
+            description: "Nujne spletne tehnologije in piškotki so bistveni za to, da je naša spletna stran za vas dostopna in funkcionalna. Omogočajo ključne funkcije, kot so krmarjenje, pravilen prikaz v vašem brskalniku in upravljanje vaših nastavitev privolitve. Brez teh tehnologij in piškotkov naša spletna stran ne more pravilno delovati."
+        },
+        functional: {
+            title: "Funkcionalni",
+            description: "Funkcionalni piškotki nam omogočajo shranjevanje informacij, ki spreminjajo videz ali delovanje spletne strani, na primer vaš izbrani jezik ali regijo."
+        },
+        statisic: {
+            title: "Analitika",
+            description: "Nenehno si prizadevamo izboljšati uporabniško izkušnjo in delovanje naše spletne strani. Za to uporabljamo analitične tehnologije (vključno s piškotki), ki psevdonimno merijo in ocenjujejo, katere funkcije in vsebine naše spletne strani se uporabljajo, kako in kako pogosto. Ti podatki nam pomagajo izboljšati stran za uporabnike."
+        },
+        marketing: {
+            title: "Trženje",
+            description: "Uporabljamo spletne tehnologije (vključno s piškotki) zaupanja vrednih partnerjev, da vam na spletnih straneh in platformah družbenih medijev prikažemo vsebino in oglase, prilagojene posebej vam. Ta vsebina je izbrana in prikazana na podlagi vašega vedenja pri brskanju. Oglasni in tržni piškotki se uporabljajo za prikaz ustreznih oglasov in kampanj, sledenje obiskovalcem na različnih straneh ter zbiranje informacij za prikaz personaliziranih oglasov."
+        }
+    },
+    lithuanian: {
+        saveSettings: "Atmesti viską",
+        necessary: {
+            title: "Būtini",
+            description: "Būtinos interneto technologijos ir slapukai yra būtini, kad mūsų svetainė būtų jums prieinama ir veiktų tinkamai. Jie leidžia naudotis pagrindinėmis funkcijomis, tokiomis kaip navigacija, teisingas rodymas naršyklėje ir sutikimo nuostatų valdymas. Be šių technologijų ir slapukų mūsų svetainė negali tinkamai veikti."
+        },
+        functional: {
+            title: "Funkciniai",
+            description: "Funkciniai slapukai leidžia mums saugoti informaciją, keičiančią svetainės išvaizdą ar veikimą, pavyzdžiui, jūsų pageidaujamą kalbą ar regioną."
+        },
+        statisic: {
+            title: "Analitika",
+            description: "Nuolat siekiame gerinti naudotojų patirtį ir mūsų svetainės veikimą. Tam naudojame analitines technologijas (įskaitant slapukus), kurios pseudonimiškai matuoja ir vertina, kurios mūsų svetainės funkcijos ir turinys naudojami, kaip ir kaip dažnai. Šie duomenys padeda mums tobulinti svetainę naudotojams."
+        },
+        marketing: {
+            title: "Rinkodara",
+            description: "Naudojame patikimų partnerių interneto technologijas (įskaitant slapukus), kad pateiktume jums specialiai pritaikytą turinį ir reklamas svetainėse bei socialinių tinklų platformose. Šis turinys parenkamas ir rodomas atsižvelgiant į jūsų naršymo elgseną. Reklamos ir rinkodaros slapukai naudojami rodyti aktualias reklamas ir kampanijas, sekti lankytojus įvairiose svetainėse ir rinkti informaciją, kad būtų galima pateikti personalizuotas reklamas."
+        }
+    },
+    latvian: {
+        saveSettings: "Noraidīt visu",
+        necessary: {
+            title: "Nepieciešamie",
+            description: "Nepieciešamās tīmekļa tehnoloģijas un sīkfaili ir būtiski, lai mūsu vietne būtu jums pieejama un funkcionāla. Tie nodrošina galvenās funkcijas, piemēram, navigāciju, pareizu attēlošanu jūsu pārlūkprogrammā un jūsu piekrišanas iestatījumu pārvaldību. Bez šīm tehnoloģijām un sīkfailiem mūsu vietne nevar pareizi darboties."
+        },
+        functional: {
+            title: "Funkcionālie",
+            description: "Funkcionālie sīkfaili ļauj mums saglabāt informāciju, kas maina vietnes izskatu vai darbību, piemēram, jūsu vēlamo valodu vai reģionu."
+        },
+        statisic: {
+            title: "Analītika",
+            description: "Mēs pastāvīgi cenšamies uzlabot lietotāju pieredzi un mūsu vietnes veiktspēju. Lai to panāktu, mēs izmantojam analītiskās tehnoloģijas (tostarp sīkfailus), kas pseidonīmi mēra un novērtē, kuras mūsu vietnes funkcijas un saturs tiek izmantoti, kā un cik bieži. Šie dati mums palīdz uzlabot vietni lietotājiem."
+        },
+        marketing: {
+            title: "Mārketings",
+            description: "Mēs izmantojam uzticamu partneru tīmekļa tehnoloģijas (tostarp sīkfailus), lai piedāvātu jums īpaši pielāgotu saturu un reklāmas tīmekļa vietnēs un sociālo mediju platformās. Šis saturs tiek atlasīts un rādīts, pamatojoties uz jūsu pārlūkošanas paradumiem. Reklāmas un mārketinga sīkfaili tiek izmantoti, lai rādītu atbilstošas reklāmas un kampaņas, izsekotu apmeklētājiem dažādās vietnēs un vāktu informāciju, lai piedāvātu personalizētas reklāmas."
+        }
     }
 };

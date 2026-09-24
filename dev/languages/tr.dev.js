@@ -1,0 +1,44 @@
+(function () {
+    var categories = {
+    saveSettings: "Tümünü Reddet",
+    necessary: {
+        title: "Gerekli",
+        description: "Gerekli web teknolojileri ve çerezler, web sitemizi sizin için erişilebilir ve işlevsel hale getirmek için gereklidir. Gezinme, tarayıcınızda doğru görüntüleme ve onay tercihlerinizin yönetilmesi gibi temel işlevleri sağlarlar. Bu teknolojiler ve çerezler olmadan web sitemiz düzgün çalışamaz."
+    },
+    functional: {
+        title: "İşlevsel",
+        description: "İşlevsel çerezler, tercih ettiğiniz dil veya bölge gibi web sitesinin görünümünü veya davranışını değiştiren bilgileri saklamamızı sağlar."
+    },
+    statisic: {
+        title: "Analitik",
+        description: "Web sitemizin kullanıcı deneyimini ve performansını sürekli olarak geliştirmeye çalışıyoruz. Bunu başarmak için, web sitemizin hangi özelliklerinin ve içeriklerinin nasıl, ne zaman ve ne sıklıkla kullanıldığını takma ad altında ölçen ve değerlendiren analitik teknolojiler (çerezler dahil) kullanıyoruz. Bu veriler, sitemizi kullanıcılar için geliştirmemize yardımcı olur."
+    },
+    marketing: {
+        title: "Pazarlama",
+        description: "Web sitelerinde ve sosyal medya platformlarında size özel olarak hazırlanmış içerik ve reklamlar sunmak için güvenilir ortaklardan gelen web teknolojilerini (çerezler dahil) kullanıyoruz. Bu içerik, gezinme davranışınıza göre seçilir ve görüntülenir. Reklam ve pazarlama çerezleri, ilgili reklamları ve kampanyaları göstermek, ziyaretçileri siteler arasında takip etmek ve kişiselleştirilmiş reklamlar sunmak için bilgi toplamak amacıyla kullanılır."
+    }
+};
+    var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "sol" : "sağ";
+    window.__intaCmpLocalePayload = {
+        slug: "tr",
+        cookieSettingsLabel: "Çerez Ayarları",
+        showHideDetails: "Detayları göster",
+        acceptLabel: "Kabul Et",
+        acceptShortLabel: "Kabul Et",
+        declineLabel: "Tümünü Reddet",
+        settingsLabel: "Ayarlar",
+        policyLinkLabel: "Gizlilik ve Çerez Politikamız",
+        bannerMessage: "Tüm çerezleri kabul ederek " + document.domain + " için daha iyi bir çözüm geliştirmesine destek olursunuz.</p><p>Yalnızca gerekli çerezlere mi yoksa tüm çerezlere mi izin vermek istediğinizi seçin.",
+        settingsMessage: "<h3 style=\"    font-size: 25px;\">Kontrol sizde</h3>"
+            + "<p>Biz ve güvenilir ortaklarımız, çeşitli amaçlarla bilgi toplamak için çerezler gibi teknolojiler kullanıyoruz, bunlar arasında:</p>"
+            + "<ol>"
+            + "<li>İşlevsel</li>"
+            + "<li>Analitik</li>"
+            + "<li>Pazarlama</li>"
+            + "</ol>"
+            + "<p>'Kabul Et'e tıklayarak tüm bu amaçlara onay vermiş olursunuz. Alternatif olarak, ilgili kutucukları işaretleyip 'Ayarları Kaydet'e tıklayarak onayladığınız belirli amaçları seçebilirsiniz.</p>"
+            + "<p>Onayınızı, web sitesinin alt " + arrangeWord + " köşesindeki küçük simgeye tıklayarak istediğiniz zaman geri çekebilirsiniz.</p>",
+        settingsMessageSuffix: '<button onClick="showPrivacy()" class="intastellarCookie-settings__privacyLink">Intastellar Solutions, International gizlilik politikası</button>',
+        categories: categories
+    };
+})();
