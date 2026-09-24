@@ -841,7 +841,7 @@ function intaCbFetchTextOverridePresetFromApiIfNeeded() {
             console.warn("[Intastellar] CMP preset fetch failed:", slug, err && err.message ? err.message : err);
         });
 }
-/* const poweredBy = `<a class="inta-poweredBy" href='https://www.intastellarsolutions.com?utm_source=${encodeURI(window.location.href)}&utm_content=powered_by&utm_medium=referral&utm_campaign=Consents+Block&utm_term=gdpr_banner_logo' target='_blank' rel='noopener' style="align-items: center; text-decoration: none;font-size: 11.5px; color: #000 !important; display: flex; justify-content: center;">powered by <img width="109px" height="20px" style="width: 109px !important; height: 20px !important;margin-left: 10px;" src="https://www.intastellarsolutions.com/assets/intastellar_solutions.svg" alt="Intastellar Solutions, International"></a>`; */
+/* const poweredBy = `<a class="inta-poweredBy" href='https://www.intastellar.eu?utm_source=${encodeURI(window.location.href)}&utm_content=powered_by&utm_medium=referral&utm_campaign=Consents+Block&utm_term=gdpr_banner_logo' target='_blank' rel='noopener' style="align-items: center; text-decoration: none;font-size: 11.5px; color: #000 !important; display: flex; justify-content: center;">powered by <img width="109px" height="20px" style="width: 109px !important; height: 20px !important;margin-left: 10px;" src="https://www.intastellarsolutions.com/assets/intastellar_solutions.svg" alt="Intastellar Solutions, International"></a>`; */
 const banner = document.createElement("inta-consents-settings-btn");
 const bannerContent = document.createElement("button");
 const intastellarLogoLight = "https://www.intastellarsolutions.com/assets/logos/intastellar-consents-logo-white.svg";
@@ -2443,8 +2443,8 @@ function intaInsertStylesheetLinkInHead(stylesheetLink) {
     }
 }
 
-if (window.location.host.indexOf("intastellarsolutions") == -1) {
-    poweredBy = "<span class='intastellarCookie-settings__poweredBy' alt='This cookie banner is powered by Intastellar Consents Solutions'>Powered by <a class='intastellarCookie-settings__poweredByLink' href='https://www.intastellarsolutions.com' target='_blank' rel='noopener'><img class='intastellarCookie-settings__poweredByImg' width='100px' height='100px' src='" + intastellarLogo + "' alt='Intastellar Solutions, International'></a></span>";
+if (window.location.host.indexOf("intastellar") == -1) {
+    poweredBy = "<span class='intastellarCookie-settings__poweredBy' alt='This cookie banner is powered by Intastellar Consents Solutions'>Powered by <a class='intastellarCookie-settings__poweredByLink' href='https://www.intastellar.eu' target='_blank' rel='noopener'><img class='intastellarCookie-settings__poweredByImg' width='100px' height='100px' src='" + intastellarLogo + "' alt='Intastellar Solutions, International'></a></span>";
 }
 if (arrange == "ltr") {
     bannerContent.classList.add("intastellarCookie-settingsContainer--otherSide");
@@ -2469,12 +2469,12 @@ function setIntastellarPartnerDomain() {
 }
 
 function generatePoweredBy() {
-    if (window.location.host.indexOf("intastellarsolutions") == -1) {
+    if (window.location.host.indexOf("intastellar") == -1) {
         let intastellarLogo = intastellarLogoLight;
         if (window.INTA.settings.design == "bannerV2") {
             intastellarLogo = intastellarLogoDark;
         }
-        poweredBy = "<span class='intastellarCookie-settings__poweredBy' alt='This cookie banner is powered by Intastellar Consents Solutions'>Powered by <a class='intastellarCookie-settings__poweredByLink' href='https://www.intastellarsolutions.com' target='_blank' rel='noopener'><img class='intastellarCookie-settings__poweredByImg' width='100px' height='100px' src='" + intastellarLogo + "' alt='Intastellar Solutions, International'></a></span>";
+        poweredBy = "<span class='intastellarCookie-settings__poweredBy' alt='This cookie banner is powered by Intastellar Consents Solutions'>Powered by <a class='intastellarCookie-settings__poweredByLink' href='https://www.intastellar.eu' target='_blank' rel='noopener'><img class='intastellarCookie-settings__poweredByImg' width='100px' height='100px' src='" + intastellarLogo + "' alt='Intastellar Solutions, International'></a></span>";
     }
     return `<section class="intSettingsPoweredBy" > ${poweredBy}</section>`;
 }
@@ -2815,6 +2815,9 @@ function intaCbShopifySyncFromBannerCheckboxes() {
 
 function IntaSaveSettings() {
     recordTimeToDecision('save_settings');
+    const FunctionalCheckbox = document.querySelector("#functional");
+    const StaticsCheckBox = document.querySelector("#statics");
+    const MarketingCheckBox = document.querySelector("#marketing");
     const accepted = [];
     if (FunctionalCheckbox?.checked) {
         gtag('consent', 'update', {
@@ -3799,6 +3802,20 @@ function allStorage() {
     }
 
     return values;
+}
+
+/* Total individual cookies across all vendors in a category's cookie list */
+function intaCountCookiesInList(list) {
+    if (!Array.isArray(list)) return 0;
+    return list.reduce(function (sum, vendor) {
+        return sum + (vendor && Array.isArray(vendor.cookies) ? vendor.cookies.length : 0);
+    }, 0);
+}
+
+/* Updates the "(N)" cookie count badge next to a category heading */
+function intaSetCookieCountBadge(cat, count) {
+    var badge = document.getElementById('inta-cookie-count-' + cat);
+    if (badge) badge.textContent = '(' + count + ')';
 }
 
 /* Helper function to list all cookies */
@@ -4818,8 +4835,9 @@ function intaApplyCookieBannerApiData(data) {
 
     Object.keys(categories).forEach(function (cat) {
         var el = document.getElementById('inta-cookie-list-' + cat);
-        if (!el) return;
         var list = categories[cat];
+        intaSetCookieCountBadge(cat, intaCountCookiesInList(list));
+        if (!el) return;
         el.innerHTML = list.length ? listAllCookies(list) : '';
     });
 }
@@ -4832,6 +4850,7 @@ function intaRenderFallbackCookieLists() {
     };
     Object.keys(map).forEach(function (cat) {
         var el = document.getElementById('inta-cookie-list-' + cat);
+        intaSetCookieCountBadge(cat, intaCountCookiesInList(map[cat]));
         if (el) el.innerHTML = listAllCookies(map[cat]);
     });
 }

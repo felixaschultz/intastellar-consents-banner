@@ -179,6 +179,7 @@ We support the following trackers and consents mode:
 | Pintrk | Pintrk is a platform that allows you to track your website visitors and retarget them with ads. | [Pintrk Consent Mode](https://www.pintrk.com/docs/consent-mode/) |
 | Microsoft Clarity | Microsoft Clarity is a web analytics service that helps you understand your website visitors and improve your website. | [Microsoft Clarity Consent Mode](https://clarity.microsoft.com/docs/consent-mode/) |
 | OpenAI Ads | OpenAI Ads measurement API used to track conversions and attribution for ads served via OpenAI surfaces. | OpenAI Ads Consent Mode (`oaiq("consent", true\|false)`) |
+| Amazon Ads | Amazon Ads' advertising and measurement products (e.g. Amazon DSP, Amazon Marketing Cloud) used to track conversions and attribution for ads served via Amazon surfaces. | [Amazon Consent Signal (ACS)](https://advertising.amazon.com/help/GKJQ7E8SE9BRG73Q) — `window.amznConsent()` builder API |
 
 ## Support
 

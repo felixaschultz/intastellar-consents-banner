@@ -1427,9 +1427,6 @@ function restartObserver() {
 
 let beforeScriptExecuteListener = function (event, node) {
     let src = node.src || "";
-    const FunctionalCheckbox = document.querySelector("#functional");
-    const StaticsCheckBox = document.querySelector("#statics");
-    const MarketingCheckBox = document.querySelector("#marketing");
 
     if (getCookie(int_hideCookieBannerName) == "" || getCookie(int_hideCookieBannerName)?.indexOf("__inta") == -1 || intaCookieConsents?.advertisementCookies == "false" && getCookie(int_hideCookieBannerName) != "" && getCookie(int_hideCookieBannerName)?.indexOf("__inta") > -1 && intaCookieConsents?.functionalCookies == "false" && getCookie(int_hideCookieBannerName) != "" && getCookie(int_hideCookieBannerName)?.indexOf("__inta") > -1 && intaCookieConsents?.staticsticCookies == "false" || intaCookieConsents?.advertisementCookies == "null" && intaCookieConsents?.functionalCookies == "null" && intaCookieConsents?.staticsticCookies == "null"
         || intaCookieConsents?.advertisementCookies == "" && intaCookieConsents?.functionalCookies == "" && intaCookieConsents?.staticsticCookies == ""
@@ -1514,9 +1511,6 @@ function checkCookieStatus() {
             let batch = __intaObserverPendingMutations;
             __intaObserverPendingMutations = [];
             requestAnimationFrame(() => {
-                const FunctionalCheckbox = document.querySelector("#functional");
-                const StaticsCheckBox = document.querySelector("#statics");
-                const MarketingCheckBox = document.querySelector("#marketing");
                 batch.forEach(({ addedNodes }) => {
                 addedNodes.forEach((node) => {
 
