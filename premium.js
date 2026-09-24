@@ -4430,16 +4430,16 @@ function generateCookieButtons(allCookiesText, necessaryCookiesText, cookieSetti
     var acceptAllText = intaGetTextOverride("acceptAllButton", allCookiesText);
     var necessaryOnlyText = intaGetNecessaryButtonText(necessaryCookiesText);
     var settingsText = intaGetTextOverride("settingsButton", cookieSettingsText);
-    return '<button class="intastellarCookie-settings__btn --bg intastellarCookieSettings--acceptAll">' + acceptAllText + '</button>'
-        + '<button class="intastellarCookie-settings__btn intastellarCookieBanner__accpetNecssery">' + necessaryOnlyText + '</button>'
-        + '<button class="intastellarCookie-settings__btn intastellarCookieBanner__settings">' + settingsText + '</button>';
+    return '<button class="intastellarCookie-settings__btn --bg intastellarCookieSettings--acceptAll" onclick="javascript:IntaAcceptAll();">' + acceptAllText + '</button>'
+        + '<button class="intastellarCookie-settings__btn intastellarCookieBanner__accpetNecssery" onclick="javascript:IntaSaveNeccessary();">' + necessaryOnlyText + '</button>'
+        + '<button class="intastellarCookie-settings__btn intastellarCookieBanner__settings" onclick="javascript:IntaSaveSettings();">' + settingsText + '</button>';
 }
 
 function generateCookieSettingsButton(settingsText, allCookiesText) {
     var saveSettingsText = intaGetTextOverride("saveSettingsButton", settingsText);
     var acceptAllText = intaGetTextOverride("acceptAllButton", allCookiesText);
     return '<section class="intSettingsButton"><button class="intastellarCookie-settings__btn --noBorderRadius --bg intastellarCookieSettings--acceptAll">' + acceptAllText + '</button>'
-        + '<button class="intastellarCookie-settings__btn intastellarCookieBanner__settings --save">' + saveSettingsText + '</button>'
+        + '<button class="intastellarCookie-settings__btn intastellarCookieBanner__settings --save" onclick="javascript:IntaSaveSettings();">' + saveSettingsText + '</button>'
         + '</section>';
 }
 /* - - - Helper function for ccpa URL generator */
