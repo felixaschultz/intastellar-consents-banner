@@ -488,6 +488,118 @@
     color: var(--inta-floating-fg);
 }
 
+/* ── Blocked embed placeholders (YouTube/Facebook/etc. swapped out until the visitor
+   consents) — built by the shared ConsentsBlock() in uc-boot.dev.js/gdpr.dev.js, used
+   by every design. This gives it the same clean, theme-aware card look as the banner
+   itself instead of rendering unstyled on the bare page background. ──────────────── */
+
+.intCookie_ConsentContainer-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 220px;
+    padding: 24px;
+    box-sizing: border-box;
+    text-align: center;
+    background: var(--inta-floating-bg);
+    color: var(--inta-floating-fg);
+    border: 1px solid var(--inta-floating-border);
+    border-radius: var(--inta-floating-radius);
+    overflow: hidden;
+}
+
+.intCookie_ConsentContainer-info {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: inherit;
+}
+
+.intCookie_ConsentContainer-info p {
+    color: var(--inta-floating-fg);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* .--changePermission is styled full-width/48px for the banner's own button column
+   (see the ── Buttons ── rules above) — inside this placeholder card it sits alongside
+   plain text, not stacked with other buttons, so it should stay compact instead. */
+.intCookie_ConsentContainer-info .intastellarCookie-settings__btn {
+    width: auto;
+    min-width: 160px;
+}
+
+/* Video/embed thumbnail background, when the caller passes one (YouTube etc.) */
+.intCookie_ConsentContainer-content.yt-frame {
+    padding: 0;
+    min-height: 280px;
+}
+
+.intCookie_ConsentContainer-bgIMG {
+    position: absolute;
+    inset: 0;
+    background-color: #000;
+    background-image: attr(inta-bg-img url);
+    background-size: cover;
+    background-position: center;
+}
+
+.intCookie_ConsentContainer-content.yt-frame .intCookie_ConsentContainer-bgIMG::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.intCookie_ConsentContainer-content.yt-frame .intCookie_ConsentContainer-info {
+    padding: 24px;
+    color: #fff;
+}
+
+.intCookie_ConsentContainer-content.yt-frame .intCookie_ConsentContainer-info p {
+    color: #fff;
+}
+
+.intCookie_ConsentLogo-container {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--inta-floating-bg);
+    border: 1px solid var(--inta-floating-border);
+}
+
+.intCookie_ConsentLogo {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+}
+
+.inta-poweredBy {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--inta-floating-fg-muted) !important;
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.inta-poweredBy img {
+    width: 80px !important;
+    height: auto !important;
+    object-fit: contain;
+}
+
 /* ── Small screens: let the card use the full width with side margins ──── */
 
 @media (max-width: 480px) {

@@ -2801,6 +2801,21 @@ onWindowLoad(function () {
     /* Setting Google consent default values to denied & granted based on user selection. Via that Google Ads can be shown on Webpage if user gives consents to Advertisment / Marketing cookies */
     /* (intaCookieConsents?.advertisementCookies == "false") ? '"denied"': '"granted"' */
 
+    /* Must NOT be gated behind isValidPolicyLink() below — category expand/collapse has
+       nothing to do with whether a privacy policy link is configured, and was silently
+       never wiring up at all for any site without one.
+       Delegated on moreFooter (same fix as cb.dev.js): binding per-button via
+       querySelectorAll(...)[i] on *globally* indexed .intastellar__arrow /
+       .intaCookieListOverview lists breaks the moment those classes appear anywhere
+       else on the page, or the index ordering doesn't line up 1:1. Scoping the lookup
+       to the clicked button's own subtree/parent avoids that entirely. */
+    moreFooter.addEventListener("click", (e) => {
+        const btn = e.target.closest(".intaExpandCookieList");
+        if (!btn || !moreFooter.contains(btn)) return;
+        btn.querySelector(".intastellar__arrow")?.classList.toggle("open");
+        btn.parentElement.querySelector(".intaCookieListOverview")?.classList.toggle("view");
+    });
+
     if (isValidPolicyLink()) {
         document.querySelectorAll(".intaCookieListOverview-vendor").forEach((vendor, i) => {
             if (window?.INTA?.settings.company != "" && window?.INTA?.settings.company != undefined && vendor.innerText == window.location.host) {
@@ -2831,14 +2846,6 @@ onWindowLoad(function () {
         }
 
         intaApplyCmpVisibilityFromCookie();
-
-        document.querySelectorAll(".intaExpandCookieList").forEach((btn, i) => {
-
-            btn.addEventListener("click", () => {
-                document.querySelectorAll(".intastellar__arrow")[i].classList.toggle("open");
-                document.querySelectorAll(".intaCookieListOverview")[i].classList.toggle("view");
-            })
-        })
 
         let settings = document.querySelector(".intastellarCookie-settings__container");
         if (document.querySelector(".intastellarCookieBanner") != null) {
@@ -2963,13 +2970,22 @@ onWindowLoad(function () {
                 ? intaGetNecessaryButtonText(settingsSaveLang.necessaryCookiesText) : intaGetTextOverride("saveSettingsButton", settingsSaveLang.saveSettingsText);
         })
 
-        document.querySelector(".intastellarCookie-settings__btn.intastellarCookieBanner__settings.--save").innerText = FunctionalCheckbox?.checked === true
-            && StaticsCheckBox?.checked === true
-            && MarketingCheckBox?.checked === true
-            || FunctionalCheckbox?.checked === true
-            || StaticsCheckBox?.checked === true
-            || MarketingCheckBox?.checked === true
-            ? intaGetTextOverride("saveSettingsButton", settingsSaveLang.saveSettingsText) : intaGetNecessaryButtonText(settingsSaveLang.necessaryCookiesText)
+        /* Re-run on every checkbox change (not just once at load) so the button text stays
+           in sync with what the visitor has actually toggled — see updateSaveButtonText() below. */
+        function updateSaveButtonText() {
+            const saveBtn = document.querySelector(".intastellarCookie-settings__btn.intastellarCookieBanner__settings.--save");
+            if (!saveBtn) return;
+            const fc = document.querySelector("#functional");
+            const sc = document.querySelector("#statics");
+            const mc = document.querySelector("#marketing");
+            saveBtn.innerText = (fc?.checked || sc?.checked || mc?.checked)
+                ? intaGetTextOverride("saveSettingsButton", settingsSaveLang.saveSettingsText)
+                : intaGetNecessaryButtonText(settingsSaveLang.necessaryCookiesText);
+        }
+        updateSaveButtonText();
+        [FunctionalCheckbox, StaticsCheckBox, MarketingCheckBox].forEach((el) => {
+            el?.addEventListener("change", updateSaveButtonText);
+        });
 
         const ness = document.getElementsByClassName("intastellarCookieBanner__accpetNecssery");
         const all = document.getElementsByClassName("intastellarCookieSettings--acceptAll");
