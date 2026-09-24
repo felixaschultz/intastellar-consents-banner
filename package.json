@@ -2,7 +2,8 @@
   "name": "intastellar-cookie-solutions",
   "private": true,
   "scripts": {
-    "test": "jest --testPathPattern=tests/regulations"
+    "test": "jest --testPathPattern=tests/regulations",
+    "test-on-site": "jest --testPathPattern=tests/test-on-site"
   },
   "devDependencies": {
     "jest": "^29.7.0"
