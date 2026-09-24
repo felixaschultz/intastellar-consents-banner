@@ -4954,5 +4954,125 @@ function saveINTCookieSettings(consent, type = null) {
    already reads the checkbox states straight from the DOM and does the full save/persist/dispatch
    flow, so there's nothing else for this to do. */
 function IntaSaveSettings() {
-    saveINTCookieSettings("save_settings");
-}
+    recordTimeToDecision('save_settings');
+    const FunctionalCheckbox = document.querySelector("#functional");
+    const StaticsCheckBox = document.querySelector("#statics");
+    const MarketingCheckBox = document.querySelector("#marketing");
+    const accepted = [];
+    if (FunctionalCheckbox?.checked) {
+        gtag('consent', 'update', {
+            'functionality_storage': 'granted',
+        })
+        accepted.push("functionalCookies");
+
+    } else if (!FunctionalCheckbox?.checked) {
+        gtag('consent', 'update', {
+            'functionality_storage': 'denied',
+        });
+
+        const index = accepted.indexOf("functionalCookies");
+        if (index > -1) { // only splice array when item is found
+            accepted.splice(index, 1); // 2nd parameter means remove one item only
+        }
+    }
+
+    if (StaticsCheckBox?.checked) {
+        gtag('consent', 'update', {
+            'analytics_storage': 'granted',
+        })
+        window.clarity && window.clarity('consentv2', {
+            analytics_Storage: "granted"
+        });
+        accepted.push("staticsticCookies");
+        _paq.push(['setConsentGiven']);
+    } else if (!StaticsCheckBox?.checked) {
+        gtag('consent', 'update', {
+            'analytics_storage': 'denied',
+        })
+
+        _paq.push(['forgetConsentGiven']);
+
+        window.clarity && window.clarity('consentv2', {
+            analytics_Storage: "denied"
+        });
+
+        const index = accepted.indexOf("staticsticCookies");
+        if (index > -1) { // only splice array when item is found
+            accepted.splice(index, 1); // 2nd parameter means remove one item only
+        }
+    }
+
+    if (MarketingCheckBox?.checked) {
+        gtag('consent', 'update', {
+            'ad_storage': 'granted',
+            'personalization_storage': 'granted',
+            'ads_data_redaction': 'granted',
+            'ad_user_data': 'granted',
+            'ad_personalization': 'granted',
+        });
+        window.uetq.push('consent', 'update', {
+            'ad_storage': 'granted'
+        });
+        window.clarity && window.clarity('consentv2', {
+            ad_Storage: "granted",
+            analytics_Storage: "denied"
+        });
+        accepted.push("advertisementCookies");
+        // Pintrk
+        if (typeof pintrk === 'function') {
+            try {
+                pintrk('setconsent', true);
+            } catch (e) { /* ignore */ }
+        }
+        // OpenAI Ads measurement consent mode
+        if (typeof oaiq === 'function') {
+            try {
+                oaiq('consent', true);
+            } catch (e) { /* ignore */ }
+        }
+        updateVwoConsent(intaConsentsObjectVariable.consents);
+
+    } else if (!MarketingCheckBox?.checked || intastellar) {
+        window.uetq.push('consent', 'update', {
+            'ad_storage': 'denied'
+        });
+        gtag('consent', 'update', {
+            'ad_storage': 'denied',
+            'personalization_storage': 'denied',
+            'ads_data_redaction': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied',
+        });
+
+        updateVwoConsent(intaConsentsObjectVariable.consents);
+        // Pintrk
+        if (typeof pintrk === 'function') {
+            try {
+                pintrk('setconsent', false);
+            } catch (e) { /* ignore */ }
+        }
+        // OpenAI Ads measurement consent mode
+        if (typeof oaiq === 'function') {
+            try {
+                oaiq('consent', false);
+            } catch (e) { /* ignore */ }
+        }
+
+        window.clarity && window.clarity('consent', false);
+
+        const index = accepted.indexOf("advertisementCookies");
+        if (index > -1) { // only splice array when item is found
+            accepted.splice(index, 1); // 2nd parameter means remove one item only
+        }
+    }
+    if (typeof intaWpApplyConsentFromIntastellarChoices === "function") {
+        intaWpApplyConsentFromIntastellarChoices(
+            !!FunctionalCheckbox?.checked,
+            !!StaticsCheckBox?.checked,
+            !!MarketingCheckBox?.checked,
+        );
+    }
+    saveINTCookieSettings("changePermission", accepted);
+    // Dispatch TCF event after user action
+    dispatchTCFConsentChangedIfAvailable();
+};
