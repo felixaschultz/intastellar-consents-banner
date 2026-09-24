@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "test": "jest --testPathPattern=tests/regulations",
-    "test-on-site": "jest --testPathPattern=tests/test-on-site"
+    "test-on-site": "jest --testPathPattern=tests/test-on-site",
+    "generate-locale-files": "node scripts/generate-cmp-locales.mjs"
   },
   "devDependencies": {
     "jest": "^29.7.0"
