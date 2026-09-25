@@ -805,18 +805,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
        
@@ -916,18 +910,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.german.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.german.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.german.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.german.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
     `;
@@ -1032,18 +1020,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.english.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.english.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.english.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.english.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
     `;
@@ -1143,16 +1125,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.spanish.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.spanish.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])}
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.spanish.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.spanish.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])}
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
     `;
@@ -1254,18 +1232,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.french.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.french.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.french.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.french.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
     `;
@@ -1367,18 +1339,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.swedish.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.swedish.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.swedish.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.swedish.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
     `;
@@ -1453,18 +1419,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.norwegian.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.norwegian.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.norwegian.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.norwegian.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -1565,18 +1525,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.dutch.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.dutch.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.dutch.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.dutch.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -1677,18 +1631,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.italian.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.italian.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.italian.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.italian.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -1789,18 +1737,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.finnish.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.finnish.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.finnish.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.finnish.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -1901,18 +1843,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.russian.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.russian.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.russian.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.russian.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -2013,18 +1949,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.polish.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.polish.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.polish.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.polish.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -2125,18 +2055,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.afrikaans.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.afrikaans.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.afrikaans.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.afrikaans.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -2237,18 +2161,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.korean.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.korean.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.korean.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.korean.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -2350,18 +2268,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.arabic.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.arabic.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.arabic.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.arabic.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -2463,18 +2375,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.estonian.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.estonian.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.estonian.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.estonian.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -2575,18 +2481,12 @@ if (intastellarCookieLanguage != null) {
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.security.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_securityCookieList !== "undefined" ? inta_securityCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.unclassified.description}</p>
-                <article class="intaCookieListOverview">
-                ${listAllCookies(typeof inta_unclassifiedCookieList !== "undefined" ? inta_unclassifiedCookieList : [])
-            }
-                </article>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -4540,6 +4440,61 @@ function listAllCookies(cookieList) {
     }).join(" ")
 }
 
+/* security/unclassified have no static vendor list (see dev/gdpr.dev.js) — they only
+   ever come from the live cookie-banner-scan API, so they're populated and unhidden
+   here instead of at template-render time. Mirrors dev/cb.dev.js. */
+var _intaOptionalCategoriesLoaded = false;
+var INTA_OPTIONAL_DETAIL_CATEGORIES = ['security', 'unclassified'];
+
+function intaToggleCookieCategorySection(cat, hasItems) {
+    if (INTA_OPTIONAL_DETAIL_CATEGORIES.indexOf(cat) === -1) return;
+    var section = document.getElementById('inta-cookie-section-' + cat);
+    if (section) section.style.display = hasItems ? '' : 'none';
+}
+
+function intaApplyOptionalCookieCategories(data) {
+    var apiCategories = data && typeof data === 'object' && !Array.isArray(data) ? data.categories : null;
+    if (!apiCategories || typeof apiCategories !== 'object') return;
+
+    INTA_OPTIONAL_DETAIL_CATEGORIES.forEach(function (cat) {
+        var entry = apiCategories[cat] || {};
+        var vendors = Array.isArray(entry.vendors) ? entry.vendors : [];
+        var el = document.getElementById('inta-cookie-list-' + cat);
+        intaToggleCookieCategorySection(cat, vendors.length > 0);
+        if (!el) return;
+        try {
+            el.innerHTML = vendors.length ? listAllCookies(vendors) : '';
+        } catch (e) {
+            if (typeof intastellarDevMode !== "undefined" && intastellarDevMode) {
+                console.error('[intaApplyOptionalCookieCategories] listAllCookies failed for "' + cat + '":', e);
+            }
+        }
+    });
+}
+
+function intaFetchOptionalCookieCategories() {
+    if (_intaOptionalCategoriesLoaded) return;
+    _intaOptionalCategoriesLoaded = true;
+
+    if (window.intaFoundCookieList?.categories) {
+        intaApplyOptionalCookieCategories(window.intaFoundCookieList);
+        return;
+    }
+
+    var domain = location.hostname;
+    var apiUrl = 'https://www.intastellarconsents.com/api/cookie-banner.js?domain=' + encodeURIComponent(domain);
+
+    fetch(apiUrl)
+        .then(function (res) {
+            if (!res.ok) throw new Error('API returned ' + res.status);
+            return res.json();
+        })
+        .then(function (data) {
+            intaApplyOptionalCookieCategories(data);
+        })
+        .catch(function () { /* leave sections hidden */ });
+}
+
 function isURL(str) {
     const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
         '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
@@ -4771,6 +4726,7 @@ function learnMore(e) {
     //document.querySelector(".intastellarCookieConstents").classList.toggle("--active");
 
     if (document.querySelector(".intastellarCookieConstents__content-footer").classList.contains("view")) {
+        intaFetchOptionalCookieCategories();
         if (intastellarCookieLanguage == "da-DK" || intastellarCookieLanguage == "da" || intastellarCookieLanguage == "dk") {
             e.innerHTML = "Skjul detaljer";
         } else if (intastellarCookieLanguage != null && intastellarCookieLanguage === "en" || intastellarCookieLanguage === "en-GB" || intastellarCookieLanguage === "en-US") {
