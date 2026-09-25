@@ -237,6 +237,13 @@
             + '<article class="intaCookieListOverview" id="inta-cookie-list-statistics"></article></section>'
             + "<section><h3 class=\"intaExpandCookieList\">" + C.marketing.title + ' <span class="intaCookieCount" id="inta-cookie-count-marketing"></span> <i class="intastellar__arrow"></i></h3><p>' + C.marketing.description + '</p>'
             + '<article class="intaCookieListOverview" id="inta-cookie-list-marketing"></article></section>'
+            /* Security and unclassified are informational-only categories from the cookie-banner API
+               (no consent toggle). They're hidden until intaApplyCookieBannerApiData finds cookies in
+               them, since most sites will have none. */
+            + '<section id="inta-cookie-section-security" style="display:none;"><h3 class="intaExpandCookieList">' + (C.security ? C.security.title : 'Security') + ' <span class="intaCookieCount" id="inta-cookie-count-security"></span> <i class="intastellar__arrow"></i></h3><p>' + (C.security ? C.security.description : 'Security cookies help identify and prevent security risks, detect fraudulent activity, and protect our website and its users.') + '</p>'
+            + '<article class="intaCookieListOverview" id="inta-cookie-list-security"></article></section>'
+            + '<section id="inta-cookie-section-unclassified" style="display:none;"><h3 class="intaExpandCookieList">' + (C.unclassified ? C.unclassified.title : 'Unclassified') + ' <span class="intaCookieCount" id="inta-cookie-count-unclassified"></span> <i class="intastellar__arrow"></i></h3><p>' + (C.unclassified ? C.unclassified.description : 'Cookies that have not yet been classified into a category are listed here. We are working with the providers of these individual cookies to classify them.') + '</p>'
+            + '<article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article></section>'
             + "</article>";
     };
 

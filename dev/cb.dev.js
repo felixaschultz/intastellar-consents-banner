@@ -4828,13 +4828,22 @@ function intaTriggerCookieBannerScan(domain) {
 }
 
 /* Maps the live cookie-banner-scan API's category keys onto our internal category
-   keys ("analytics" -> "statistics"). "security" has no matching UI category (yet)
-   and is intentionally left out of the badges/lists below. */
-var INTA_API_CATEGORY_TO_INTERNAL = { necessary: 'necessary', functional: 'functional', analytics: 'statistics', statistics: 'statistics', marketing: 'marketing' };
+   keys ("analytics" -> "statistics"). */
+var INTA_API_CATEGORY_TO_INTERNAL = { necessary: 'necessary', functional: 'functional', analytics: 'statistics', statistics: 'statistics', marketing: 'marketing', security: 'security', unclassified: 'unclassified' };
+
+/* Categories with no consent toggle that only appear in the details view when the
+   API actually found cookies for them; hidden by default (see cb-locale-loader.dev.js). */
+var INTA_OPTIONAL_DETAIL_CATEGORIES = ['security', 'unclassified'];
+
+function intaToggleCookieCategorySection(cat, hasItems) {
+    if (INTA_OPTIONAL_DETAIL_CATEGORIES.indexOf(cat) === -1) return;
+    var section = document.getElementById('inta-cookie-section-' + cat);
+    if (section) section.style.display = hasItems ? '' : 'none';
+}
 
 function intaApplyCookieBannerApiData(data) {
-    var categories = { necessary: [], functional: [], statistics: [], marketing: [] };
-    var counts = { necessary: null, functional: null, statistics: null, marketing: null };
+    var categories = { necessary: [], functional: [], statistics: [], marketing: [], security: [], unclassified: [] };
+    var counts = { necessary: null, functional: null, statistics: null, marketing: null, security: null, unclassified: null };
 
     var apiCategories = data && typeof data === 'object' && !Array.isArray(data) ? data.categories : null;
     if (apiCategories && typeof apiCategories === 'object') {
@@ -4869,6 +4878,7 @@ function intaApplyCookieBannerApiData(data) {
         var list = categories[cat];
         var count = (counts[cat] !== null) ? counts[cat] : intaCountCookiesInList(list);
         intaSetCookieCountBadge(cat, count);
+        intaToggleCookieCategorySection(cat, list.length > 0);
         if (!el) return;
         /* listAllCookies() still expects the older vendor.domains/vendor.cookies[].cookie shape
            and can throw on the live API's vendor.hosts/vendor.cookies[].name shape — isolate that

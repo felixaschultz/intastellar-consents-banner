@@ -16,6 +16,14 @@
     marketing: {
         title: "Marketing",
         description: "We use web technologies (including cookies) from trusted partners to deliver content and advertisements tailored specifically to you on websites and social media platforms. This content is selected and displayed based on your browsing behavior. Advertising and marketing cookies are used to show relevant ads and campaigns, tracking visitors across sites and gathering information to present personalized advertisements."
+    },
+    security: {
+        title: "Security",
+        description: "Security cookies help identify and prevent security risks, detect fraudulent activity, and protect our website and its users."
+    },
+    unclassified: {
+        title: "Unclassified",
+        description: "Cookies that have not yet been classified into a category are listed here. We are working with the providers of these individual cookies to classify them."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "left" : "right";
