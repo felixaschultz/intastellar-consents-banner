@@ -16,6 +16,14 @@
     marketing: {
         title: "Marketing",
         description: "Koristimo web tehnologije (uključujući kolačiće) pouzdanih partnera kako bismo vam pružili sadržaj i oglase posebno prilagođene vama na web stranicama i platformama društvenih medija. Ovaj sadržaj se odabire i prikazuje na temelju vašeg ponašanja pri pregledavanju. Oglasni i marketinški kolačići koriste se za prikaz relevantnih oglasa i kampanja, praćenje posjetitelja na različitim stranicama i prikupljanje informacija za prikaz personaliziranih oglasa."
+    },
+    security: {
+        title: "Sigurnost",
+        description: "Sigurnosni kolačići pomažu u prepoznavanju i sprječavanju sigurnosnih rizika, otkrivanju prijevarnih aktivnosti te zaštiti naše web stranice i njezinih korisnika."
+    },
+    unclassified: {
+        title: "Nekategorizirani",
+        description: "Kolačići koji još nisu razvrstani u kategoriju navedeni su ovdje. Surađujemo s pružateljima ovih pojedinačnih kolačića kako bismo ih razvrstali."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "lijevom" : "desnom";

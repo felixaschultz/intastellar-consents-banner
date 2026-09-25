@@ -45,6 +45,14 @@ module.exports = {
             title: "Werbung",
             description: "Werbe- oder Marketing-Cookies werden eingesetzt, um Besuchern relevante Anzeigen und Marketingkampagnen anzuzeigen. Diese Cookies verfolgen Besucher über verschiedene Websites und sammeln Informationen, um personalisierte Werbung bereitzustellen."
         },
+        security: {
+            title: "Sicherheit",
+            description: "Sicherheits-Cookies helfen dabei, Sicherheitsrisiken zu erkennen und zu verhindern, betrügerische Aktivitäten aufzudecken und unsere Website sowie ihre Nutzer zu schützen."
+        },
+        unclassified: {
+            title: "Nicht klassifiziert",
+            description: "Cookies, die noch keiner Kategorie zugeordnet wurden, werden hier aufgeführt. Wir arbeiten mit den Anbietern dieser einzelnen Cookies zusammen, um sie zu klassifizieren."
+        },
     },
     danish: {
         saveSettings: "Afvis",
@@ -63,6 +71,14 @@ module.exports = {
         marketing: {
             title: "Marketing",
             description: "Vi bruger webteknologier (også cookies) fra udvalgte partnere for at kunne vise dig indhold og annoncer, der er specielt skræddersyet til dig på hjemmesider og sociale medier. Dette indhold udvælges og vises på baggrund af din brugsadfærd. Annonce- eller marketingcookies bruges til at give besøgende relevante annoncer og marketingkampagner. Disse cookies sporer besøgende på tværs af websteder og indsamler oplysninger for at levere tilpassede annoncer."
+        },
+        security: {
+            title: "Sikkerhed",
+            description: "Sikkerhedscookies hjælper med at identificere og forhindre sikkerhedsrisici, opdage svigagtig aktivitet og beskytte vores hjemmeside og dens brugere."
+        },
+        unclassified: {
+            title: "Ikke-klassificerede",
+            description: "Cookies, der endnu ikke er blevet kategoriseret, er angivet her. Vi arbejder sammen med udbyderne af disse enkelte cookies for at klassificere dem."
         }
     },
     spanish: {
@@ -82,6 +98,14 @@ module.exports = {
         marketing: {
             title: "Marketing",
             description: "Utilizamos tecnologías web (también cookies) de socios seleccionados para poder mostrarle contenido y publicidad especialmente adaptados a usted en sitios web y redes sociales. Este contenido se selecciona y muestra en función de su comportamiento de uso. Las cookies publicitarias o de marketing se utilizan para proporcionar a los visitantes anuncios y campañas de marketing relevantes. Estas cookies rastrean a los visitantes a través de sitios web y recopilan información para proporcionar anuncios personalizados."
+        },
+        security: {
+            title: "Seguridad",
+            description: "Las cookies de seguridad ayudan a identificar y prevenir riesgos de seguridad, detectar actividades fraudulentas y proteger nuestro sitio web y a sus usuarios."
+        },
+        unclassified: {
+            title: "Sin clasificar",
+            description: "Las cookies que aún no han sido clasificadas en una categoría se enumeran aquí. Estamos trabajando con los proveedores de estas cookies individuales para clasificarlas."
         }
     },
     french: {
@@ -101,6 +125,14 @@ module.exports = {
         marketing: {
             title: "Marketing",
             description: "Nous utilisons des technologies web (également des cookies) de partenaires sélectionnés pour pouvoir vous montrer du contenu et de la publicité spécialement adaptés à vous sur des sites web et des réseaux sociaux. Ce contenu est sélectionné et affiché sur la base de votre comportement d'utilisation. Les cookies publicitaires ou de marketing sont utilisés pour fournir aux visiteurs des annonces et des campagnes marketing pertinentes. Ces cookies suivent les visiteurs à travers les sites web et collectent des informations pour fournir des annonces personnalisées."
+        },
+        security: {
+            title: "Sécurité",
+            description: "Les cookies de sécurité aident à identifier et à prévenir les risques de sécurité, à détecter les activités frauduleuses et à protéger notre site web et ses utilisateurs."
+        },
+        unclassified: {
+            title: "Non classés",
+            description: "Les cookies qui n'ont pas encore été classés dans une catégorie sont répertoriés ici. Nous travaillons avec les fournisseurs de ces cookies individuels pour les classer."
         }
     },
     italian: {
@@ -120,6 +152,14 @@ module.exports = {
         marketing: {
             title: "Marketing",
             description: "Utilizziamo tecnologie web (anche cookie) da partner selezionati per poterti mostrare contenuti e pubblicità appositamente studiati per te su siti web e social media. Questi contenuti vengono selezionati e visualizzati in base al tuo comportamento d'uso. I cookie pubblicitari o di marketing vengono utilizzati per fornire ai visitatori annunci e campagne di marketing pertinenti. Questi cookie tracciano i visitatori tra i siti web e raccolgono informazioni per fornire annunci personalizzati."
+        },
+        security: {
+            title: "Sicurezza",
+            description: "I cookie di sicurezza aiutano a identificare e prevenire rischi per la sicurezza, rilevare attività fraudolente e proteggere il nostro sito web e i suoi utenti."
+        },
+        unclassified: {
+            title: "Non classificati",
+            description: "I cookie che non sono ancora stati classificati in una categoria sono elencati qui. Stiamo collaborando con i fornitori di questi singoli cookie per classificarli."
         }
     },
     dutch: {
@@ -139,6 +179,14 @@ module.exports = {
         marketing: {
             title: "Marketing",
             description: "We gebruiken webtechnologieën (ook cookies) van geselecteerde partners om u inhoud en advertenties te tonen die speciaal op u zijn afgestemd op websites en sociale media. Deze inhoud wordt geselecteerd en weergegeven op basis van uw gebruiksgedrag. Advertentie- of marketingcookies worden gebruikt om bezoekers relevante advertenties en marketingcampagnes te bieden. Deze cookies volgen bezoekers over websites heen en verzamelen informatie om aangepaste advertenties te leveren."
+        },
+        security: {
+            title: "Beveiliging",
+            description: "Beveiligingscookies helpen bij het identificeren en voorkomen van beveiligingsrisico's, het opsporen van frauduleuze activiteiten en het beschermen van onze website en haar gebruikers."
+        },
+        unclassified: {
+            title: "Niet-geclassificeerd",
+            description: "Cookies die nog niet in een categorie zijn ingedeeld, worden hier weergegeven. We werken samen met de aanbieders van deze individuele cookies om ze te classificeren."
         }
     },
     portuguese: {
@@ -158,6 +206,14 @@ module.exports = {
         marketing: {
             title: "Marketing",
             description: "Utilizamos tecnologias web (também cookies) de parceiros selecionados para lhe mostrar conteúdo e publicidade especialmente adaptados a si em sites web e redes sociais. Este conteúdo é selecionado e exibido com base no seu comportamento de utilização. Os cookies publicitários ou de marketing são utilizados para fornecer aos visitantes anúncios e campanhas de marketing relevantes. Estes cookies rastreiam visitantes em sites web e recolhem informações para fornecer anúncios personalizados."
+        },
+        security: {
+            title: "Segurança",
+            description: "Os cookies de segurança ajudam a identificar e prevenir riscos de segurança, detetar atividades fraudulentas e proteger o nosso site e os seus utilizadores."
+        },
+        unclassified: {
+            title: "Não classificados",
+            description: "Os cookies que ainda não foram classificados numa categoria estão listados aqui. Estamos a trabalhar com os fornecedores destes cookies individuais para os classificar."
         }
 
     },
@@ -178,6 +234,14 @@ module.exports = {
         marketing: {
             title: "Маркетинг",
             description: "Мы используем веб-технологии (также файлы cookie) от выбранных партнеров, чтобы показывать вам контент и рекламу, специально подобранную для вас на сайтах и социальных сетях. Этот контент выбирается и отображается на основе вашего поведения. Файлы cookie для рекламы или маркетинга используются для предоставления посетителям релевантных объявлений и маркетинговых кампаний. Эти файлы cookie отслеживают посетителей по различным сайтам и собирают информацию для предоставления настраиваемых объявлений."
+        },
+        security: {
+            title: "Безопасность",
+            description: "Файлы cookie для обеспечения безопасности помогают выявлять и предотвращать угрозы безопасности, обнаруживать мошеннические действия и защищать наш сайт и его пользователей."
+        },
+        unclassified: {
+            title: "Неклассифицированные",
+            description: "Здесь перечислены файлы cookie, которые еще не были отнесены к какой-либо категории. Мы работаем с поставщиками этих отдельных файлов cookie, чтобы классифицировать их."
         }
     },
     swedish: {
@@ -197,6 +261,14 @@ module.exports = {
         marketing: {
             title: "Marknadsföring",
             description: "Vi använder webbteknologier (även cookies) från utvalda partners för att kunna visa dig innehåll och annonser som är speciellt anpassade för dig på webbplatser och sociala medier. Detta innehåll väljs och visas baserat på ditt användarbeteende. Annons- eller marknadsföringscookies används för att ge besökare relevanta annonser och marknadsföringskampanjer. Dessa cookies spårar besökare över webbplatser och samlar in information för att tillhandahålla anpassade annonser."
+        },
+        security: {
+            title: "Säkerhet",
+            description: "Säkerhetscookies hjälper till att identifiera och förhindra säkerhetsrisker, upptäcka bedräglig aktivitet och skydda vår webbplats och dess användare."
+        },
+        unclassified: {
+            title: "Oklassificerade",
+            description: "Cookies som ännu inte har klassificerats i en kategori listas här. Vi arbetar med leverantörerna av dessa enskilda cookies för att klassificera dem."
         }
     },
     norwegian: {
@@ -216,6 +288,14 @@ module.exports = {
         marketing: {
             title: "Markedsføring",
             description: "Vi bruker webteknologier (også informasjonskapsler) fra utvalgte partnere for å kunne vise deg innhold og annonser som er spesielt tilpasset deg på nettsteder og sosiale medier. Dette innholdet velges og vises basert på bruksatferden din. Annonse- eller markedsføringskapsler brukes til å gi besøkende relevante annonser og markedsføringskampanjer. Disse informasjonskapslene sporer besøkende på tvers av nettsteder og samler inn informasjon for å levere tilpassede annonser."
+        },
+        security: {
+            title: "Sikkerhet",
+            description: "Sikkerhetsinformasjonskapsler hjelper til med å identifisere og forhindre sikkerhetsrisikoer, oppdage svindelaktivitet og beskytte nettstedet vårt og dets brukere."
+        },
+        unclassified: {
+            title: "Uklassifiserte",
+            description: "Informasjonskapsler som ennå ikke er klassifisert i en kategori, er oppført her. Vi jobber med leverandørene av disse individuelle informasjonskapslene for å klassifisere dem."
         }
     },
     finnish: {
@@ -235,6 +315,14 @@ module.exports = {
         marketing: {
             title: "Markkinointi",
             description: "Käytämme valittujen kumppaneiden web-tekniikoita (myös evästeitä) voidaksemme näyttää sinulle sisältöä ja mainoksia, jotka on räätälöity sinulle erityisesti verkkosivustoilla ja sosiaalisissa medioissa. Tämä sisältö valitaan ja näytetään käyttäytymisesi perusteella. Mainos- tai markkinointievästeitä käytetään tarjoamaan vierailijoille relevantteja mainoksia ja markkinointikampanjoita. Nämä evästeet seuraavat vierailijoita sivustoilla ja keräävät tietoja räätälöityjen mainosten tarjoamiseksi."
+        },
+        security: {
+            title: "Turvallisuus",
+            description: "Turvaevästeet auttavat tunnistamaan ja estämään turvallisuusriskejä, havaitsemaan petollista toimintaa ja suojaamaan verkkosivustoamme ja sen käyttäjiä."
+        },
+        unclassified: {
+            title: "Luokittelemattomat",
+            description: "Tässä luetellaan evästeet, joita ei ole vielä luokiteltu mihinkään kategoriaan. Teemme yhteistyötä näiden yksittäisten evästeiden tarjoajien kanssa niiden luokittelemiseksi."
         }
     },
     polish: {
@@ -254,6 +342,14 @@ module.exports = {
         marketing: {
             title: "Reklama",
             description: "Korzystamy z technologii internetowych (w tym plików cookie) od wybranych partnerów, aby móc wyświetlać Ci treści i reklamy specjalnie dostosowane do Ciebie na stronach internetowych i w mediach społecznościowych. Treści te są wybierane i wyświetlane na podstawie Twojego zachowania podczas korzystania z sieci. Pliki cookie reklamowe lub marketingowe są używane do dostarczania odwiedzającym odpowiednich reklam i kampanii marketingowych. Te pliki cookie śledzą odwiedzających na różnych stronach internetowych i zbierają informacje w celu dostarczenia spersonalizowanych reklam."
+        },
+        security: {
+            title: "Bezpieczeństwo",
+            description: "Pliki cookie związane z bezpieczeństwem pomagają identyfikować i zapobiegać zagrożeniom bezpieczeństwa, wykrywać oszukańcze działania oraz chronić naszą stronę internetową i jej użytkowników."
+        },
+        unclassified: {
+            title: "Niesklasyfikowane",
+            description: "Pliki cookie, które nie zostały jeszcze przypisane do żadnej kategorii, są wymienione tutaj. Współpracujemy z dostawcami tych poszczególnych plików cookie, aby je sklasyfikować."
         }
     },
     chinese: {
@@ -273,6 +369,14 @@ module.exports = {
         marketing: {
             title: "营销",
             description: "我们使用来自精选合作伙伴的网络技术（包括Cookie），以便在网站和社交媒体上向您展示特别为您量身定制的内容和广告。这些内容根据您的使用行为进行选择和显示。广告或营销Cookie用于向访问者提供相关的广告和营销活动。这些Cookie在不同的网站上跟踪访问者，并收集信息以提供个性化的广告。"
+        },
+        security: {
+            title: "安全",
+            description: "安全性Cookie有助于识别和预防安全风险、检测欺诈活动，并保护我们的网站及其用户。"
+        },
+        unclassified: {
+            title: "未分类",
+            description: "尚未归类的Cookie会列示于此。我们正在与这些Cookie的各个提供商合作，对其进行分类。"
         }
     },
     japanese: {
@@ -292,6 +396,14 @@ module.exports = {
         marketing: {
             title: "マーケティング",
             description: "当社は、選択されたパートナーからのWeb技術（Cookieも含む）を使用して、Webサイトやソーシャルメディア上で特にあなた向けにカスタマイズされたコンテンツや広告を表示します。これらのコンテンツは、あなたの使用行動に基づいて選択および表示されます。広告またはマーケティングCookieは、訪問者に関連する広告やマーケティングキャンペーンを提供するために使用されます。これらのCookieは、異なるWebサイトで訪問者を追跡し、個別化された広告を提供するための情報を収集します。"
+        },
+        security: {
+            title: "セキュリティ",
+            description: "セキュリティCookieは、セキュリティリスクの識別と防止、不正行為の検出、当社のWebサイトとそのユーザーの保護に役立ちます。"
+        },
+        unclassified: {
+            title: "未分類",
+            description: "まだカテゴリーに分類されていないCookieがここに表示されます。当社はこれらの個々のCookieの提供元と協力して分類を進めています。"
         }
     },
     thai: {
@@ -312,6 +424,14 @@ module.exports = {
             title: "การตลาด",
             description: "เราใช้เทคโนโลยีเว็บ (รวมถึงคุกกี้) จากพันธมิตรที่คัดสรร เพื่อแสดงเนื้อหาและโฆษณาที่ปรับให้เหมาะกับคุณบนเว็บไซต์และโซเชียลมีเดีย โดยเลือกและแสดงผลตามพฤติกรรมการใช้งานของคุณ คุกกี้โฆษณาหรือการตลาดใช้เพื่อแสดงโฆษณาและแคมเปญที่เกี่ยวข้อง ติดตามผู้เยี่ยมชมข้ามเว็บไซต์ และรวบรวมข้อมูลเพื่อนำเสนอโฆษณาเฉพาะบุคคล",
         },
+        security: {
+            title: "ความปลอดภัย",
+            description: "คุกกี้ด้านความปลอดภัยช่วยระบุและป้องกันความเสี่ยงด้านความปลอดภัย ตรวจจับกิจกรรมฉ้อโกง และปกป้องเว็บไซต์ของเราและผู้ใช้งาน",
+        },
+        unclassified: {
+            title: "ยังไม่จัดหมวดหมู่",
+            description: "คุกกี้ที่ยังไม่ได้ถูกจัดอยู่ในหมวดหมู่ใดจะแสดงอยู่ที่นี่ เรากำลังทำงานร่วมกับผู้ให้บริการคุกกี้แต่ละรายการเพื่อจัดหมวดหมู่ให้",
+        },
     },
     greek: {
         saveSettings: "Απόρριψη",
@@ -330,6 +450,14 @@ module.exports = {
         marketing: {
             title: "Μάρκετινγκ",
             description: "Χρησιμοποι    ούμε τεχνολογίες ιστού (συμπεριλαμβανομένων των cookies) από επιλεγμένους συνεργάτες για να σας δείχνουμε περιεχόμενο και διαφημίσεις ειδικά προσαρμοσμένες για εσάς σε ιστότοπους και κοινωνικά μέσα. Αυτό το περιεχόμενο επιλέγεται και εμφανίζεται με βάση τη συμπεριφορά χρήσης σας. Τα cookies διαφήμισης ή μάρκετινγκ χρησιμοποιούνται για να παρέχουν στους επισκέπτες σχετικές διαφημίσεις και εκστρατείες μάρκετινγκ. Αυτά τα cookies παρακολουθούν τους επισκέπτες σε διάφορους ιστότοπους και συλλέγουν πληροφορίες για την παροχή εξατομικευμένων διαφημίσεων."
+        },
+        security: {
+            title: "Ασφάλεια",
+            description: "Τα cookies ασφαλείας βοηθούν στον εντοπισμό και την αποτροπή κινδύνων ασφαλείας, στην ανίχνευση δόλιας δραστηριότητας και στην προστασία του ιστότοπού μας και των χρηστών του."
+        },
+        unclassified: {
+            title: "Μη ταξινομημένα",
+            description: "Τα cookies που δεν έχουν ακόμη ταξινομηθεί σε κάποια κατηγορία αναφέρονται εδώ. Συνεργαζόμαστε με τους παρόχους αυτών των μεμονωμένων cookies για να τα ταξινομήσουμε."
         }
     },
     afrikaans: {
@@ -349,6 +477,14 @@ module.exports = {
         marketing: {
             title: "Bemarking",
             description: "Ons gebruik webtegnologieë (ook koekies) van geselekte vennote om u inhoud en advertensies te wys wat spesifiek vir u opgestel is op webwerwe en sosiale media. Hierdie inhoud word gekies en vertoon op grond van u gebruiksgedrag. Advertensie- of bemarkingskoekies word gebruik om besoekers relevante advertensies en bemarkingsveldtogte te bied. Hierdie koekies volg besoekers oor verskillende webwerwe en versamel inligting om gepersonaliseerde advertensies te lewer."
+        },
+        security: {
+            title: "Sekuriteit",
+            description: "Sekuriteitskoekies help om sekuriteitsrisiko's te identifiseer en te voorkom, bedrieglike aktiwiteit op te spoor en ons webwerf en sy gebruikers te beskerm."
+        },
+        unclassified: {
+            title: "Ongeklassifiseer",
+            description: "Koekies wat nog nie in 'n kategorie geklassifiseer is nie, word hier gelys. Ons werk saam met die verskaffers van hierdie individuele koekies om hulle te klassifiseer."
         }
     },
     arabic: {
@@ -368,6 +504,14 @@ module.exports = {
         marketing: {
             title: "تسويق",
             description: "نستخدم تقنيات الويب (بما في ذلك ملفات تعريف الارتباط) من شركاء مختارين لعرض محتوى وإعلانات مصممة خصيصًا لك على مواقع الويب ووسائل التواصل الاجتماعي. يتم اختيار هذا المحتوى وعرضه بناءً على سلوك استخدامك. تُستخدم ملفات تعريف الارتباط الإعلانية أو التسويقية لتزويد الزوار بإعلانات وحملات تسويقية ذات صلة. تتبع هذه الملفات الزوار عبر مواقع الويب المختلفة وتجمع المعلومات لتقديم إعلانات مخصصة."
+        },
+        security: {
+            title: "الأمان",
+            description: "تساعد ملفات تعريف الارتباط الأمنية في تحديد ومنع المخاطر الأمنية، واكتشاف الأنشطة الاحتيالية، وحماية موقعنا الإلكتروني ومستخدميه."
+        },
+        unclassified: {
+            title: "غير مصنف",
+            description: "يتم إدراج ملفات تعريف الارتباط التي لم يتم تصنيفها بعد ضمن فئة معينة هنا. نحن نعمل مع مزودي كل من ملفات تعريف الارتباط هذه لتصنيفها."
         }
     },
     korean: {
@@ -387,6 +531,14 @@ module.exports = {
         marketing: {
             title: "마케팅",
             description: "우리는 선택된 파트너의 웹 기술(쿠키 포함)을 사용하여 웹사이트와 소셜 미디어에서 귀하에게 맞춤형 콘텐츠와 광고를 표시합니다. 이 콘텐츠는 귀하의 사용 행동에 따라 선택되고 표시됩니다. 광고 또는 마케팅 쿠키는 방문자에게 관련 광고와 마케팅 캠페인을 제공하는 데 사용됩니다. 이러한 쿠키는 다양한 웹사이트에서 방문자를 추적하고 개인화된 광고를 제공하기 위해 정보를 수집합니다."
+        },
+        security: {
+            title: "보안",
+            description: "보안 쿠키는 보안 위험을 식별하고 예방하며, 부정 행위를 탐지하고, 당사 웹사이트와 사용자를 보호하는 데 도움을 줍니다."
+        },
+        unclassified: {
+            title: "미분류",
+            description: "아직 카테고리로 분류되지 않은 쿠키가 여기에 나열됩니다. 우리는 이러한 개별 쿠키의 제공업체와 협력하여 이를 분류하고 있습니다."
         }
     },
     estonian: {
@@ -406,6 +558,14 @@ module.exports = {
         marketing: {
             title: "Turundus",
             description: "Kasutame valitud partnerite veebitehnoloogiaid (ka küpsiseid), et näidata teile sisu ja reklaame, mis on spetsiaalselt teie jaoks kohandatud veebisaitidel ja sotsiaalmeedias. See sisu valitakse ja kuvatakse vastavalt teie kasutuskäitumisele. Reklaami- või turundusküpsiseid kasutatakse külastajatele asjakohaste reklaamide ja turunduskampaaniate pakkumiseks. Need küpsised jälgivad külastajaid erinevatel veebisaitidel ja koguvad teavet isikupärastatud reklaamide esitamiseks."
+        },
+        security: {
+            title: "Turvalisus",
+            description: "Turvaküpsised aitavad tuvastada ja ennetada turvariske, avastada pettuseid ning kaitsta meie veebisaiti ja selle kasutajaid."
+        },
+        unclassified: {
+            title: "Liigitamata",
+            description: "Siin on loetletud küpsised, mida pole veel ühtegi kategooriasse liigitatud. Teeme koostööd nende üksikute küpsiste pakkujatega, et need liigitada."
         }
     },
     hindi: {
@@ -425,6 +585,14 @@ module.exports = {
         marketing: {
             title: "मार्केटिंग",
             description: "हम विश्वसनीय साझेदारों की वेब तकनीकों (कुकीज़ सहित) का उपयोग वेबसाइटों और सोशल मीडिया प्लेटफ़ॉर्म पर आपके लिए विशेष रूप से तैयार की गई सामग्री और विज्ञापन प्रदान करने के लिए करते हैं। यह सामग्री आपके ब्राउज़िंग व्यवहार के आधार पर चुनी और प्रदर्शित की जाती है। विज्ञापन और मार्केटिंग कुकीज़ का उपयोग प्रासंगिक विज्ञापन और अभियान दिखाने, विभिन्न साइटों पर आगंतुकों को ट्रैक करने, और व्यक्तिगत विज्ञापन प्रस्तुत करने के लिए जानकारी एकत्र करने हेतु किया जाता है।"
+        },
+        security: {
+            title: "सुरक्षा",
+            description: "सुरक्षा कुकीज़ सुरक्षा जोखिमों की पहचान करने और उन्हें रोकने, धोखाधड़ी गतिविधि का पता लगाने, तथा हमारी वेबसाइट और उसके उपयोगकर्ताओं की सुरक्षा करने में मदद करती हैं।"
+        },
+        unclassified: {
+            title: "अवर्गीकृत",
+            description: "जिन कुकीज़ को अभी तक किसी श्रेणी में वर्गीकृत नहीं किया गया है, उन्हें यहाँ सूचीबद्ध किया गया है। हम इन व्यक्तिगत कुकीज़ के प्रदाताओं के साथ मिलकर उन्हें वर्गीकृत करने का काम कर रहे हैं।"
         }
     },
     turkish: {
@@ -444,6 +612,14 @@ module.exports = {
         marketing: {
             title: "Pazarlama",
             description: "Web sitelerinde ve sosyal medya platformlarında size özel olarak hazırlanmış içerik ve reklamlar sunmak için güvenilir ortaklardan gelen web teknolojilerini (çerezler dahil) kullanıyoruz. Bu içerik, gezinme davranışınıza göre seçilir ve görüntülenir. Reklam ve pazarlama çerezleri, ilgili reklamları ve kampanyaları göstermek, ziyaretçileri siteler arasında takip etmek ve kişiselleştirilmiş reklamlar sunmak için bilgi toplamak amacıyla kullanılır."
+        },
+        security: {
+            title: "Güvenlik",
+            description: "Güvenlik çerezleri, güvenlik risklerini belirlemeye ve önlemeye, sahtekarlık faaliyetlerini tespit etmeye ve web sitemizi ve kullanıcılarını korumaya yardımcı olur."
+        },
+        unclassified: {
+            title: "Sınıflandırılmamış",
+            description: "Henüz bir kategoriye sınıflandırılmamış çerezler burada listelenmektedir. Bu tekil çerezlerin sağlayıcılarıyla birlikte bunları sınıflandırmak için çalışıyoruz."
         }
     },
     vietnamese: {
@@ -463,6 +639,14 @@ module.exports = {
         marketing: {
             title: "Tiếp thị",
             description: "Chúng tôi sử dụng các công nghệ web (bao gồm cookie) từ các đối tác đáng tin cậy để cung cấp nội dung và quảng cáo được thiết kế riêng cho bạn trên các trang web và nền tảng mạng xã hội. Nội dung này được lựa chọn và hiển thị dựa trên hành vi duyệt web của bạn. Cookie quảng cáo và tiếp thị được sử dụng để hiển thị quảng cáo và chiến dịch phù hợp, theo dõi khách truy cập trên nhiều trang web và thu thập thông tin để đưa ra quảng cáo được cá nhân hóa."
+        },
+        security: {
+            title: "Bảo mật",
+            description: "Cookie bảo mật giúp xác định và ngăn chặn các rủi ro bảo mật, phát hiện hoạt động gian lận và bảo vệ trang web của chúng tôi cùng người dùng."
+        },
+        unclassified: {
+            title: "Chưa phân loại",
+            description: "Các cookie chưa được phân loại vào danh mục nào được liệt kê tại đây. Chúng tôi đang làm việc với các nhà cung cấp của từng cookie này để phân loại chúng."
         }
     },
     indonesian: {
@@ -482,6 +666,14 @@ module.exports = {
         marketing: {
             title: "Pemasaran",
             description: "Kami menggunakan teknologi web (termasuk cookie) dari mitra tepercaya untuk menyajikan konten dan iklan yang disesuaikan khusus untuk Anda di situs web dan platform media sosial. Konten ini dipilih dan ditampilkan berdasarkan perilaku menjelajah Anda. Cookie iklan dan pemasaran digunakan untuk menampilkan iklan dan kampanye yang relevan, melacak pengunjung di berbagai situs, dan mengumpulkan informasi untuk menyajikan iklan yang dipersonalisasi."
+        },
+        security: {
+            title: "Keamanan",
+            description: "Cookie keamanan membantu mengidentifikasi dan mencegah risiko keamanan, mendeteksi aktivitas penipuan, dan melindungi situs web kami beserta penggunanya."
+        },
+        unclassified: {
+            title: "Belum Diklasifikasikan",
+            description: "Cookie yang belum diklasifikasikan ke dalam kategori tercantum di sini. Kami sedang bekerja sama dengan penyedia masing-masing cookie ini untuk mengklasifikasikannya."
         }
     },
     filipino: {
@@ -501,6 +693,14 @@ module.exports = {
         marketing: {
             title: "Marketing",
             description: "Gumagamit kami ng mga teknolohiya sa web (kasama ang cookies) mula sa mga pinagkakatiwalaang kasosyo upang maghatid ng nilalaman at mga advertisement na espesyal na iniangkop para sa iyo sa mga website at social media platform. Pinipili at ipinapakita ang nilalamang ito batay sa iyong pag-uugali sa pag-browse. Ginagamit ang mga cookies sa advertising at marketing upang magpakita ng mga kaugnay na ad at kampanya, subaybayan ang mga bisita sa iba't ibang site, at mangalap ng impormasyon upang magbigay ng mga personalized na ad."
+        },
+        security: {
+            title: "Seguridad",
+            description: "Ang mga cookies sa seguridad ay tumutulong na matukoy at maiwasan ang mga panganib sa seguridad, matuklasan ang mapanlinlang na aktibidad, at protektahan ang aming website at mga gumagamit nito."
+        },
+        unclassified: {
+            title: "Hindi Nakaklasipika",
+            description: "Ang mga cookies na hindi pa naiuuri sa isang kategorya ay nakalista dito. Nakikipagtulungan kami sa mga tagapagbigay ng mga indibidwal na cookies na ito upang uriin ang mga ito."
         }
     },
     malay: {
@@ -520,6 +720,14 @@ module.exports = {
         marketing: {
             title: "Pemasaran",
             description: "Kami menggunakan teknologi web (termasuk kuki) daripada rakan kongsi yang dipercayai untuk menyampaikan kandungan dan iklan yang disesuaikan khas untuk anda di laman web dan platform media sosial. Kandungan ini dipilih dan dipaparkan berdasarkan tingkah laku pelayaran anda. Kuki iklan dan pemasaran digunakan untuk memaparkan iklan dan kempen yang relevan, menjejaki pelawat merentas laman, dan mengumpul maklumat untuk menyampaikan iklan yang diperibadikan."
+        },
+        security: {
+            title: "Keselamatan",
+            description: "Kuki keselamatan membantu mengenal pasti dan mencegah risiko keselamatan, mengesan aktiviti penipuan, dan melindungi laman web kami serta penggunanya."
+        },
+        unclassified: {
+            title: "Tidak Dikelaskan",
+            description: "Kuki yang belum dikelaskan ke dalam mana-mana kategori disenaraikan di sini. Kami sedang bekerjasama dengan penyedia setiap kuki ini untuk mengklasifikasikannya."
         }
     },
     ukrainian: {
@@ -539,6 +747,14 @@ module.exports = {
         marketing: {
             title: "Маркетинг",
             description: "Ми використовуємо веб-технології (включно з файлами cookie) від надійних партнерів, щоб надавати вам вміст і рекламу, спеціально підібрані для вас на веб-сайтах і в соціальних мережах. Цей вміст вибирається та відображається на основі вашої поведінки перегляду. Рекламні та маркетингові файли cookie використовуються для показу відповідних оголошень і кампаній, відстеження відвідувачів на різних сайтах і збору інформації для показу персоналізованої реклами."
+        },
+        security: {
+            title: "Безпека",
+            description: "Файли cookie безпеки допомагають виявляти та запобігати ризикам безпеки, виявляти шахрайську діяльність і захищати наш сайт та його користувачів."
+        },
+        unclassified: {
+            title: "Некласифіковані",
+            description: "Тут перелічені файли cookie, які ще не віднесені до жодної категорії. Ми співпрацюємо з постачальниками цих окремих файлів cookie, щоб їх класифікувати."
         }
     },
     hebrew: {
@@ -558,6 +774,14 @@ module.exports = {
         marketing: {
             title: "שיווק",
             description: "אנו משתמשים בטכנולוגיות אינטרנט (כולל עוגיות) משותפים מהימנים כדי להציג עבורך תוכן ופרסומות המותאמים אישית באתרים וברשתות חברתיות. תוכן זה נבחר ומוצג בהתבסס על התנהגות הגלישה שלך. עוגיות פרסום ושיווק משמשות להצגת מודעות וקמפיינים רלוונטיים, למעקב אחר מבקרים באתרים שונים ולאיסוף מידע להצגת פרסומות מותאמות אישית."
+        },
+        security: {
+            title: "אבטחה",
+            description: "עוגיות אבטחה מסייעות לזהות ולמנוע סיכוני אבטחה, לאתר פעילות הונאה ולהגן על האתר שלנו ועל המשתמשים בו."
+        },
+        unclassified: {
+            title: "לא מסווג",
+            description: "עוגיות שטרם סווגו לקטגוריה כלשהי מפורטות כאן. אנו פועלים יחד עם ספקי העוגיות הבודדות הללו על מנת לסווג אותן."
         }
     },
     czech: {
@@ -577,6 +801,14 @@ module.exports = {
         marketing: {
             title: "Marketing",
             description: "Využíváme webové technologie (včetně souborů cookie) od důvěryhodných partnerů k poskytování obsahu a reklam přizpůsobených právě vám na webových stránkách a platformách sociálních médií. Tento obsah je vybírán a zobrazován na základě vašeho chování při procházení. Reklamní a marketingové soubory cookie se používají k zobrazování relevantních reklam a kampaní, sledování návštěvníků napříč weby a shromažďování informací pro zobrazení personalizovaných reklam."
+        },
+        security: {
+            title: "Zabezpečení",
+            description: "Bezpečnostní soubory cookie pomáhají identifikovat a předcházet bezpečnostním rizikům, odhalovat podvodné aktivity a chránit náš web a jeho uživatele."
+        },
+        unclassified: {
+            title: "Nezařazené",
+            description: "Soubory cookie, které dosud nebyly zařazeny do žádné kategorie, jsou uvedeny zde. Spolupracujeme s poskytovateli jednotlivých souborů cookie na jejich zařazení."
         }
     },
     slovak: {
@@ -596,6 +828,14 @@ module.exports = {
         marketing: {
             title: "Marketing",
             description: "Používame webové technológie (vrátane súborov cookie) od dôveryhodných partnerov na poskytovanie obsahu a reklám prispôsobených práve vám na webových stránkach a platformách sociálnych médií. Tento obsah je vyberaný a zobrazovaný na základe vášho správania pri prehliadaní. Reklamné a marketingové súbory cookie sa používajú na zobrazovanie relevantných reklám a kampaní, sledovanie návštevníkov naprieč stránkami a zhromažďovanie informácií na zobrazenie personalizovaných reklám."
+        },
+        security: {
+            title: "Zabezpečenie",
+            description: "Bezpečnostné súbory cookie pomáhajú identifikovať a predchádzať bezpečnostným rizikám, odhaľovať podvodnú činnosť a chrániť našu webovú stránku a jej používateľov."
+        },
+        unclassified: {
+            title: "Nezaradené",
+            description: "Súbory cookie, ktoré ešte neboli zaradené do žiadnej kategórie, sú uvedené tu. Spolupracujeme s poskytovateľmi jednotlivých súborov cookie na ich zaradení."
         }
     },
     hungarian: {
@@ -615,6 +855,14 @@ module.exports = {
         marketing: {
             title: "Marketing",
             description: "Megbízható partnereink webes technológiáit (beleértve a cookie-kat is) használjuk arra, hogy kifejezetten Önnek szabott tartalmakat és hirdetéseket jelenítsünk meg weboldalakon és közösségi médiaplatformokon. Ezt a tartalmat böngészési viselkedése alapján választjuk ki és jelenítjük meg. A hirdetési és marketing cookie-kat releváns hirdetések és kampányok megjelenítésére, a látogatók oldalak közötti nyomon követésére, valamint a személyre szabott hirdetések megjelenítéséhez szükséges információk gyűjtésére használjuk."
+        },
+        security: {
+            title: "Biztonság",
+            description: "A biztonsági cookie-k segítenek azonosítani és megelőzni a biztonsági kockázatokat, felismerni a csalárd tevékenységeket, valamint megvédeni weboldalunkat és felhasználóit."
+        },
+        unclassified: {
+            title: "Besorolatlan",
+            description: "Az itt felsorolt cookie-k még nincsenek kategóriába sorolva. Ezen egyedi cookie-k szolgáltatóival együttműködve dolgozunk a besorolásukon."
         }
     },
     romanian: {
@@ -634,6 +882,14 @@ module.exports = {
         marketing: {
             title: "Marketing",
             description: "Folosim tehnologii web (inclusiv cookie-uri) de la parteneri de încredere pentru a livra conținut și reclame adaptate special pentru dvs. pe site-uri web și platforme de socializare. Acest conținut este selectat și afișat în funcție de comportamentul dvs. de navigare. Cookie-urile de publicitate și marketing sunt utilizate pentru a afișa reclame și campanii relevante, pentru a urmări vizitatorii pe diferite site-uri și pentru a colecta informații în vederea afișării de reclame personalizate."
+        },
+        security: {
+            title: "Securitate",
+            description: "Cookie-urile de securitate ajută la identificarea și prevenirea riscurilor de securitate, la detectarea activităților frauduloase și la protejarea site-ului nostru și a utilizatorilor acestuia."
+        },
+        unclassified: {
+            title: "Neclasificate",
+            description: "Cookie-urile care nu au fost încă încadrate într-o categorie sunt enumerate aici. Colaborăm cu furnizorii acestor cookie-uri individuale pentru a le clasifica."
         }
     },
     bulgarian: {
@@ -653,6 +909,14 @@ module.exports = {
         marketing: {
             title: "Маркетинг",
             description: "Използваме уеб технологии (включително бисквитки) от доверени партньори, за да предоставяме съдържание и реклами, специално съобразени с вас, в уебсайтове и платформи на социалните медии. Това съдържание се избира и показва въз основа на вашето поведение при разглеждане. Рекламните и маркетинговите бисквитки се използват за показване на подходящи реклами и кампании, проследяване на посетители в различни сайтове и събиране на информация за представяне на персонализирани реклами."
+        },
+        security: {
+            title: "Сигурност",
+            description: "Бисквитките за сигурност помагат за идентифициране и предотвратяване на рискове за сигурността, откриване на измамна дейност и защита на нашия уебсайт и неговите потребители."
+        },
+        unclassified: {
+            title: "Некласифицирани",
+            description: "Тук са изброени бисквитки, които все още не са класифицирани в категория. Работим с доставчиците на тези отделни бисквитки, за да ги класифицираме."
         }
     },
     croatian: {
@@ -672,6 +936,14 @@ module.exports = {
         marketing: {
             title: "Marketing",
             description: "Koristimo web tehnologije (uključujući kolačiće) pouzdanih partnera kako bismo vam pružili sadržaj i oglase posebno prilagođene vama na web stranicama i platformama društvenih medija. Ovaj sadržaj se odabire i prikazuje na temelju vašeg ponašanja pri pregledavanju. Oglasni i marketinški kolačići koriste se za prikaz relevantnih oglasa i kampanja, praćenje posjetitelja na različitim stranicama i prikupljanje informacija za prikaz personaliziranih oglasa."
+        },
+        security: {
+            title: "Sigurnost",
+            description: "Sigurnosni kolačići pomažu u prepoznavanju i sprječavanju sigurnosnih rizika, otkrivanju prijevarnih aktivnosti te zaštiti naše web stranice i njezinih korisnika."
+        },
+        unclassified: {
+            title: "Nekategorizirani",
+            description: "Kolačići koji još nisu razvrstani u kategoriju navedeni su ovdje. Surađujemo s pružateljima ovih pojedinačnih kolačića kako bismo ih razvrstali."
         }
     },
     slovenian: {
@@ -691,6 +963,14 @@ module.exports = {
         marketing: {
             title: "Trženje",
             description: "Uporabljamo spletne tehnologije (vključno s piškotki) zaupanja vrednih partnerjev, da vam na spletnih straneh in platformah družbenih medijev prikažemo vsebino in oglase, prilagojene posebej vam. Ta vsebina je izbrana in prikazana na podlagi vašega vedenja pri brskanju. Oglasni in tržni piškotki se uporabljajo za prikaz ustreznih oglasov in kampanj, sledenje obiskovalcem na različnih straneh ter zbiranje informacij za prikaz personaliziranih oglasov."
+        },
+        security: {
+            title: "Varnost",
+            description: "Varnostni piškotki pomagajo prepoznati in preprečiti varnostna tveganja, zaznati goljufivo dejavnost ter zaščititi našo spletno stran in njene uporabnike."
+        },
+        unclassified: {
+            title: "Nekategorizirani",
+            description: "Piškotki, ki še niso razvrščeni v kategorijo, so navedeni tukaj. S ponudniki teh posameznih piškotkov sodelujemo pri njihovi razvrstitvi."
         }
     },
     lithuanian: {
@@ -710,6 +990,14 @@ module.exports = {
         marketing: {
             title: "Rinkodara",
             description: "Naudojame patikimų partnerių interneto technologijas (įskaitant slapukus), kad pateiktume jums specialiai pritaikytą turinį ir reklamas svetainėse bei socialinių tinklų platformose. Šis turinys parenkamas ir rodomas atsižvelgiant į jūsų naršymo elgseną. Reklamos ir rinkodaros slapukai naudojami rodyti aktualias reklamas ir kampanijas, sekti lankytojus įvairiose svetainėse ir rinkti informaciją, kad būtų galima pateikti personalizuotas reklamas."
+        },
+        security: {
+            title: "Saugumas",
+            description: "Saugumo slapukai padeda nustatyti ir užkirsti kelią saugumo rizikoms, aptikti sukčiavimo veiklą ir apsaugoti mūsų svetainę bei jos naudotojus."
+        },
+        unclassified: {
+            title: "Nesuklasifikuoti",
+            description: "Čia išvardyti slapukai, kurie dar nepriskirti jokiai kategorijai. Bendradarbiaujame su šių atskirų slapukų teikėjais, kad juos suklasifikuotume."
         }
     },
     latvian: {
@@ -729,6 +1017,14 @@ module.exports = {
         marketing: {
             title: "Mārketings",
             description: "Mēs izmantojam uzticamu partneru tīmekļa tehnoloģijas (tostarp sīkfailus), lai piedāvātu jums īpaši pielāgotu saturu un reklāmas tīmekļa vietnēs un sociālo mediju platformās. Šis saturs tiek atlasīts un rādīts, pamatojoties uz jūsu pārlūkošanas paradumiem. Reklāmas un mārketinga sīkfaili tiek izmantoti, lai rādītu atbilstošas reklāmas un kampaņas, izsekotu apmeklētājiem dažādās vietnēs un vāktu informāciju, lai piedāvātu personalizētas reklāmas."
+        },
+        security: {
+            title: "Drošība",
+            description: "Drošības sīkfaili palīdz identificēt un novērst drošības riskus, atklāt krāpniecisku darbību un aizsargāt mūsu tīmekļa vietni un tās lietotājus."
+        },
+        unclassified: {
+            title: "Nekategorizēti",
+            description: "Šeit ir uzskaitīti sīkfaili, kas vēl nav klasificēti nevienā kategorijā. Mēs sadarbojamies ar šo atsevišķo sīkfailu nodrošinātājiem, lai tos klasificētu."
         }
     },
     irish: {
@@ -748,6 +1044,14 @@ module.exports = {
         marketing: {
             title: "Margaíocht",
             description: "Úsáidimid teicneolaíochtaí gréasáin (lena n-áirítear fianáin) ó chomhpháirtithe iontaofa chun ábhar agus fógraí atá curtha in oiriúint go sonrach duitse a sholáthar ar shuímh ghréasáin agus ar ardáin na meán sóisialta. Roghnaítear agus taispeántar an t-ábhar seo bunaithe ar d'iompar brabhsála. Úsáidtear fianáin fógraíochta agus margaíochta chun fógraí agus feachtais ábhartha a thaispeáint, chun cuairteoirí a rianú thar shuímh éagsúla, agus chun faisnéis a bhailiú chun fógraí pearsantaithe a chur i láthair."
+        },
+        security: {
+            title: "Slándáil",
+            description: "Cuidíonn fianáin slándála le rioscaí slándála a aithint agus a chosc, gníomhaíocht chalaoiseach a bhrath, agus ár suíomh gréasáin agus a úsáideoirí a chosaint."
+        },
+        unclassified: {
+            title: "Neamhaicmithe",
+            description: "Liostaítear anseo fianáin nár aicmíodh fós i gcatagóir. Táimid ag obair le soláthraithe na bhfianán aonair seo chun iad a aicmiú."
         }
     },
     maltese: {
@@ -767,6 +1071,14 @@ module.exports = {
         marketing: {
             title: "Marketing",
             description: "Nużaw teknoloġiji tal-web (inklużi cookies) minn sħab affidabbli biex nagħtu kontenut u riklami mfassla apposta għalik fuq websajts u pjattaformi tal-midja soċjali. Dan il-kontenut jintgħażel u jintwera abbażi tal-imġieba tal-browsing tiegħek. Il-cookies tar-riklamar u tal-marketing jintużaw biex juru riklami u kampanji rilevanti, jissorveljaw viżitaturi minn sit għal ieħor, u jiġbru informazzjoni biex jippreżentaw riklami personalizzati."
+        },
+        security: {
+            title: "Sigurtà",
+            description: "Il-cookies tas-sigurtà jgħinu jidentifikaw u jipprevjenu riskji ta' sigurtà, jaqbdu attività frawdolenti, u jipproteġu l-websajt tagħna u l-utenti tagħha."
+        },
+        unclassified: {
+            title: "Mhux Ikklassifikati",
+            description: "Il-cookies li għadhom ma ġewx ikklassifikati f'kategorija huma elenkati hawnhekk. Qed naħdmu mal-fornituri ta' dawn il-cookies individwali biex nikklassifikawhom."
         }
     },
     icelandic: {
@@ -786,6 +1098,14 @@ module.exports = {
         marketing: {
             title: "Markaðssetning",
             description: "Við notum vaftækni (þar á meðal vafrakökur) frá traustum samstarfsaðilum til að birta þér efni og auglýsingar sem eru sérsniðnar fyrir þig á vefsíðum og samfélagsmiðlum. Þetta efni er valið og birt út frá vafrahegðun þinni. Auglýsinga- og markaðsvafrakökur eru notaðar til að sýna viðeigandi auglýsingar og herferðir, rekja gesti milli vefsvæða og safna upplýsingum til að birta persónusniðnar auglýsingar."
+        },
+        security: {
+            title: "Öryggi",
+            description: "Öryggisvafrakökur hjálpa til við að greina og koma í veg fyrir öryggisáhættu, uppgötva sviksamlega starfsemi og vernda vefsíðu okkar og notendur hennar."
+        },
+        unclassified: {
+            title: "Óflokkað",
+            description: "Vafrakökur sem enn hefur ekki verið úthlutað í flokk eru taldar upp hér. Við vinnum með veitendum þessara einstöku vafrakaka til að flokka þær."
         }
     },
     serbian: {
@@ -805,6 +1125,14 @@ module.exports = {
         marketing: {
             title: "Маркетинг",
             description: "Користимо веб технологије (укључујући колачиће) од поузданих партнера да бисмо вам приказали садржај и рекламе прилагођене посебно вама на веб сајтовима и платформама друштвених медија. Овај садржај се бира и приказује на основу вашег понашања приликом прегледања. Рекламни и маркетиншки колачићи се користе за приказивање релевантних реклама и кампања, праћење посетилаца на различитим сајтовима и прикупљање информација за приказивање персонализованих реклама."
+        },
+        security: {
+            title: "Безбедност",
+            description: "Безбедносни колачићи помажу у идентификовању и спречавању безбедносних ризика, откривању преварних активности и заштити нашег сајта и његових корисника."
+        },
+        unclassified: {
+            title: "Некатегорисани",
+            description: "Овде су наведени колачићи који још увек нису сврстани у категорију. Сарађујемо са добављачима ових појединачних колачића како бисмо их категорисали."
         }
     },
     persian: {
@@ -824,6 +1152,14 @@ module.exports = {
         marketing: {
             title: "بازاریابی",
             description: "ما از فناوری‌های وب (از جمله کوکی‌ها) از شرکای مورد اعتماد استفاده می‌کنیم تا محتوا و تبلیغاتی متناسب با شما را در وب‌سایت‌ها و پلتفرم‌های رسانه‌های اجتماعی ارائه دهیم. این محتوا بر اساس رفتار مرور شما انتخاب و نمایش داده می‌شود. کوکی‌های تبلیغاتی و بازاریابی برای نمایش تبلیغات و کمپین‌های مرتبط، ردیابی بازدیدکنندگان در سایت‌های مختلف و جمع‌آوری اطلاعات برای ارائه تبلیغات شخصی‌سازی‌شده استفاده می‌شوند."
+        },
+        security: {
+            title: "امنیت",
+            description: "کوکی‌های امنیتی به شناسایی و پیشگیری از خطرات امنیتی، شناسایی فعالیت‌های متقلبانه و محافظت از وب‌سایت ما و کاربران آن کمک می‌کنند."
+        },
+        unclassified: {
+            title: "دسته‌بندی‌نشده",
+            description: "کوکی‌هایی که هنوز در هیچ دسته‌ای طبقه‌بندی نشده‌اند در اینجا فهرست شده‌اند. ما در حال همکاری با ارائه‌دهندگان این کوکی‌های جداگانه برای طبقه‌بندی آن‌ها هستیم."
         }
     },
     urdu: {
@@ -843,6 +1179,14 @@ module.exports = {
         marketing: {
             title: "مارکیٹنگ",
             description: "ہم قابل اعتماد شراکت داروں کی ویب ٹیکنالوجیز (بشمول کوکیز) استعمال کرتے ہیں تاکہ ویب سائٹس اور سوشل میڈیا پلیٹ فارمز پر آپ کے لیے خاص طور پر تیار کردہ مواد اور اشتہارات فراہم کر سکیں۔ یہ مواد آپ کے براؤزنگ رویے کی بنیاد پر منتخب اور ظاہر کیا جاتا ہے۔ اشتہاری اور مارکیٹنگ کوکیز متعلقہ اشتہارات اور مہمات دکھانے، مختلف سائٹس پر زائرین کو ٹریک کرنے، اور ذاتی نوعیت کے اشتہارات پیش کرنے کے لیے معلومات جمع کرنے کے لیے استعمال ہوتی ہیں۔"
+        },
+        security: {
+            title: "سیکیورٹی",
+            description: "سیکیورٹی کوکیز سیکیورٹی کے خطرات کی نشاندہی اور روک تھام، دھوکہ دہی کی سرگرمی کا پتہ لگانے اور ہماری ویب سائٹ اور اس کے صارفین کی حفاظت میں مدد کرتی ہیں۔"
+        },
+        unclassified: {
+            title: "غیر درجہ بند",
+            description: "وہ کوکیز جنہیں ابھی تک کسی زمرے میں شامل نہیں کیا گیا، یہاں درج ہیں۔ ہم ان انفرادی کوکیز کے فراہم کنندگان کے ساتھ مل کر انہیں درجہ بند کرنے پر کام کر رہے ہیں۔"
         }
     },
     bengali: {
@@ -862,6 +1206,14 @@ module.exports = {
         marketing: {
             title: "মার্কেটিং",
             description: "আমরা বিশ্বস্ত অংশীদারদের ওয়েব প্রযুক্তি (কুকি সহ) ব্যবহার করি যাতে ওয়েবসাইট ও সামাজিক মাধ্যম প্ল্যাটফর্মে আপনার জন্য বিশেষভাবে তৈরি বিষয়বস্তু ও বিজ্ঞাপন প্রদান করা যায়। এই বিষয়বস্তু আপনার ব্রাউজিং আচরণের ভিত্তিতে নির্বাচিত ও প্রদর্শিত হয়। বিজ্ঞাপন ও মার্কেটিং কুকিগুলো প্রাসঙ্গিক বিজ্ঞাপন ও প্রচারাভিযান দেখাতে, বিভিন্ন সাইটে দর্শকদের ট্র্যাক করতে এবং ব্যক্তিগতকৃত বিজ্ঞাপন উপস্থাপনের জন্য তথ্য সংগ্রহ করতে ব্যবহৃত হয়।"
+        },
+        security: {
+            title: "নিরাপত্তা",
+            description: "নিরাপত্তা কুকিগুলো নিরাপত্তা ঝুঁকি চিহ্নিত ও প্রতিরোধ করতে, প্রতারণামূলক কার্যকলাপ শনাক্ত করতে এবং আমাদের ওয়েবসাইট ও এর ব্যবহারকারীদের সুরক্ষিত রাখতে সাহায্য করে।"
+        },
+        unclassified: {
+            title: "অশ্রেণিবদ্ধ",
+            description: "যে কুকিগুলো এখনও কোনো বিভাগে শ্রেণিবদ্ধ করা হয়নি সেগুলো এখানে তালিকাভুক্ত করা হয়েছে। আমরা এই পৃথক কুকিগুলোর প্রদানকারীদের সাথে মিলে সেগুলো শ্রেণিবদ্ধ করার কাজ করছি।"
         }
     },
     swahili: {
@@ -881,6 +1233,14 @@ module.exports = {
         marketing: {
             title: "Uuzaji",
             description: "Tunatumia teknolojia za wavuti (ikiwa ni pamoja na vidakuzi) kutoka kwa washirika wanaoaminika ili kukupatia maudhui na matangazo yaliyoundwa mahususi kwa ajili yako kwenye tovuti na mitandao ya kijamii. Maudhui haya huchaguliwa na kuonyeshwa kulingana na tabia yako ya kuvinjari. Vidakuzi vya matangazo na uuzaji hutumika kuonyesha matangazo na kampeni zinazofaa, kufuatilia wageni kwenye tovuti mbalimbali, na kukusanya taarifa ili kuwasilisha matangazo binafsishwa."
+        },
+        security: {
+            title: "Usalama",
+            description: "Vidakuzi vya usalama husaidia kutambua na kuzuia hatari za usalama, kugundua shughuli za udanganyifu, na kulinda tovuti yetu na watumiaji wake."
+        },
+        unclassified: {
+            title: "Ambavyo Havijawekwa Kundi",
+            description: "Vidakuzi ambavyo bado havijawekwa katika kundi lolote vimeorodheshwa hapa. Tunafanya kazi na watoa huduma wa vidakuzi hivi mahususi ili kuvipanga katika makundi."
         }
     },
     tamil: {
@@ -900,6 +1260,14 @@ module.exports = {
         marketing: {
             title: "சந்தைப்படுத்தல்",
             description: "நம்பகமான கூட்டாளர்களிடமிருந்து வலை தொழில்நுட்பங்களை (குக்கீகள் உட்பட) பயன்படுத்தி, இணையதளங்களிலும் சமூக ஊடக தளங்களிலும் உங்களுக்கென தனிப்பயனாக்கப்பட்ட உள்ளடக்கம் மற்றும் விளம்பரங்களை வழங்குகிறோம். இந்த உள்ளடக்கம் உங்கள் உலாவல் நடத்தையின் அடிப்படையில் தேர்ந்தெடுக்கப்பட்டு காட்டப்படுகிறது. தொடர்புடைய விளம்பரங்கள் மற்றும் பிரச்சாரங்களைக் காட்ட, பல்வேறு தளங்களில் பார்வையாளர்களைக் கண்காணிக்க, மற்றும் தனிப்பயனாக்கப்பட்ட விளம்பரங்களை வழங்க தகவல்களை சேகரிக்க விளம்பர மற்றும் சந்தைப்படுத்தல் குக்கீகள் பயன்படுத்தப்படுகின்றன."
+        },
+        security: {
+            title: "பாதுகாப்பு",
+            description: "பாதுகாப்பு குக்கீகள் பாதுகாப்பு அபாயங்களை அடையாளம் கண்டு தடுக்கவும், மோசடி நடவடிக்கைகளைக் கண்டறியவும், எங்கள் இணையதளத்தையும் அதன் பயனர்களையும் பாதுகாக்கவும் உதவுகின்றன."
+        },
+        unclassified: {
+            title: "வகைப்படுத்தப்படாதவை",
+            description: "இன்னும் எந்த வகைக்குள்ளும் வகைப்படுத்தப்படாத குக்கீகள் இங்கே பட்டியலிடப்பட்டுள்ளன. இந்தத் தனித்தனி குக்கீகளை வழங்குபவர்களுடன் இணைந்து அவற்றை வகைப்படுத்த நாங்கள் பணியாற்றி வருகிறோம்."
         }
     }
 };

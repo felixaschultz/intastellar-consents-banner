@@ -16,6 +16,14 @@
     marketing: {
         title: "Mārketings",
         description: "Mēs izmantojam uzticamu partneru tīmekļa tehnoloģijas (tostarp sīkfailus), lai piedāvātu jums īpaši pielāgotu saturu un reklāmas tīmekļa vietnēs un sociālo mediju platformās. Šis saturs tiek atlasīts un rādīts, pamatojoties uz jūsu pārlūkošanas paradumiem. Reklāmas un mārketinga sīkfaili tiek izmantoti, lai rādītu atbilstošas reklāmas un kampaņas, izsekotu apmeklētājiem dažādās vietnēs un vāktu informāciju, lai piedāvātu personalizētas reklāmas."
+    },
+    security: {
+        title: "Drošība",
+        description: "Drošības sīkfaili palīdz identificēt un novērst drošības riskus, atklāt krāpniecisku darbību un aizsargāt mūsu tīmekļa vietni un tās lietotājus."
+    },
+    unclassified: {
+        title: "Nekategorizēti",
+        description: "Šeit ir uzskaitīti sīkfaili, kas vēl nav klasificēti nevienā kategorijā. Mēs sadarbojamies ar šo atsevišķo sīkfailu nodrošinātājiem, lai tos klasificētu."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "kreisajā" : "labajā";

@@ -16,6 +16,14 @@
     marketing: {
         title: "Marketing",
         description: "Používame webové technológie (vrátane súborov cookie) od dôveryhodných partnerov na poskytovanie obsahu a reklám prispôsobených práve vám na webových stránkach a platformách sociálnych médií. Tento obsah je vyberaný a zobrazovaný na základe vášho správania pri prehliadaní. Reklamné a marketingové súbory cookie sa používajú na zobrazovanie relevantných reklám a kampaní, sledovanie návštevníkov naprieč stránkami a zhromažďovanie informácií na zobrazenie personalizovaných reklám."
+    },
+    security: {
+        title: "Zabezpečenie",
+        description: "Bezpečnostné súbory cookie pomáhajú identifikovať a predchádzať bezpečnostným rizikám, odhaľovať podvodnú činnosť a chrániť našu webovú stránku a jej používateľov."
+    },
+    unclassified: {
+        title: "Nezaradené",
+        description: "Súbory cookie, ktoré ešte neboli zaradené do žiadnej kategórie, sú uvedené tu. Spolupracujeme s poskytovateľmi jednotlivých súborov cookie na ich zaradení."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "ľavom" : "pravom";

@@ -16,6 +16,14 @@
     marketing: {
         title: "Marketing",
         description: "Folosim tehnologii web (inclusiv cookie-uri) de la parteneri de încredere pentru a livra conținut și reclame adaptate special pentru dvs. pe site-uri web și platforme de socializare. Acest conținut este selectat și afișat în funcție de comportamentul dvs. de navigare. Cookie-urile de publicitate și marketing sunt utilizate pentru a afișa reclame și campanii relevante, pentru a urmări vizitatorii pe diferite site-uri și pentru a colecta informații în vederea afișării de reclame personalizate."
+    },
+    security: {
+        title: "Securitate",
+        description: "Cookie-urile de securitate ajută la identificarea și prevenirea riscurilor de securitate, la detectarea activităților frauduloase și la protejarea site-ului nostru și a utilizatorilor acestuia."
+    },
+    unclassified: {
+        title: "Neclasificate",
+        description: "Cookie-urile care nu au fost încă încadrate într-o categorie sunt enumerate aici. Colaborăm cu furnizorii acestor cookie-uri individuale pentru a le clasifica."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "stânga" : "dreapta";

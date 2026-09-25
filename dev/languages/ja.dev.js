@@ -16,6 +16,14 @@
     marketing: {
         title: "マーケティング",
         description: "当社は、選択されたパートナーからのWeb技術（Cookieも含む）を使用して、Webサイトやソーシャルメディア上で特にあなた向けにカスタマイズされたコンテンツや広告を表示します。これらのコンテンツは、あなたの使用行動に基づいて選択および表示されます。広告またはマーケティングCookieは、訪問者に関連する広告やマーケティングキャンペーンを提供するために使用されます。これらのCookieは、異なるWebサイトで訪問者を追跡し、個別化された広告を提供するための情報を収集します。"
+    },
+    security: {
+        title: "セキュリティ",
+        description: "セキュリティCookieは、セキュリティリスクの識別と防止、不正行為の検出、当社のWebサイトとそのユーザーの保護に役立ちます。"
+    },
+    unclassified: {
+        title: "未分類",
+        description: "まだカテゴリーに分類されていないCookieがここに表示されます。当社はこれらの個々のCookieの提供元と協力して分類を進めています。"
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "左側" : "右側";

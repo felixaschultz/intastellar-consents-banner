@@ -16,6 +16,14 @@
     marketing: {
         title: "Marketing",
         description: "We gebruiken webtechnologieën (ook cookies) van geselecteerde partners om u inhoud en advertenties te tonen die speciaal op u zijn afgestemd op websites en sociale media. Deze inhoud wordt geselecteerd en weergegeven op basis van uw gebruiksgedrag. Advertentie- of marketingcookies worden gebruikt om bezoekers relevante advertenties en marketingcampagnes te bieden. Deze cookies volgen bezoekers over websites heen en verzamelen informatie om aangepaste advertenties te leveren."
+    },
+    security: {
+        title: "Beveiliging",
+        description: "Beveiligingscookies helpen bij het identificeren en voorkomen van beveiligingsrisico's, het opsporen van frauduleuze activiteiten en het beschermen van onze website en haar gebruikers."
+    },
+    unclassified: {
+        title: "Niet-geclassificeerd",
+        description: "Cookies die nog niet in een categorie zijn ingedeeld, worden hier weergegeven. We werken samen met de aanbieders van deze individuele cookies om ze te classificeren."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "linker" : "rechter";

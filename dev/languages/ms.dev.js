@@ -16,6 +16,14 @@
     marketing: {
         title: "Pemasaran",
         description: "Kami menggunakan teknologi web (termasuk kuki) daripada rakan kongsi yang dipercayai untuk menyampaikan kandungan dan iklan yang disesuaikan khas untuk anda di laman web dan platform media sosial. Kandungan ini dipilih dan dipaparkan berdasarkan tingkah laku pelayaran anda. Kuki iklan dan pemasaran digunakan untuk memaparkan iklan dan kempen yang relevan, menjejaki pelawat merentas laman, dan mengumpul maklumat untuk menyampaikan iklan yang diperibadikan."
+    },
+    security: {
+        title: "Keselamatan",
+        description: "Kuki keselamatan membantu mengenal pasti dan mencegah risiko keselamatan, mengesan aktiviti penipuan, dan melindungi laman web kami serta penggunanya."
+    },
+    unclassified: {
+        title: "Tidak Dikelaskan",
+        description: "Kuki yang belum dikelaskan ke dalam mana-mana kategori disenaraikan di sini. Kami sedang bekerjasama dengan penyedia setiap kuki ini untuk mengklasifikasikannya."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "kiri" : "kanan";

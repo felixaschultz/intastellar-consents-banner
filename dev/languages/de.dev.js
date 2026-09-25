@@ -16,6 +16,14 @@
     marketing: {
         title: "Werbung",
         description: "Werbe- oder Marketing-Cookies werden eingesetzt, um Besuchern relevante Anzeigen und Marketingkampagnen anzuzeigen. Diese Cookies verfolgen Besucher über verschiedene Websites und sammeln Informationen, um personalisierte Werbung bereitzustellen."
+    },
+    security: {
+        title: "Sicherheit",
+        description: "Sicherheits-Cookies helfen dabei, Sicherheitsrisiken zu erkennen und zu verhindern, betrügerische Aktivitäten aufzudecken und unsere Website sowie ihre Nutzer zu schützen."
+    },
+    unclassified: {
+        title: "Nicht klassifiziert",
+        description: "Cookies, die noch keiner Kategorie zugeordnet wurden, werden hier aufgeführt. Wir arbeiten mit den Anbietern dieser einzelnen Cookies zusammen, um sie zu klassifizieren."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "linken" : "rechten";

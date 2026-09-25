@@ -16,6 +16,14 @@
     marketing: {
         title: "Markaðssetning",
         description: "Við notum vaftækni (þar á meðal vafrakökur) frá traustum samstarfsaðilum til að birta þér efni og auglýsingar sem eru sérsniðnar fyrir þig á vefsíðum og samfélagsmiðlum. Þetta efni er valið og birt út frá vafrahegðun þinni. Auglýsinga- og markaðsvafrakökur eru notaðar til að sýna viðeigandi auglýsingar og herferðir, rekja gesti milli vefsvæða og safna upplýsingum til að birta persónusniðnar auglýsingar."
+    },
+    security: {
+        title: "Öryggi",
+        description: "Öryggisvafrakökur hjálpa til við að greina og koma í veg fyrir öryggisáhættu, uppgötva sviksamlega starfsemi og vernda vefsíðu okkar og notendur hennar."
+    },
+    unclassified: {
+        title: "Óflokkað",
+        description: "Vafrakökur sem enn hefur ekki verið úthlutað í flokk eru taldar upp hér. Við vinnum með veitendum þessara einstöku vafrakaka til að flokka þær."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "vinstra" : "hægra";

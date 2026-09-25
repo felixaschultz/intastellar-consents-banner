@@ -16,6 +16,14 @@
     marketing: {
         title: "Trženje",
         description: "Uporabljamo spletne tehnologije (vključno s piškotki) zaupanja vrednih partnerjev, da vam na spletnih straneh in platformah družbenih medijev prikažemo vsebino in oglase, prilagojene posebej vam. Ta vsebina je izbrana in prikazana na podlagi vašega vedenja pri brskanju. Oglasni in tržni piškotki se uporabljajo za prikaz ustreznih oglasov in kampanj, sledenje obiskovalcem na različnih straneh ter zbiranje informacij za prikaz personaliziranih oglasov."
+    },
+    security: {
+        title: "Varnost",
+        description: "Varnostni piškotki pomagajo prepoznati in preprečiti varnostna tveganja, zaznati goljufivo dejavnost ter zaščititi našo spletno stran in njene uporabnike."
+    },
+    unclassified: {
+        title: "Nekategorizirani",
+        description: "Piškotki, ki še niso razvrščeni v kategorijo, so navedeni tukaj. S ponudniki teh posameznih piškotkov sodelujemo pri njihovi razvrstitvi."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "levem" : "desnem";

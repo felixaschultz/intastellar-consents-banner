@@ -16,6 +16,14 @@
     marketing: {
         title: "Rinkodara",
         description: "Naudojame patikimų partnerių interneto technologijas (įskaitant slapukus), kad pateiktume jums specialiai pritaikytą turinį ir reklamas svetainėse bei socialinių tinklų platformose. Šis turinys parenkamas ir rodomas atsižvelgiant į jūsų naršymo elgseną. Reklamos ir rinkodaros slapukai naudojami rodyti aktualias reklamas ir kampanijas, sekti lankytojus įvairiose svetainėse ir rinkti informaciją, kad būtų galima pateikti personalizuotas reklamas."
+    },
+    security: {
+        title: "Saugumas",
+        description: "Saugumo slapukai padeda nustatyti ir užkirsti kelią saugumo rizikoms, aptikti sukčiavimo veiklą ir apsaugoti mūsų svetainę bei jos naudotojus."
+    },
+    unclassified: {
+        title: "Nesuklasifikuoti",
+        description: "Čia išvardyti slapukai, kurie dar nepriskirti jokiai kategorijai. Bendradarbiaujame su šių atskirų slapukų teikėjais, kad juos suklasifikuotume."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "kairiajame" : "dešiniajame";

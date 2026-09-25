@@ -16,6 +16,14 @@
     marketing: {
         title: "营销",
         description: "我们使用来自精选合作伙伴的网络技术（包括Cookie），以便在网站和社交媒体上向您展示特别为您量身定制的内容和广告。这些内容根据您的使用行为进行选择和显示。广告或营销Cookie用于向访问者提供相关的广告和营销活动。这些Cookie在不同的网站上跟踪访问者，并收集信息以提供个性化的广告。"
+    },
+    security: {
+        title: "安全",
+        description: "安全性Cookie有助于识别和预防安全风险、检测欺诈活动，并保护我们的网站及其用户。"
+    },
+    unclassified: {
+        title: "未分类",
+        description: "尚未归类的Cookie会列示于此。我们正在与这些Cookie的各个提供商合作，对其进行分类。"
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "左侧" : "右侧";

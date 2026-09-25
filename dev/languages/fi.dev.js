@@ -16,6 +16,14 @@
     marketing: {
         title: "Markkinointi",
         description: "Käytämme valittujen kumppaneiden web-tekniikoita (myös evästeitä) voidaksemme näyttää sinulle sisältöä ja mainoksia, jotka on räätälöity sinulle erityisesti verkkosivustoilla ja sosiaalisissa medioissa. Tämä sisältö valitaan ja näytetään käyttäytymisesi perusteella. Mainos- tai markkinointievästeitä käytetään tarjoamaan vierailijoille relevantteja mainoksia ja markkinointikampanjoita. Nämä evästeet seuraavat vierailijoita sivustoilla ja keräävät tietoja räätälöityjen mainosten tarjoamiseksi."
+    },
+    security: {
+        title: "Turvallisuus",
+        description: "Turvaevästeet auttavat tunnistamaan ja estämään turvallisuusriskejä, havaitsemaan petollista toimintaa ja suojaamaan verkkosivustoamme ja sen käyttäjiä."
+    },
+    unclassified: {
+        title: "Luokittelemattomat",
+        description: "Tässä luetellaan evästeet, joita ei ole vielä luokiteltu mihinkään kategoriaan. Teemme yhteistyötä näiden yksittäisten evästeiden tarjoajien kanssa niiden luokittelemiseksi."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "vasen" : "oikea";

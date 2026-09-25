@@ -16,6 +16,14 @@
     marketing: {
         title: "Bemarking",
         description: "Ons gebruik webtegnologieë (ook koekies) van geselekte vennote om u inhoud en advertensies te wys wat spesifiek vir u opgestel is op webwerwe en sosiale media. Hierdie inhoud word gekies en vertoon op grond van u gebruiksgedrag. Advertensie- of bemarkingskoekies word gebruik om besoekers relevante advertensies en bemarkingsveldtogte te bied. Hierdie koekies volg besoekers oor verskillende webwerwe en versamel inligting om gepersonaliseerde advertensies te lewer."
+    },
+    security: {
+        title: "Sekuriteit",
+        description: "Sekuriteitskoekies help om sekuriteitsrisiko's te identifiseer en te voorkom, bedrieglike aktiwiteit op te spoor en ons webwerf en sy gebruikers te beskerm."
+    },
+    unclassified: {
+        title: "Ongeklassifiseer",
+        description: "Koekies wat nog nie in 'n kategorie geklassifiseer is nie, word hier gelys. Ons werk saam met die verskaffers van hierdie individuele koekies om hulle te klassifiseer."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "linker" : "regter";

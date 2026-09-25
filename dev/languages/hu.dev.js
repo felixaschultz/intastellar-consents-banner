@@ -16,6 +16,14 @@
     marketing: {
         title: "Marketing",
         description: "Megbízható partnereink webes technológiáit (beleértve a cookie-kat is) használjuk arra, hogy kifejezetten Önnek szabott tartalmakat és hirdetéseket jelenítsünk meg weboldalakon és közösségi médiaplatformokon. Ezt a tartalmat böngészési viselkedése alapján választjuk ki és jelenítjük meg. A hirdetési és marketing cookie-kat releváns hirdetések és kampányok megjelenítésére, a látogatók oldalak közötti nyomon követésére, valamint a személyre szabott hirdetések megjelenítéséhez szükséges információk gyűjtésére használjuk."
+    },
+    security: {
+        title: "Biztonság",
+        description: "A biztonsági cookie-k segítenek azonosítani és megelőzni a biztonsági kockázatokat, felismerni a csalárd tevékenységeket, valamint megvédeni weboldalunkat és felhasználóit."
+    },
+    unclassified: {
+        title: "Besorolatlan",
+        description: "Az itt felsorolt cookie-k még nincsenek kategóriába sorolva. Ezen egyedi cookie-k szolgáltatóival együttműködve dolgozunk a besorolásukon."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "bal" : "jobb";
