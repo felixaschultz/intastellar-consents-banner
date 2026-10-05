@@ -475,7 +475,7 @@ const settingsMessagesLanguages = {
     ${generatePolicyUrl('Unsere Datenschutz Erklährung und Cookie politik')}
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
-    english: `<h3 class="intastellarconsents-heading">You´re in control</h3>
+    english: `<h3 class="intastellarconsents-heading">You're in control</h3>
     <p>We and our trusted partners use technologies, such as cookies, to collect information for various purposes, including:</p>
     <ol>
         <li>Functionality</li>
