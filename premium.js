@@ -560,8 +560,8 @@ const settingsMessagesLanguages = {
     ${generatePolicyUrl('Unsere Datenschutz Erklährung und Cookie politik')}
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
         }`,
-    english: `<h3 class="intastellarconsents-heading">You´re in control</h3>
-    <p>We and our partners use cookies for functionality, analytics, and advertising. Accept, decline, or choose what you allow — you can withdraw consent anytime via the small icon in the bottom ${(window?.INTA?.settings.arrange == "ltr") ? "left" : "right"} corner.</p>
+    english: `<h3 class="intastellarconsents-heading">You're in control</h3>
+    <p>We and our partners use cookies for functionality, analytics, and advertising. Accept, decline, or choose what you allow. You may withdraw your consent at any time by clicking the small icon at the bottom ${(window?.INTA?.settings.arrange == "ltr") ? "left" : "right"} corner of the website.</p>
     ${generatePolicyUrl('Our Privacy and cookie Policy')}
 
     ${(window.INTA.settings.design == "banner" && window.innerWidth > 768 ? generatePoweredBy() : "")
