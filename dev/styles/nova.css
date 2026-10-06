@@ -68,6 +68,11 @@
        button's position) agrees on the same effective value instead of each
        needing to re-clamp it themselves and risk drifting apart. */
     --inta-nova-panel-height: min(85vh, 640px);
+    /* Height of the floating Save Settings footer bar — also read by the
+       panel's own bottom padding above it, and by the bar's position below,
+       so the three stay in lockstep instead of needing separately-tuned
+       magic numbers. */
+    --inta-nova-panel-footer-height: 72px;
 
     --inta-nova-badge-size: 56px;
     --inta-nova-badge-icon: url("https://www.intastellar-consents.com/assets/icons/cookie_settings.svg");
@@ -155,9 +160,21 @@
    .--active, instead of the screen they're actually meant to center on.
    The grow-in animation has already finished by the time a visitor can open
    the panel, so dropping to transform: none here changes nothing visually —
-   scale(1)/translateY(0) and none render identically. */
+   scale(1)/translateY(0) and none render identically.
+
+   transition: none is just as load-bearing as the transform value itself:
+   .--active's own rule still declares `transition: …, transform 0.34s …`,
+   and switching the computed `transform` from "scale(1) translateY(0)" to
+   "none" is still a change the transitions engine animates between (even
+   though the two render identically) unless told not to. For the whole
+   0.34s of that transition, `transform`'s computed value is still something
+   other than `none`, so the card is STILL the containing block throughout —
+   the panel renders relative to the card for that entire duration and only
+   jumps to its real centered position once the transition finishes and
+   `transform` actually settles at `none`. */
 .intastellarCookieConstents:has(.intReadMore.view) {
     transform: none;
+    transition: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -465,7 +482,10 @@ intastellarconsents .intastellarCCPAContainer {
     height: var(--inta-nova-panel-height);
     overflow-y: auto;
     box-sizing: border-box;
-    padding: 22px 22px 18px;
+    /* Bottom padding reserves room for the floating Save Settings footer bar
+       below (--inta-nova-panel-footer-height) so the last scrolled item
+       (the vendor list) can clear it instead of staying hidden underneath. */
+    padding: 22px 22px calc(var(--inta-nova-panel-footer-height) + 18px);
     background: var(--inta-nova-panel-bg);
     color: var(--inta-nova-panel-fg);
     border-radius: var(--inta-nova-radius);
@@ -526,6 +546,46 @@ intastellarconsents .intastellarCCPAContainer {
     content: "\2715";
     font-size: 15px;
     line-height: 1;
+}
+
+/* Save Settings — the same button generateCookieSettingsButton() already
+   builds for the compact card's button row (there labelled from the site's
+   own text settings, "Decline All" by default — it reads current checkbox
+   states and saves them, so it's "decline" only when nothing's been
+   toggled), hidden there (see the --save rule above) and hidden by default
+   everywhere else too. It isn't a descendant of this panel (same structural
+   reason as the close button above — lives in the compact card's button
+   row), so it's repositioned here as a fixed sticky footer bar computed from
+   the same --inta-nova-panel-width/-height/-footer-height custom properties
+   the panel itself and the close button use, rather than left stranded
+   behind the centered overlay with no way to reach it. */
+.intastellarCookieConstents:has(.intReadMore.view) .intSettingsButton .intastellarCookie-settings__btn.--save {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 2147483002;
+    left: 50%;
+    top: calc(50% + (var(--inta-nova-panel-height) / 2) - var(--inta-nova-panel-footer-height));
+    bottom: auto;
+    right: auto;
+    transform: translateX(-50%);
+    width: min(92vw, var(--inta-nova-panel-width));
+    height: var(--inta-nova-panel-footer-height);
+    margin: 0;
+    padding: 0 22px;
+    box-sizing: border-box;
+    border-radius: 0 0 var(--inta-nova-radius) var(--inta-nova-radius);
+    background: var(--inta-nova-card-bg);
+    color: #fff;
+    border: none;
+    border-top: 1px solid var(--inta-nova-panel-border);
+    font-size: 13.5px;
+    font-weight: 700;
+}
+
+.intastellarCookieConstents:has(.intReadMore.view) .intSettingsButton .intastellarCookie-settings__btn.--save:hover {
+    opacity: 0.92;
 }
 
 /* ── Category toggle rows (intCookieSetting__form) — the compact switch list,
