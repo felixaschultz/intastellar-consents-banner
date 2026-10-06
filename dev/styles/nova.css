@@ -592,7 +592,11 @@ intastellarconsents .intastellarCCPAContainer {
     padding: 0 22px;
     box-sizing: border-box;
     border-radius: 0 0 var(--inta-nova-radius) var(--inta-nova-radius);
-    background: var(--inta-nova-card-bg);
+    /* The site's actual brand/accept color (same as Accept All), not nova's
+       own fixed card color — set as a CSS variable by cb.dev.js since the
+       shared brand-color override elsewhere only targets
+       .intastellarCookieSettings--acceptAll, not this button. */
+    background: var(--inta-nova-brand-color, var(--inta-nova-card-bg));
     color: #fff;
     border: none;
     border-top: 1px solid var(--inta-nova-panel-border);

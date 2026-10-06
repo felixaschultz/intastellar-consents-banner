@@ -2533,6 +2533,15 @@ let showUsPrivacyOptOut = ccpa || (usPrivacy && usPrivacy.on);
 const _US_PRIVACY_LAW_NAMES = { VA: "Virginia Consumer Data Protection Act (CDPA)", CO: "Colorado Privacy Act (CPA)", UT: "Utah Consumer Privacy Act (UCPA)", CT: "Connecticut Data Privacy Act (CTDPA)" };
 let usPrivacyLawFullName = (usPrivacy && usPrivacy.state && _US_PRIVACY_LAW_NAMES[usPrivacy.state]) || "California Consumer Privacy Act (CCPA/CPRA)";
 let cookieColor = window?.INTA?.settings === undefined || window?.INTA?.settings.color === undefined || window?.INTA?.settings.color === false || window?.INTA?.settings.color.indexOf("[") > -1 || window?.INTA?.settings.color === "" ? "rgba(0, 51, 153, 1)" : window?.INTA?.settings.color;
+// nova's Save Settings footer button uses the site's actual brand/accept
+// color (same as Accept All) rather than nova's own fixed card color — the
+// shared inline override further below only targets
+// .intastellarCookieSettings--acceptAll, not this button, so it needs its
+// own way to reach cookieColor. Works for gradient values too (cookieColor
+// can be a radial-gradient(...) string, a valid background-image value).
+if (window.INTA.settings.design === "nova") {
+    document.documentElement.style.setProperty("--inta-nova-brand-color", cookieColor);
+}
 let cookieLogo = window?.INTA?.settings === undefined || window?.INTA?.settings.logo === undefined || window?.INTA?.settings.logo === "" || window?.INTA?.settings.logo.indexOf("[") > -1 ? null : window?.INTA?.settings.logo;
 let backgroundColor = window?.INTA?.settings === undefined || window?.INTA?.settings.background_color === undefined ? "#fff" : window?.INTA?.settings.background_color;
 let cookieTextColor = invertColor(backgroundColor);
