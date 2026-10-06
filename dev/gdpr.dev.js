@@ -4430,8 +4430,8 @@ function updateCookiePreferenceOfBlockedIframes(dataType) {
         document.querySelector("#functional").checked = true;
     }
     saveINTCookieSettings("changePermission");
-    document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-        .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+    document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]")?.contentWindow
+        ?.postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
     // Dispatch TCF event after user action
     dispatchTCFConsentChangedIfAvailable();
 

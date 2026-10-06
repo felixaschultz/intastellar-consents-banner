@@ -1832,15 +1832,36 @@ const IntastellarCookieConsent = {
     // Store reference to the banner element
     _banner: null,
     renew: function () {
+        // nova only, and only once a choice has already been recorded
+        // (returning visitor, html.inta-cmp-has-consent): clicking the
+        // persistent cookie icon toggles the card open/closed instead of
+        // only ever opening it. First-time visitors (no consent cookie yet)
+        // keep the original "always open" behavior on every other design —
+        // the card is the thing they're meant to be deciding on, not
+        // something to casually dismiss by clicking its own badge.
+        var isActive = true;
         if (typeof moreSettings !== 'undefined') {
-            moreSettings.classList.add("--active");
-            document.documentElement.classList.add("noScroll");
+            var isNovaReturningVisitorToggle = window.INTA && window.INTA.settings
+                && window.INTA.settings.design === "nova"
+                && document.documentElement.classList.contains('inta-cmp-has-consent');
+            if (isNovaReturningVisitorToggle) {
+                moreSettings.classList.toggle("--active");
+                isActive = moreSettings.classList.contains("--active");
+                document.documentElement.classList.toggle("noScroll", isActive);
+            } else {
+                moreSettings.classList.add("--active");
+                document.documentElement.classList.add("noScroll");
+            }
         }
         if (window.intaconsents) {
             var floatBtn = window.intaconsents.querySelector('.intastellarCookie-settings');
             if (floatBtn) {
                 floatBtn.style.display = '';
             }
+        }
+        if (!isActive) {
+            // Closing, not opening — skip the "shown" side effects below.
+            return;
         }
         if (typeof window._intaBannerShownAt === 'undefined') {
             window._intaBannerShownAt = Date.now();
@@ -3010,6 +3031,19 @@ function IntaSaveSettings() {
     dispatchTCFConsentChangedIfAvailable();
 };
 
+/** The cross-site sharing iframe is only created inside onWindowLoad() further
+ *  down this file — it doesn't exist yet if a visitor clicks Accept/Decline/
+ *  Save before the window "load" event has fired (plausible on a page with
+ *  many third-party scripts), so every caller needs this guard rather than
+ *  assuming the querySelector always finds it.
+ */
+function intaPostMessageToSharingIframe(payload) {
+    var iframe = document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]");
+    if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage(payload, "*");
+    }
+}
+
 function IntaAcceptAll() {
     recordTimeToDecision('accept_all');
     intaConsentsObjectVariable.consents = {
@@ -3045,8 +3079,7 @@ function IntaAcceptAll() {
     intaApplyCmpVisibilityFromCookie();
     dataLayer.push({ 'event': 'intastellar_consents_widget_visible' });
 
-    document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-        .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+    intaPostMessageToSharingIframe(JSON.stringify(intaConsentsObjectVariable));
 
     gtag('consent', 'update', {
         'ad_storage': 'granted',
@@ -3135,8 +3168,7 @@ function IntaSaveNeccessary() {
     window._intaCookieConstents.classList.toggle("--active");
     dataLayer.push({ 'event': 'intastellar_consents_widget_visible' });
 
-    document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-        .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+    intaPostMessageToSharingIframe(JSON.stringify(intaConsentsObjectVariable));
 
     gtag('consent', 'update', {
         'ad_storage': 'denied',
@@ -3472,8 +3504,7 @@ onWindowLoad(function () {
                     intCookieDomain +
                     "";
 
-                document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-                    .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+                intaPostMessageToSharingIframe(JSON.stringify(intaConsentsObjectVariable));
 
                 document.querySelector("html").classList.toggle("noScroll");
                 window._intaCookieConstents.classList.toggle("--active");
@@ -3579,8 +3610,7 @@ onWindowLoad(function () {
                 }
                 window.addEventListener("message", function (e) {
                     if (e.data != "ready" && e.origin != intastellarCookieBannerRootDomain) return
-                    document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-                        .postMessage(JSON.stringify(intastellarShared), "*");
+                    intaPostMessageToSharingIframe(JSON.stringify(intastellarShared));
 
                 })
 
@@ -3667,8 +3697,7 @@ onWindowLoad(function () {
                 }
                 window.addEventListener("message", function (e) {
                     if (e.data != "ready" && e.origin != intastellarCookieBannerRootDomain) return
-                    document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-                        .postMessage(JSON.stringify(intastellarShared), "*");
+                    intaPostMessageToSharingIframe(JSON.stringify(intastellarShared));
                 })
                 gtag('consent', 'update', {
                     'ad_storage': 'denied',
@@ -3769,8 +3798,7 @@ onWindowLoad(function () {
 
         window.addEventListener("message", (e) => {
             if (e.data == "ready") {
-                document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-                    .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+                intaPostMessageToSharingIframe(JSON.stringify(intaConsentsObjectVariable));
             }
             if (e.data) {
                 const sharedCookies = e.data;

@@ -37,7 +37,7 @@ window.INTA = {
         color: "#197da1ff",
         text: false,
         language: "auto",
-        design: "premium",
+        design: "nova",
         // Overrides nova's default navy card background to match a brand
         // color instead — try removing this line to see the default.
         novaBackgroundColor: "#58004a",
