@@ -173,8 +173,13 @@
             + ((window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2" && window.INTA.settings.logo && window.INTA.settings.logo != "")
                 ? '<img class="intSettingsCompanyLogo" src="' + window.INTA.settings.logo + '" alt="Intastellar Solutions, International">' : "")
             + generateCookieSettingsButton(C.saveSettings, acceptShort)
-            + '<button class="intLearnMoreBtn" onclick="learnMore(this)">' + intastellarShowHideDetailsText + '</button>'
-            + '<button class="openVendorList" onclick="openVendorList()">' + intaVendorListButtonLabel() + '</button>'
+            // No inline onclick here: these are wired via addEventListener
+            // just below instead (see the comment there) — keeping both
+            // double-fires every click (CSP-permissive browsers run the
+            // inline handler AND the listener), toggling .view on then
+            // immediately back off, so the panel never visibly opens.
+            + '<button class="intLearnMoreBtn">' + intastellarShowHideDetailsText + '</button>'
+            + '<button class="openVendorList">' + intaVendorListButtonLabel() + '</button>'
             // "nova" always shows attribution (no width gate) — the design is
             // free to use and must keep the "powered by" badge visible at all
             // times, on every viewport size.
