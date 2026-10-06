@@ -173,9 +173,12 @@
             + ((window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2" && window.INTA.settings.logo && window.INTA.settings.logo != "")
                 ? '<img class="intSettingsCompanyLogo" src="' + window.INTA.settings.logo + '" alt="Intastellar Solutions, International">' : "")
             + generateCookieSettingsButton(C.saveSettings, acceptShort)
-            + '<button class="intLearnMoreBtn">' + intastellarShowHideDetailsText + '</button>'
-            + '<button class="openVendorList">' + intaVendorListButtonLabel() + '</button>'
-            + (window.INTA.settings.design == "bannerV2" && window.innerWidth > 768 ? generatePoweredBy() : "")
+            + '<button class="intLearnMoreBtn" onclick="learnMore(this)">' + intastellarShowHideDetailsText + '</button>'
+            + '<button class="openVendorList" onclick="openVendorList()">' + intaVendorListButtonLabel() + '</button>'
+            // "nova" always shows attribution (no width gate) — the design is
+            // free to use and must keep the "powered by" badge visible at all
+            // times, on every viewport size.
+            + ((window.INTA.settings.design == "bannerV2" && window.innerWidth > 768) || window.INTA.settings.design == "nova" ? generatePoweredBy() : "")
             + "</section>";
         /* Wired via addEventListener rather than an onclick="" attribute: many production sites run a
            Content-Security-Policy without 'unsafe-inline', which silently drops inline event handlers
@@ -270,7 +273,7 @@
             settingsLabel: "Settings",
             policyLinkLabel: "Our Privacy and cookie Policy",
             bannerMessage: "By accepting all cookies, you support " + document.domain + " in developing a better solution for you. </p><p> Select whether you want to allow only the necessary cookies or whether you want to allow all cookies.",
-            settingsMessage: '<h3 style="    font-size: 25px;">You're in control</h3>'
+            settingsMessage: "<h3 style=\"    font-size: 25px;\">You're in control</h3>"
                 + "<p>We and our trusted partners use technologies, such as cookies, to collect information for various purposes, including:</p>"
                 + "<ol><li>Functionality</li><li>Analytics</li><li>Advertising</li></ol>"
                 + "<p>By clicking 'Accept', you consent to all of these purposes. Alternatively, you can select the specific purposes you agree to by ticking the checkboxes and clicking 'Save Settings'.</p>"

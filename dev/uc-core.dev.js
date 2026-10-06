@@ -2680,7 +2680,8 @@ let cookieBannerStyles = {
     banner: "banner.css",
     bannerV2: "bannerV2.css",
     overlay: "overlay.css",
-    premium: "premium.css"
+    premium: "premium.css",
+    nova: "nova.css"
 };
 
 window.INTA.settings.language = typeof window.INTA?.settings?.language === "undefined" ?

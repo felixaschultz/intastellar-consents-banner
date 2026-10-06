@@ -2122,9 +2122,22 @@ if (typeof window.__tcfapi === 'function') {
 const intaStyleLink = document.createElement('link');
 intaStyleLink.rel = 'stylesheet';
 intaStyleLink.type = 'text/css';
-intaStyleLink.href = 'https://downloads.intastellarsolutions.com/css/gdpr/' + cookieBannerStyles[window.INTA.settings.design || "overlay"] + '?v=' + new Date().getTime();
+intaStyleLink.href = (typeof intastellarDevMode !== 'undefined' && intastellarDevMode)
+    ? '../../dev/styles/' + cookieBannerStyles[window.INTA.settings.design || "overlay"] + '?v=' + new Date().getTime()
+    : 'https://downloads.intastellarsolutions.com/css/gdpr/' + cookieBannerStyles[window.INTA.settings.design || "overlay"] + '?v=' + new Date().getTime();
 intaStyleLink.media = 'all';
 intaInsertStylesheetLinkInHead(intaStyleLink);
+
+// "nova" card background: optional per-site brand override. nova.css's
+// --inta-nova-card-bg (and everything derived from it — the badge ring, the
+// reopen bubble, the CCPA pill, the LGPD/POPIA icon + buttons) is set as an
+// inline custom property on the root element, which beats the stylesheet's
+// :root default regardless of load order. Nova's text/border colors are
+// fixed white-on-dark, so a light novaBackgroundColor will read poorly —
+// that's a call for whoever sets it, not something this does automatically.
+if (window.INTA.settings.design === "nova" && window.INTA.settings.novaBackgroundColor) {
+    document.documentElement.style.setProperty("--inta-nova-card-bg", window.INTA.settings.novaBackgroundColor);
+}
 
 let intastellarCookieLanguageSettings = "Cookie Indstillinger";
 if (intastellarCookieLanguage == "de" || intastellarCookieLanguage == "de-DE" || window.INTA.settings.language == "de" || window.INTA.settings.language == "german") {
@@ -2183,6 +2196,18 @@ if (intastellarCookieLanguage == "de" || intastellarCookieLanguage == "de-DE" ||
     intastellarCookieLanguageSettings = "הגדרות עוגיות";
 } else if (intastellarCookieLanguage == "uk" || intastellarCookieLanguage == "uk-UA" || window.INTA.settings.language == "uk" || window.INTA.settings.language == "ukrainian") {
     intastellarCookieLanguageSettings = "Налаштування куків";
+}
+
+// nova's categories-panel heading (nova.css's content-footer::before) was a
+// hardcoded English "Categories" — CSS `content` has no way to be
+// locale-aware on its own, so every other language in the panel was
+// correctly translated except that one heading. Reusing the
+// already-fully-translated intastellarCookieLanguageSettings string above
+// (the same "Cookie Settings"/"Cookie Einstellungen"/… computed for every
+// supported language right above this) avoids needing a second translation
+// table just for this heading.
+if (window.INTA.settings.design === "nova") {
+    document.documentElement.style.setProperty("--inta-nova-panel-heading", JSON.stringify(intastellarCookieLanguageSettings));
 }
 
 moreSettings.setAttribute("class", "intastellarCookieConstents");
@@ -2449,6 +2474,12 @@ if (window.location.host.indexOf("intastellar") == -1) {
 if (arrange == "ltr") {
     bannerContent.classList.add("intastellarCookie-settingsContainer--otherSide");
     cookieSettings.classList.add("intastellarCookie-settings__container--otherSide");
+    // The main card itself (moreSettings/.intastellarCookieConstents) was
+    // never given this class anywhere — only the reopen bubble and the
+    // settings container were — so nova's corner-anchored card, badge, and
+    // open/close animation never actually responded to arrange: "ltr" despite
+    // all having --otherSide CSS written for them.
+    moreSettings.classList.add("intastellarCookieConstents--otherSide");
 }
 
 function setIntastellarPartnerDomain() {
@@ -2502,6 +2533,15 @@ let showUsPrivacyOptOut = ccpa || (usPrivacy && usPrivacy.on);
 const _US_PRIVACY_LAW_NAMES = { VA: "Virginia Consumer Data Protection Act (CDPA)", CO: "Colorado Privacy Act (CPA)", UT: "Utah Consumer Privacy Act (UCPA)", CT: "Connecticut Data Privacy Act (CTDPA)" };
 let usPrivacyLawFullName = (usPrivacy && usPrivacy.state && _US_PRIVACY_LAW_NAMES[usPrivacy.state]) || "California Consumer Privacy Act (CCPA/CPRA)";
 let cookieColor = window?.INTA?.settings === undefined || window?.INTA?.settings.color === undefined || window?.INTA?.settings.color === false || window?.INTA?.settings.color.indexOf("[") > -1 || window?.INTA?.settings.color === "" ? "rgba(0, 51, 153, 1)" : window?.INTA?.settings.color;
+// nova's Save Settings footer button uses the site's actual brand/accept
+// color (same as Accept All) rather than nova's own fixed card color — the
+// shared inline override further below only targets
+// .intastellarCookieSettings--acceptAll, not this button, so it needs its
+// own way to reach cookieColor. Works for gradient values too (cookieColor
+// can be a radial-gradient(...) string, a valid background-image value).
+if (window.INTA.settings.design === "nova") {
+    document.documentElement.style.setProperty("--inta-nova-brand-color", cookieColor);
+}
 let cookieLogo = window?.INTA?.settings === undefined || window?.INTA?.settings.logo === undefined || window?.INTA?.settings.logo === "" || window?.INTA?.settings.logo.indexOf("[") > -1 ? null : window?.INTA?.settings.logo;
 let backgroundColor = window?.INTA?.settings === undefined || window?.INTA?.settings.background_color === undefined ? "#fff" : window?.INTA?.settings.background_color;
 let cookieTextColor = invertColor(backgroundColor);
@@ -2673,6 +2713,9 @@ if (showUsPrivacyOptOut) {
     const intastellarCCPAContainer__content = document.createElement("section");
 
     intastellarCCPAContainer.setAttribute("class", "intastellarCCPAContainer");
+    if (arrange == "ltr") {
+        intastellarCCPAContainer.classList.add("intastellarCCPAContainer--otherSide");
+    }
     intastellarCCPAContainer.setAttribute("title", usPrivacyLawFullName + ": Do not sell or share my personal data");
     intastellarCCPAContainer__content.setAttribute("class", "intastellarCCPAContainer__content")
     intastellarCCPAContainer__content.innerHTML = `
@@ -2754,7 +2797,14 @@ const intaCbSettingsMessageBaseHtml = settingsMessage;
 
 function intaCbApplyMainBannerDomAndInitialize() {
     message = intaGetTextOverride("bannerMessageHtml", intaCbBannerMessageBaseHtml);
-    moreContentText.innerHTML = intaGetTextOverride("bannerMessageHtml", intaCbSettingsMessageBaseHtml);
+    // "nova" is a compact corner card — it shows the short, per-locale
+    // bannerMessage (same text as the reopenable settings card) instead of
+    // the long settingsMessage (categories intro + numbered list), which is
+    // sized for a detailed view, not a small card. Every other design keeps
+    // its existing behavior.
+    moreContentText.innerHTML = (window.INTA.settings.design === "nova")
+        ? message
+        : intaGetTextOverride("bannerMessageHtml", intaCbSettingsMessageBaseHtml);
 
     let intCookieIconSmallClass = cookieLogo == intCookieIcon ? " intastellarIcon" : "";
     let CompanyLogoName = cookieLogo == intCookieIcon ? "Cookie Icon" : `${document.domain} logo`;
@@ -4925,6 +4975,14 @@ function learnMore(e) {
 
     if (document.querySelector(".intReadMore").classList.contains("view")) {
         intaFetchCookieBannerData();
+        // "nova" shows the vendor list inline, always, with no separate
+        // "Vendor list" button (hidden in nova.css) — load + reveal it the
+        // same moment the categories panel opens instead of waiting for a
+        // click that no longer has a button to fire it.
+        if (window.INTA.settings.design === "nova") {
+            intaEnsureVendorListLoaded();
+            vendorListContainer.classList.add("--open");
+        }
         if (intastellarCookieLanguage == "da-DK" || intastellarCookieLanguage == "da" || intastellarCookieLanguage == "dk") {
             e.innerHTML = "Skjul detaljer";
         } else if (intastellarCookieLanguage != null && intastellarCookieLanguage === "en" || intastellarCookieLanguage === "en-GB" || intastellarCookieLanguage === "en-US") {
@@ -4959,10 +5017,15 @@ function learnMore(e) {
             e.innerHTML = "Skjul detaljer";
         }
 
-        document.querySelector(".intReadMore").scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-        });
+        // "nova" shows a short toggle list + heading above .intReadMore inside
+        // the same scrollable panel — jumping .intReadMore to the top on open
+        // would hide that heading/toggles immediately, so skip it there.
+        if (window.INTA.settings.design !== "nova") {
+            document.querySelector(".intReadMore").scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }
     } else {
         if (intastellarCookieLanguage == "da-DK" || intastellarCookieLanguage == "da" || intastellarCookieLanguage == "dk") {
             e.innerHTML = "Vis detaljer";
