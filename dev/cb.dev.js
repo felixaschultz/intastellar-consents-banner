@@ -2462,6 +2462,12 @@ if (window.location.host.indexOf("intastellar") == -1) {
 if (arrange == "ltr") {
     bannerContent.classList.add("intastellarCookie-settingsContainer--otherSide");
     cookieSettings.classList.add("intastellarCookie-settings__container--otherSide");
+    // The main card itself (moreSettings/.intastellarCookieConstents) was
+    // never given this class anywhere — only the reopen bubble and the
+    // settings container were — so nova's corner-anchored card, badge, and
+    // open/close animation never actually responded to arrange: "ltr" despite
+    // all having --otherSide CSS written for them.
+    moreSettings.classList.add("intastellarCookieConstents--otherSide");
 }
 
 function setIntastellarPartnerDomain() {
@@ -2663,6 +2669,9 @@ if (showUsPrivacyOptOut) {
     const intastellarCCPAContainer__content = document.createElement("section");
 
     intastellarCCPAContainer.setAttribute("class", "intastellarCCPAContainer");
+    if (arrange == "ltr") {
+        intastellarCCPAContainer.classList.add("intastellarCCPAContainer--otherSide");
+    }
     intastellarCCPAContainer.setAttribute("title", usPrivacyLawFullName + ": Do not sell or share my personal data");
     intastellarCCPAContainer__content.setAttribute("class", "intastellarCCPAContainer__content")
     intastellarCCPAContainer__content.innerHTML = `

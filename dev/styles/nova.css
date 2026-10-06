@@ -61,6 +61,13 @@
     --inta-nova-panel-muted: #68686f;
     --inta-nova-panel-border: #e8e8ed;
     --inta-nova-panel-width: 420px;
+    /* A real (not max-) height so the centered panel's on-screen position is
+       always computable in plain CSS — see the categories-panel comment
+       below for why that matters. Wrapped in min() here, once, so every
+       place that reads this variable (the panel's own height and the close
+       button's position) agrees on the same effective value instead of each
+       needing to re-clamp it themselves and risk drifting apart. */
+    --inta-nova-panel-height: min(85vh, 640px);
 
     --inta-nova-badge-size: 56px;
     --inta-nova-badge-icon: url("https://www.intastellar-consents.com/assets/icons/cookie_settings.svg");
@@ -94,6 +101,70 @@
 .intastellarCookieConstents--otherSide {
     right: auto;
     left: var(--inta-nova-gap);
+}
+
+/* ── Open/reopen animation — the card grows out of the corner where the
+   cookie badge/reopen bubble lives, instead of snapping into existence.
+   cb.dev.js's shared critical CSS (injected into <head> after this
+   stylesheet, itself !important) gates visibility purely with a
+   `display: none/grid` toggle on .--active — display can't be transitioned,
+   so this keeps the card permanently `display: grid` and animates
+   opacity/transform/visibility instead. The specific rule this needs to beat
+   is the "visitor already consented, reopening via the persistent icon" one
+   (html.inta-cmp-has-consent .intastellarCookieConstents:not(.--active),
+   specificity 0-3-1 — exactly the case this animation is for) — repeating
+   the class is the only way to out-specificity an !important rule without
+   depending on cascade/load order. ─────────────────────────────────────── */
+.intastellarCookieConstents.intastellarCookieConstents.intastellarCookieConstents:not(.--active) {
+    display: grid !important;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform-origin: bottom right;
+    transform: scale(0.1) translateY(15%);
+    transition: opacity 0.22s ease, transform 0.3s cubic-bezier(0.32, 1.4, 0.55, 1), visibility 0s linear 0.3s;
+}
+
+.intastellarCookieConstents.--active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: scale(1) translateY(0);
+    transform-origin: bottom right;
+    transition: opacity 0.26s ease, transform 0.34s cubic-bezier(0.32, 1.4, 0.55, 1), visibility 0s linear 0s;
+}
+
+/* Layered on top of the rules above (same 3x-repeat + the --otherSide class
+   itself = higher specificity than either), not a sibling override of them —
+   tying on specificity with the base rules above would leave the result
+   dependent on source order instead of being decided outright. */
+.intastellarCookieConstents.intastellarCookieConstents.intastellarCookieConstents.intastellarCookieConstents--otherSide:not(.--active) {
+    transform-origin: bottom left;
+}
+
+.intastellarCookieConstents.--active.intastellarCookieConstents--otherSide {
+    transform-origin: bottom left;
+}
+
+/* Any `transform` on this element — including the identity scale(1)
+   translateY(0) above, it doesn't have to visually do anything — makes it
+   the containing block for every `position: fixed` descendant, including
+   the dead-centered categories panel and its close button further down.
+   Without this, both get positioned relative to the card's own (small,
+   corner-anchored) box instead of the viewport the moment the card is
+   .--active, instead of the screen they're actually meant to center on.
+   The grow-in animation has already finished by the time a visitor can open
+   the panel, so dropping to transform: none here changes nothing visually —
+   scale(1)/translateY(0) and none render identically. */
+.intastellarCookieConstents:has(.intReadMore.view) {
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .intastellarCookieConstents.intastellarCookieConstents.intastellarCookieConstents:not(.--active),
+    .intastellarCookieConstents.--active {
+        transition: none;
+    }
 }
 
 /* cb.dev.js injects a generic inline <style> (after every design stylesheet,
@@ -229,6 +300,16 @@ intastellarconsents .intastellarCCPAContainer {
        it. minmax(0, 1fr) forces both columns to actually respect the 50/50
        split and lets the button's own text wrap within it instead. */
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    /* Grid's default align-items: stretch makes every item fill its row's
+       auto-computed height. That row height isn't fixed — when the panel
+       opens, .intLearnMoreBtn (normally sharing row 1 with the Accept
+       button) switches to position: fixed to become the panel's close
+       button, leaving row 1 without the item its height was reconciled
+       against. The row recomputes taller, and the Accept button (still
+       stretch-aligned) visibly grows with it, overlapping the "Powered by"
+       row below. Each item keeping its own natural height regardless of the
+       row's size avoids that regardless of why the row height changes. */
+    align-items: start;
     gap: 10px;
     margin-top: 18px;
 }
@@ -251,7 +332,13 @@ intastellarconsents .intastellarCCPAContainer {
     grid-row: 2;
 }
 
-.intastellarCookie-settings__poweredBy {
+/* .intSettingsPoweredBy (generatePoweredBy()'s own wrapper <section>) is the
+   actual grid child here — .intastellarCookie-settings__poweredBy is a span
+   nested one level INSIDE it, so grid-row/-column placed there (as this was
+   until now) is simply ignored by Grid: only a direct child can be a grid
+   item, so the real wrapper auto-placed into row 1 instead and visually
+   collided with the Accept button there. */
+.intSettingsPoweredBy {
     grid-column: 1 / -1;
     grid-row: 3;
     justify-content: center;
@@ -348,10 +435,18 @@ intastellarconsents .intastellarCCPAContainer {
 }
 
 /* ── Categories panel (the "Show details" / "Hide details" expansion) ─────
-   Anchored above the compact card in the same corner — not a dead-centered
-   modal — so the Accept/decline buttons stay directly below it and the two
-   never visually disconnect regardless of panel content height. Revealed via
-   :has() watching .intReadMore.view (see file header on browser support). ── */
+   A dead-centered full overlay — deliberately a fixed width AND height (not
+   max-height) rather than "centered but sized to content", because the
+   close button below needs a viewport position it can compute in plain CSS.
+   .intLearnMoreBtn isn't a descendant of this panel (it lives in the compact
+   card's button row — see file header), so it can't be `position: absolute`
+   relative to the panel's own box; it can only be `position: fixed` at
+   coordinates known ahead of time. A fixed panel size (driven by the same
+   --inta-nova-panel-width/-height custom properties the button's own
+   position is computed from) is what makes that possible — an auto-height
+   "centered" panel would leave the button with nowhere reliable to sit.
+   Revealed via :has() watching .intReadMore.view (see file header on
+   browser support). ───────────────────────────────────────────────────── */
 
 .intastellarCookieConstents__content-footer {
     display: none;
@@ -361,13 +456,13 @@ intastellarconsents .intastellarCCPAContainer {
     display: block;
     position: fixed;
     z-index: 2147483001;
-    top: var(--inta-nova-gap);
+    top: calc(50% - (var(--inta-nova-panel-height) / 2));
+    left: 50%;
+    right: auto;
     bottom: auto;
-    right: var(--inta-nova-gap);
-    left: auto;
-    width: calc(100% - (var(--inta-nova-gap) * 2));
-    max-width: var(--inta-nova-panel-width);
-    max-height: calc(100vh - (var(--inta-nova-gap) * 2));
+    transform: translateX(-50%);
+    width: min(92vw, var(--inta-nova-panel-width));
+    height: var(--inta-nova-panel-height);
     overflow-y: auto;
     box-sizing: border-box;
     padding: 22px 22px 18px;
@@ -379,11 +474,6 @@ intastellarconsents .intastellarCCPAContainer {
     box-shadow: 0 0 0 9999px rgba(12, 12, 20, 0.55), 0 24px 60px rgba(0, 0, 0, 0.35);
     font-family: var(--inta-nova-font);
     text-align: left;
-}
-
-.intastellarCookieConstents--otherSide:has(.intReadMore.view) .intastellarCookieConstents__content-footer {
-    right: auto;
-    left: var(--inta-nova-gap);
 }
 
 .intastellarCookieConstents__content-footer::before {
@@ -399,18 +489,19 @@ intastellarconsents .intastellarCCPAContainer {
 
 /* There's no dedicated close ("X") button in the shared markup (see file
    header) — "Show details"/intLearnMoreBtn is the only open/close control,
-   and it normally lives down in the compact card's button row. Once the
-   panel is open it can grow tall enough (an expanded category's cookie list)
-   to visually and functionally cover that row, making the control impossible
-   to click. Repositioning the SAME button to the panel's own top-right
-   corner, above it in z-index, keeps one real (not decorative) close control
+   and it normally lives down in the compact card's button row, wherever
+   that card happens to be anchored (a bottom corner) — nowhere near a
+   dead-centered panel. Repositioning the SAME button to sit at the panel's
+   own top-right corner (computed from the exact same width/height custom
+   properties the panel itself uses, so the two numbers can't drift apart),
+   above it in z-index, keeps one real (not decorative) close control
    reachable regardless of panel content height. */
 .intastellarCookieConstents:has(.intReadMore.view) .intLearnMoreBtn {
     position: fixed;
     z-index: 2147483002;
-    top: calc(var(--inta-nova-gap) + 14px);
-    right: calc(var(--inta-nova-gap) + 14px);
-    left: auto;
+    top: calc(50% - (var(--inta-nova-panel-height) / 2) + 14px);
+    left: calc(50% + (min(92vw, var(--inta-nova-panel-width)) / 2) - 14px - 32px);
+    right: auto;
     bottom: auto;
     width: 32px;
     height: 32px;
@@ -435,11 +526,6 @@ intastellarconsents .intastellarCCPAContainer {
     content: "\2715";
     font-size: 15px;
     line-height: 1;
-}
-
-.intastellarCookieConstents--otherSide:has(.intReadMore.view) .intLearnMoreBtn {
-    right: auto;
-    left: calc(var(--inta-nova-gap) + 14px);
 }
 
 /* ── Category toggle rows (intCookieSetting__form) — the compact switch list,
@@ -914,6 +1000,29 @@ intastellarconsents .intastellarCCPAContainer {
     display: none;
 }
 
+/* Decorative nova badge — the same cookie/planet icon as the main card and
+   reopen bubble, so a blocked embed still reads as "this site's nova
+   banner" rather than a generic gray placeholder. Only shown when
+   ConsentsBlock() hasn't already rendered the site's own company logo
+   (.intCookie_ConsentLogo-container — a sibling, not shown for the
+   thumbnail/"yt-frame" variant at all) to avoid two competing icons. */
+.intCookie_ConsentContainer-content:not(:has(.intCookie_ConsentLogo-container))::before {
+    content: "";
+    position: relative;
+    z-index: 1;
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    background-image: var(--inta-nova-badge-icon);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+    border: 3px solid var(--inta-nova-card-bg);
+    box-shadow: 0 4px 12px rgba(10, 10, 20, 0.18);
+}
+
 .intCookie_ConsentContainer-info {
     position: relative;
     z-index: 1;
@@ -973,11 +1082,13 @@ intastellarconsents .intastellarCCPAContainer {
 }
 
 /* ── CCPA/CPRA "Do not sell or share my personal data" opt-out pill + popup ─
-   Independent of arrange/--otherSide (it's a separate top-level sibling, not
-   part of .intastellarCookieConstents) — always bottom-left. If the main card
-   is also bottom-left (arrange: "ltr"), the two will overlap; resolving that
-   needs the two elements aware of each other's height, which isn't available
-   from CSS alone on this shared markup. ───────────────────────────────────── */
+   Placed on the OPPOSITE corner from the main card (cb.dev.js adds
+   .intastellarCCPAContainer--otherSide when arrange: "ltr", mirroring the
+   same otherSide convention as the card/badge/bubble above) rather than
+   the same side: CCPA opt-out access is a legal requirement independent of
+   the cookie banner's own consent state, so it must stay reachable even
+   while the main card is open — not sit at the same anchor point where the
+   card already covers the reopen bubble once active. ───────────────────── */
 
 .intastellarCCPAContainer {
     position: fixed;
@@ -1000,6 +1111,11 @@ intastellarconsents .intastellarCCPAContainer {
     line-height: 1.3;
     cursor: pointer;
     text-align: left;
+}
+
+.intastellarCCPAContainer--otherSide {
+    left: auto;
+    right: var(--inta-nova-gap);
 }
 
 .intastellarCCPA__icon {
@@ -1333,7 +1449,9 @@ intastellarconsents .intastellarCCPAContainer {
     :root {
         --inta-nova-gap: 12px;
         --inta-nova-width: none;
-        --inta-nova-panel-width: none;
+        /* Not `none` — the close button's fixed position is computed from
+           this value via calc()/min(), which needs a real length here. */
+        --inta-nova-panel-width: calc(100vw - 24px);
     }
 
     .intastellarCookieConstents,

@@ -67,7 +67,7 @@ window.INTA = {
             on: true
         },
         gtagId: "G-XDDJRGFS76",
-        arrange: "rtl",
+        arrange: "ltr",
         styleSheets: [
             "https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500;600;700;800&display=swap",
             "https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;900&display=swap"
