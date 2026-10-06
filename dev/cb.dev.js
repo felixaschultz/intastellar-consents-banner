@@ -2865,6 +2865,29 @@ function intaCbApplyMainBannerDomAndInitialize() {
     window._intaCookieConstents = intaconsents;
     IntastellarCookieConsent.initialize(intaconsents);
 
+    // nova's cookie badge (nova.css's .intastellarCookieConstents::before) is
+    // a pseudo-element, not a real node — it can't carry its own click
+    // listener, and a generic listener on the card would also fire for every
+    // button/link/toggle inside it. Since .intastellarCookieConstents__content
+    // fills the rest of the card edge-to-edge, the badge's overflow area
+    // (rendered outside that child, directly on the card itself via
+    // overflow: visible) is the only region where a click's event.target is
+    // the card element itself rather than some descendant — that's the
+    // signal used here to mean "the badge, specifically, was clicked".
+    // Same returning-visitor-only gating as the reopen icon (see renew()).
+    moreSettings.addEventListener("click", function (e) {
+        if (e.target !== moreSettings) {
+            return;
+        }
+        if (!(window.INTA && window.INTA.settings && window.INTA.settings.design === "nova")) {
+            return;
+        }
+        if (!document.documentElement.classList.contains("inta-cmp-has-consent")) {
+            return;
+        }
+        IntastellarCookieConsent.renew();
+    });
+
     if (document.querySelector(".intastellarCCPAContainer") != null) {
         document.querySelector(".intastellarCCPAContainer").addEventListener("click", function () {
             document.querySelector(".intastellarCCPApopup").classList.toggle("--active");
