@@ -38,12 +38,9 @@ window.INTA = {
         text: false,
         language: "auto",
         design: "nova",
-        // Shortens the compact card's text for the "nova" design (its default
-        // is the long settingsMessage copy, meant for a detailed view, not a
-        // compact corner card — see dev/styles/nova.css's file header).
-        textOverrides: {
-            bannerMessageHtml: "<p>We use cookies and other third-party tools for analytics and marketing, as per our <a class='intastellarCookie-settings__privacyLink' href='https://www.intastellarsolutions.com/about/legal/privacy' target='_blank' rel='noopener'>Privacy Policy and Cookie Policy</a>. Any customization applies going forward.</p>"
-        },
+        // Overrides nova's default navy card background to match a brand
+        // color instead — try removing this line to see the default.
+        novaBackgroundColor: "#58004a",
         requiredCookies: [
             {
                 cookie: "region",

@@ -40,6 +40,13 @@
  */
 
 :root {
+    /* Default navy — overridden inline (higher precedence than this
+       stylesheet regardless of load order) by cb.dev.js when
+       window.INTA.settings.novaBackgroundColor is set, so a site can match
+       its own brand instead of this fixed color. Everything derived from
+       this variable (badge ring, reopen bubble, CCPA pill, LGPD/POPIA icon +
+       buttons) follows automatically; --inta-nova-card-fg stays fixed white,
+       so a very light override color will read poorly. */
     --inta-nova-card-bg: #2b2a42;
     --inta-nova-card-fg: #ffffff;
     --inta-nova-card-muted: rgba(255, 255, 255, 0.68);
@@ -215,7 +222,13 @@ intastellarconsents .intastellarCCPAContainer {
 
 .intCookieSaveSettingsContainer {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* minmax(0, 1fr), not plain 1fr: a bare `1fr` track's implicit minimum is
+       its content's max-content width, so a long single-line label (German
+       "Details einblenden") pushed that column wider than its 50% share
+       instead of wrapping, shrinking/overflowing the Accept column next to
+       it. minmax(0, 1fr) forces both columns to actually respect the 50/50
+       split and lets the button's own text wrap within it instead. */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 10px;
     margin-top: 18px;
 }
@@ -224,11 +237,13 @@ intastellarconsents .intastellarCCPAContainer {
     grid-column: 2;
     grid-row: 1;
     display: flex;
+    min-width: 0;
 }
 
 .intLearnMoreBtn {
     grid-column: 1;
     grid-row: 1;
+    min-width: 0;
 }
 
 .openVendorList {
@@ -255,17 +270,25 @@ intastellarconsents .intastellarCCPAContainer {
     width: 100%;
 }
 
+/* min-height (not a fixed height) + wrapping allowed: some locales'
+   "Accept"/"Show details" labels run much longer than the English copy
+   (German "Details einblenden", Finnish "Piilota yksityiskohdat", …) — a
+   fixed single-line height would either overflow or force a shrink-to-fit
+   that looks oversized/awkward for short labels. Letting the row grow to a
+   second line keeps every language legible without a different button size
+   per locale. */
 .intastellarCookie-settings__btn {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-height: 46px;
-    padding: 0 18px;
+    min-height: 44px;
+    padding: 10px 12px;
     border-radius: 12px;
-    font-size: 13.5px;
+    font-size: 12.5px;
     font-weight: 700;
-    line-height: 18px;
+    line-height: 1.25;
+    text-align: center;
     cursor: pointer;
     box-sizing: border-box;
     transition: background 0.15s ease-in-out, border-color 0.15s ease-in-out, opacity 0.15s ease-in-out;
@@ -291,15 +314,17 @@ intastellarconsents .intastellarCCPAContainer {
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-height: 46px;
-    padding: 0 14px;
+    min-height: 44px;
+    padding: 10px 10px;
     margin: 0;
     border-radius: 12px;
     background: transparent;
     border: 1.5px solid rgba(255, 255, 255, 0.4);
     color: var(--inta-nova-card-fg);
-    font-size: 13.5px;
+    font-size: 12.5px;
     font-weight: 700;
+    line-height: 1.25;
+    text-align: center;
     text-decoration: none;
     cursor: pointer;
     box-sizing: border-box;
@@ -311,20 +336,11 @@ intastellarconsents .intastellarCCPAContainer {
     border-color: rgba(255, 255, 255, 0.65);
 }
 
+/* The vendor list is always shown inside the categories panel for nova (see
+   cb.dev.js's learnMore(), which loads + reveals #vendor-list the moment the
+   panel opens) — no separate button needed to reach it. */
 .openVendorList {
-    display: block;
-    width: 100%;
-    padding: 6px 0 0;
-    background: transparent;
-    border: none;
-    color: var(--inta-nova-card-muted);
-    font-size: 12px;
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    text-align: center;
-    cursor: pointer;
-    box-sizing: border-box;
+    display: none;
 }
 
 .openVendorList:hover {
@@ -660,6 +676,92 @@ intastellarconsents .intastellarCCPAContainer {
 .intCookieSetting__checkbox:disabled ~ .checkmark.round {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+/* ── Vendor list (IAB TCF vendors) — always shown at the bottom of the
+   categories panel for nova (see cb.dev.js's learnMore(), which loads and
+   reveals #vendor-list the moment the panel opens; there is no separate
+   button). Vendor rows are built client-side (intaEnsureVendorListLoaded())
+   as plain <label class="checkMarkContainer"> rows — same toggle-row classes
+   as the category list above, restyled here as its own bordered-card list so
+   the two read as related but distinct sections. ───────────────────────── */
+
+.vendor-container {
+    display: none;
+    margin-top: 4px;
+}
+
+.vendor-container.--open {
+    display: block;
+}
+
+.vendor-container > h3 {
+    margin: 20px 0 10px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--inta-nova-panel-muted);
+}
+
+.vendor-item {
+    border: 1px solid var(--inta-nova-panel-border);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.vendor-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Inline style="...border-top:1px solid #e0e0e0..." ships on the first
+   .checkMarkContainer in each vendor-item (meant for a flat list, not a
+   bordered card) — an !important beats the inline style directly. */
+.vendor-item .checkMarkContainer {
+    padding: 12px 14px !important;
+    border-top: none !important;
+}
+
+/* The optional "Legitimate Interest" row is a second, plain
+   .checkMarkContainer right after the main one — give it its own divider
+   since it has no inline border of its own. */
+.vendor-item .checkMarkContainer + .checkMarkContainer {
+    border-top: 1px solid var(--inta-nova-panel-border) !important;
+}
+
+.vendor-item .intSettingsTitle {
+    display: block;
+    line-height: 1.5;
+}
+
+/* The provider's privacy-policy URL and the device-storage disclosure link
+   are nested inside the same .intSettingsTitle as the (bold) vendor name —
+   de-emphasize them relative to it instead of letting them inherit the same
+   bold weight/size. */
+.vendor-item .intSettingsTitleLink {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--inta-nova-panel-muted) !important;
+}
+
+.vendor-item .inta-gvl-device-storage {
+    margin-top: 6px !important;
+}
+
+.vendor-item .inta-device-storage-toggle {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--inta-nova-panel-muted) !important;
+}
+
+.vendor-item .inta-device-storage-toggle:hover {
+    color: var(--inta-nova-panel-fg) !important;
+}
+
+.vendor-item .inta-device-storage-details {
+    font-size: 12px !important;
+    color: var(--inta-nova-panel-fg);
 }
 
 /* ── Persistent reopen bubble (shown once the compact card is dismissed) ── */

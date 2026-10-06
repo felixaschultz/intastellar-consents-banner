@@ -2128,6 +2128,17 @@ intaStyleLink.href = (typeof intastellarDevMode !== 'undefined' && intastellarDe
 intaStyleLink.media = 'all';
 intaInsertStylesheetLinkInHead(intaStyleLink);
 
+// "nova" card background: optional per-site brand override. nova.css's
+// --inta-nova-card-bg (and everything derived from it — the badge ring, the
+// reopen bubble, the CCPA pill, the LGPD/POPIA icon + buttons) is set as an
+// inline custom property on the root element, which beats the stylesheet's
+// :root default regardless of load order. Nova's text/border colors are
+// fixed white-on-dark, so a light novaBackgroundColor will read poorly —
+// that's a call for whoever sets it, not something this does automatically.
+if (window.INTA.settings.design === "nova" && window.INTA.settings.novaBackgroundColor) {
+    document.documentElement.style.setProperty("--inta-nova-card-bg", window.INTA.settings.novaBackgroundColor);
+}
+
 let intastellarCookieLanguageSettings = "Cookie Indstillinger";
 if (intastellarCookieLanguage == "de" || intastellarCookieLanguage == "de-DE" || window.INTA.settings.language == "de" || window.INTA.settings.language == "german") {
     intastellarCookieLanguageSettings = "Cookie Einstellungen";
@@ -2733,7 +2744,14 @@ const intaCbSettingsMessageBaseHtml = settingsMessage;
 
 function intaCbApplyMainBannerDomAndInitialize() {
     message = intaGetTextOverride("bannerMessageHtml", intaCbBannerMessageBaseHtml);
-    moreContentText.innerHTML = intaGetTextOverride("bannerMessageHtml", intaCbSettingsMessageBaseHtml);
+    // "nova" is a compact corner card — it shows the short, per-locale
+    // bannerMessage (same text as the reopenable settings card) instead of
+    // the long settingsMessage (categories intro + numbered list), which is
+    // sized for a detailed view, not a small card. Every other design keeps
+    // its existing behavior.
+    moreContentText.innerHTML = (window.INTA.settings.design === "nova")
+        ? message
+        : intaGetTextOverride("bannerMessageHtml", intaCbSettingsMessageBaseHtml);
 
     let intCookieIconSmallClass = cookieLogo == intCookieIcon ? " intastellarIcon" : "";
     let CompanyLogoName = cookieLogo == intCookieIcon ? "Cookie Icon" : `${document.domain} logo`;
@@ -4876,6 +4894,14 @@ function learnMore(e) {
 
     if (document.querySelector(".intReadMore").classList.contains("view")) {
         intaFetchCookieBannerData();
+        // "nova" shows the vendor list inline, always, with no separate
+        // "Vendor list" button (hidden in nova.css) — load + reveal it the
+        // same moment the categories panel opens instead of waiting for a
+        // click that no longer has a button to fire it.
+        if (window.INTA.settings.design === "nova") {
+            intaEnsureVendorListLoaded();
+            vendorListContainer.classList.add("--open");
+        }
         if (intastellarCookieLanguage == "da-DK" || intastellarCookieLanguage == "da" || intastellarCookieLanguage == "dk") {
             e.innerHTML = "Skjul detaljer";
         } else if (intastellarCookieLanguage != null && intastellarCookieLanguage === "en" || intastellarCookieLanguage === "en-GB" || intastellarCookieLanguage === "en-US") {
