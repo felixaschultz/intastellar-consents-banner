@@ -51,11 +51,11 @@ const BOOT_RANGES = [
     [1742, 1770],
     [2019, 2311], // +49 lines: TCF encoder rewrite (IsRangeEncoding, VLI section, PublisherRestrictions); +1 analytics allowlist entry
     [2381, 2408],
-    [4522, 4773], // was 4517-4768; +5 lines from re-adding the premium.js design-setting branch
-    [5049, 5358], // was 5044-5353; +5 lines from re-adding the premium.js design-setting branch
+    [4523, 4774], // was 4522-4773; +1 line from the "nova" entry added to cookieBannerStyles (line ~3829)
+    [5050, 5359], // was 5049-5358; +1 line from the "nova" entry added to cookieBannerStyles (line ~3829)
 ];
 
-const CORE_SKIP_LINES = new Set([5547, 5548, 5549]); // was 5542-5544; +5 lines from re-adding the premium.js design-setting branch
+const CORE_SKIP_LINES = new Set([5548, 5549, 5550]); // was 5547-5549; +1 line from the "nova" entry added to cookieBannerStyles (line ~3829)
 
 function lineDepth(line) {
     let d = 0;
