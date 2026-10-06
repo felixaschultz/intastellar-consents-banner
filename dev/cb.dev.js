@@ -1806,6 +1806,27 @@ function intaApplyCmpVisibilityFromCookie() {
         settingsPanel.classList.remove('intastellarCookie-settings__container--expand');
     }
 
+    // Same idea for the categories/"Show details" panel: learnMore() only
+    // ever toggles .intReadMore's "view" class, nothing ever clears it when
+    // the card itself closes (Accept/Decline/Save all funnel through here).
+    // Without this, declining or saving while the panel is open leaves
+    // "view" set, and reopening the banner later (nova's :has(.intReadMore
+    // .view) panel in particular) jumps straight back into the categories
+    // panel instead of the compact card.
+    var readMore = document.querySelector('.intReadMore');
+    if (readMore && hasConsent) {
+        readMore.classList.remove('view');
+        // learnMore() also flips this button's label between show/hide
+        // based on the class it's toggling — reset it to match, so it
+        // doesn't say "Hide details" right after reopening a banner whose
+        // categories panel isn't actually open.
+        var learnMoreBtn = document.querySelector('.intLearnMoreBtn');
+        if (learnMoreBtn) {
+            learnMoreBtn.innerHTML = (typeof intastellarShowHideDetailsText !== 'undefined' && intastellarShowHideDetailsText)
+                || 'Show details';
+        }
+    }
+
     if (hasConsent) {
         document.documentElement.classList.remove('noScroll');
     } else {
