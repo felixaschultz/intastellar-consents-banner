@@ -2122,7 +2122,9 @@ if (typeof window.__tcfapi === 'function') {
 const intaStyleLink = document.createElement('link');
 intaStyleLink.rel = 'stylesheet';
 intaStyleLink.type = 'text/css';
-intaStyleLink.href = 'https://downloads.intastellarsolutions.com/css/gdpr/' + cookieBannerStyles[window.INTA.settings.design || "overlay"] + '?v=' + new Date().getTime();
+intaStyleLink.href = (typeof intastellarDevMode !== 'undefined' && intastellarDevMode)
+    ? '../../dev/styles/' + cookieBannerStyles[window.INTA.settings.design || "overlay"] + '?v=' + new Date().getTime()
+    : 'https://downloads.intastellarsolutions.com/css/gdpr/' + cookieBannerStyles[window.INTA.settings.design || "overlay"] + '?v=' + new Date().getTime();
 intaStyleLink.media = 'all';
 intaInsertStylesheetLinkInHead(intaStyleLink);
 
@@ -4908,10 +4910,15 @@ function learnMore(e) {
             e.innerHTML = "Skjul detaljer";
         }
 
-        document.querySelector(".intReadMore").scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-        });
+        // "nova" shows a short toggle list + heading above .intReadMore inside
+        // the same scrollable panel — jumping .intReadMore to the top on open
+        // would hide that heading/toggles immediately, so skip it there.
+        if (window.INTA.settings.design !== "nova") {
+            document.querySelector(".intReadMore").scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }
     } else {
         if (intastellarCookieLanguage == "da-DK" || intastellarCookieLanguage == "da" || intastellarCookieLanguage == "dk") {
             e.innerHTML = "Vis detaljer";

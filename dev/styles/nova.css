@@ -1,0 +1,1270 @@
+/*
+ * "nova" CMP design — a dark, bottom-corner card with a floating cookie badge,
+ * paired with a light "Categories" panel for the detailed view.
+ *
+ * Reference: a compact navy card (message + 2 buttons) that, on request, pops a
+ * white categories panel above itself in the same corner — same anchoring model
+ * as premium.css, different visual language (dark/light instead of a single
+ * adaptive theme, always-on instead of following the OS color scheme).
+ *
+ * Corner side is driven by `window.INTA.settings.arrange` (same convention as
+ * premium.css): arrange: "ltr" -> bottom-left (".../*--otherSide" modifier
+ * present), arrange: "rtl" (default) -> bottom-right.
+ *
+ * Scope note: unlike "premium" (which loads its own premium.js with its own
+ * markup), "nova" is a CSS-only design layered on the SHARED cb.dev.js markup —
+ * same as "banner"/"bannerV2"/"overlay". Two consequences:
+ *
+ *   1. The live button row is exactly 2 buttons (a "decline/save" button
+ *      labelled from the site's own text settings, usually "Decline All", and
+ *      "Accept All") — generateCookieButtons()'s 3-button variant (explicit
+ *      Necessary-only button) isn't wired to the current locale-loader flow,
+ *      but .intastellarCookieBanner__accpetNecssery is hidden defensively below
+ *      in case some integration path still renders it.
+ *   2. There's no dedicated close ("X") button on the categories panel — that
+ *      element only exists in premium.js's own fork. The "Show details" button
+ *      doubles as open/close (cb.dev.js's learnMore() toggles its own label
+ *      between "Show details" / "Hide details"), so closing the panel means
+ *      clicking that button again rather than a corner "X".
+ *
+ * The categories panel's visibility is driven by a `:has()` selector watching
+ * the inner .intReadMore.view toggle (the only state learnMore() actually
+ * flips in the shared script) rather than a class on the panel itself — needs
+ * a modern evergreen browser (Baseline since ~2023); without :has() support the
+ * panel simply never reveals itself, so verify before relying on this in a
+ * context with meaningfully older browser traffic.
+ *
+ * Brand color (window.INTA.settings.color) is applied on top of this file by
+ * cb.dev.js's own inline <style> tag (accept button + checked-toggle color) —
+ * this file only owns layout, size, and the two fixed dark/light surfaces.
+ */
+
+:root {
+    --inta-nova-card-bg: #2b2a42;
+    --inta-nova-card-fg: #ffffff;
+    --inta-nova-card-muted: rgba(255, 255, 255, 0.68);
+    --inta-nova-card-border: rgba(255, 255, 255, 0.14);
+    --inta-nova-card-shadow: 0 1px 2px rgba(10, 10, 20, 0.2), 0 12px 28px rgba(10, 10, 20, 0.28), 0 28px 64px rgba(10, 10, 20, 0.32);
+    --inta-nova-radius: 20px;
+    --inta-nova-gap: 24px;
+    --inta-nova-width: 380px;
+
+    --inta-nova-panel-bg: #ffffff;
+    --inta-nova-panel-fg: #1a1a1f;
+    --inta-nova-panel-muted: #68686f;
+    --inta-nova-panel-border: #e8e8ed;
+    --inta-nova-panel-width: 420px;
+
+    --inta-nova-badge-size: 56px;
+    --inta-nova-badge-icon: url("https://www.intastellar-consents.com/assets/icons/cookie_settings.svg");
+
+    --inta-nova-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* ── Main consent card (first-visit banner) ─────────────────────────────── */
+
+.intastellarCookieConstents {
+    position: fixed;
+    z-index: 2147483000;
+    bottom: var(--inta-nova-gap);
+    right: var(--inta-nova-gap);
+    left: auto;
+    width: calc(100% - (var(--inta-nova-gap) * 2));
+    max-width: var(--inta-nova-width);
+    box-sizing: border-box;
+    background: var(--inta-nova-card-bg);
+    color: var(--inta-nova-card-fg);
+    border-radius: var(--inta-nova-radius);
+    box-shadow: var(--inta-nova-card-shadow);
+    border: 1px solid var(--inta-nova-card-border);
+    font-family: var(--inta-nova-font);
+    /* The badge below overlaps the top edge — never clip it. */
+    overflow: visible;
+    /* Never inherit text-align from the host page. */
+    text-align: left;
+}
+
+.intastellarCookieConstents--otherSide {
+    right: auto;
+    left: var(--inta-nova-gap);
+}
+
+/* cb.dev.js injects a generic inline <style> (after every design stylesheet,
+   itself !important) that forces .intastellarCookieConstents__contentC to a
+   brand-color background — appropriate for designs with a colored header
+   band, but it would split this card into a teal-over-navy two-tone block.
+   A selector with one extra class (equal source order, higher specificity)
+   is the only way to win against an !important rule from the cascade. */
+.intastellarCookieConstents .intastellarCookieConstents__contentC {
+    background: var(--inta-nova-card-bg) !important;
+    color: var(--inta-nova-card-fg) !important;
+}
+
+/* Same override, same reason — the reopen bubble and the CCPA pill are both
+   targeted by that same inline rule and would otherwise render brand-color
+   instead of navy. */
+.intastellarCookieConstents ~ .intastellarCookie-settingsContainer,
+intastellarconsents .intastellarCookie-settingsContainer,
+intastellarconsents .intastellarCCPAContainer {
+    background: var(--inta-nova-card-bg) !important;
+}
+
+/* Floating cookie badge: a white disc straddling the card's top edge, same
+   icon already used elsewhere in the product (the reopen bubble's icon). */
+.intastellarCookieConstents::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--inta-nova-badge-size) / -2);
+    right: 28px;
+    width: var(--inta-nova-badge-size);
+    height: var(--inta-nova-badge-size);
+    border-radius: 50%;
+    background-color: #ffffff;
+    background-image: var(--inta-nova-badge-icon);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+    border: 4px solid var(--inta-nova-card-bg);
+    box-shadow: 0 6px 16px rgba(10, 10, 20, 0.3);
+}
+
+.intastellarCookieConstents--otherSide::before {
+    right: auto;
+    left: 28px;
+}
+
+.intastellarCookieConstents__content {
+    display: block;
+    padding: 30px 24px 24px;
+    box-sizing: border-box;
+}
+
+.intastellarCookieConstents__content-main {
+    color: var(--inta-nova-card-fg);
+    font-size: 13.5px;
+    line-height: 1.6;
+    text-align: left;
+}
+
+/* cb.dev.js's inline <style> (injected after every design stylesheet, itself
+   !important) also sets .content-main p/h3/ol li/.privacyLink's color based
+   on darkLightCheck(brand color) — not on this design's own (always-dark)
+   card background — so a brand color classified "light" forces near-black
+   text onto this navy card. Same fix as the .contentC background override
+   above: one extra ancestor class beats it on specificity regardless of
+   source order. */
+.intastellarCookieConstents .intastellarCookieConstents__content-main p,
+.intastellarCookieConstents .intastellarCookieConstents__content-main h3,
+.intastellarCookieConstents .intastellarCookieConstents__content-main ol li {
+    color: var(--inta-nova-card-fg) !important;
+    text-align: left !important;
+}
+
+.intastellarCookieConstents__content-main p {
+    margin: 0 0 8px;
+}
+
+.intastellarCookieConstents__content-main h3 {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px;
+}
+
+.intastellarCookieConstents__content-main ol {
+    margin: 0 0 8px;
+    padding-left: 20px;
+}
+
+/* .intastellarCookie-settings__privacyLink is used on both <a> (the policy
+   link) and <button> (POPIA/LGPD rights, settingsMessageSuffix) elements —
+   buttons carry native UA chrome (background/border/padding) that a
+   color-only rule leaves untouched, so reset it explicitly here. */
+.intastellarCookieConstents .intastellarCookieConstents__content-main .intastellarCookie-settings__privacyLink {
+    display: block;
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0 0 6px;
+    font: inherit;
+    text-align: left;
+    color: var(--inta-nova-card-fg) !important;
+    font-size: 12.5px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    opacity: 0.85;
+    cursor: pointer;
+}
+
+.intastellarCookieConstents__content-main .intastellarCookie-settings__privacyLink:last-child {
+    margin-bottom: 0;
+}
+
+.intSettingsCompanyLogo {
+    max-width: 120px;
+    max-height: 32px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+/* ── Action row: exactly 2 buttons ("decline/save" + "Accept All"), with
+   "Show details" promoted from a plain text link into the secondary button
+   slot — see the file header comment for why there's no explicit third
+   button here. ─────────────────────────────────────────────────────────── */
+
+.intCookieSaveSettingsContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.intSettingsButton {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+}
+
+.intLearnMoreBtn {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.openVendorList {
+    grid-column: 1 / -1;
+    grid-row: 2;
+}
+
+.intastellarCookie-settings__poweredBy {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    justify-content: center;
+}
+
+/* The explicit "decline/save" button and the legacy Necessary-only button
+   (generateCookieButtons()'s 3-button variant — not wired to the current
+   locale-loader flow, hidden here defensively) both stay out of the 2-button
+   row by design; see file header. */
+.intSettingsButton .intastellarCookie-settings__btn.--save,
+.intastellarCookieBanner__accpetNecssery {
+    display: none;
+}
+
+.intSettingsButton .intastellarCookie-settings__btn.--bg {
+    width: 100%;
+}
+
+.intastellarCookie-settings__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 46px;
+    padding: 0 18px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    font-weight: 700;
+    line-height: 18px;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background 0.15s ease-in-out, border-color 0.15s ease-in-out, opacity 0.15s ease-in-out;
+}
+
+/* Fallback colors only — .--bg (Accept All) gets its real background from
+   cb.dev.js's brand-color override (!important, injected after this
+   stylesheet), same arrangement premium.css documents for its own buttons. */
+.intastellarCookie-settings__btn.--bg {
+    background: #ffffff;
+    color: #1a1a1f;
+    border: none;
+}
+
+.intastellarCookie-settings__btn.--bg:hover {
+    opacity: 0.92;
+}
+
+/* "Show details" restyled as the secondary/outline button (effectively the
+   "Customize" action — see file header on why there's no separate button). */
+.intLearnMoreBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 46px;
+    padding: 0 14px;
+    margin: 0;
+    border-radius: 12px;
+    background: transparent;
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    color: var(--inta-nova-card-fg);
+    font-size: 13.5px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.intLearnMoreBtn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.65);
+}
+
+.openVendorList {
+    display: block;
+    width: 100%;
+    padding: 6px 0 0;
+    background: transparent;
+    border: none;
+    color: var(--inta-nova-card-muted);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-align: center;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.openVendorList:hover {
+    color: var(--inta-nova-card-fg);
+}
+
+/* ── Categories panel (the "Show details" / "Hide details" expansion) ─────
+   Anchored above the compact card in the same corner — not a dead-centered
+   modal — so the Accept/decline buttons stay directly below it and the two
+   never visually disconnect regardless of panel content height. Revealed via
+   :has() watching .intReadMore.view (see file header on browser support). ── */
+
+.intastellarCookieConstents__content-footer {
+    display: none;
+}
+
+.intastellarCookieConstents:has(.intReadMore.view) .intastellarCookieConstents__content-footer {
+    display: block;
+    position: fixed;
+    z-index: 2147483001;
+    top: var(--inta-nova-gap);
+    bottom: auto;
+    right: var(--inta-nova-gap);
+    left: auto;
+    width: calc(100% - (var(--inta-nova-gap) * 2));
+    max-width: var(--inta-nova-panel-width);
+    max-height: calc(100vh - (var(--inta-nova-gap) * 2));
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 22px 22px 18px;
+    background: var(--inta-nova-panel-bg);
+    color: var(--inta-nova-panel-fg);
+    border-radius: var(--inta-nova-radius);
+    /* Oversized box-shadow doubles as a full-viewport dim scrim with no extra
+       markup — it's purely visual (doesn't intercept clicks). */
+    box-shadow: 0 0 0 9999px rgba(12, 12, 20, 0.55), 0 24px 60px rgba(0, 0, 0, 0.35);
+    font-family: var(--inta-nova-font);
+    text-align: left;
+}
+
+.intastellarCookieConstents--otherSide:has(.intReadMore.view) .intastellarCookieConstents__content-footer {
+    right: auto;
+    left: var(--inta-nova-gap);
+}
+
+.intastellarCookieConstents__content-footer::before {
+    content: "Categories";
+    display: block;
+    padding-right: 36px;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--inta-nova-panel-fg);
+    margin: 0 0 12px;
+}
+
+/* There's no dedicated close ("X") button in the shared markup (see file
+   header) — "Show details"/intLearnMoreBtn is the only open/close control,
+   and it normally lives down in the compact card's button row. Once the
+   panel is open it can grow tall enough (an expanded category's cookie list)
+   to visually and functionally cover that row, making the control impossible
+   to click. Repositioning the SAME button to the panel's own top-right
+   corner, above it in z-index, keeps one real (not decorative) close control
+   reachable regardless of panel content height. */
+.intastellarCookieConstents:has(.intReadMore.view) .intLearnMoreBtn {
+    position: fixed;
+    z-index: 2147483002;
+    top: calc(var(--inta-nova-gap) + 14px);
+    right: calc(var(--inta-nova-gap) + 14px);
+    left: auto;
+    bottom: auto;
+    width: 32px;
+    height: 32px;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    border-radius: 50%;
+    background: var(--inta-nova-panel-border);
+    border: none;
+    color: var(--inta-nova-panel-fg);
+    font-size: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.intastellarCookieConstents:has(.intReadMore.view) .intLearnMoreBtn:hover {
+    background: #d9d9e0;
+}
+
+.intastellarCookieConstents:has(.intReadMore.view) .intLearnMoreBtn::before {
+    content: "\2715";
+    font-size: 15px;
+    line-height: 1;
+}
+
+.intastellarCookieConstents--otherSide:has(.intReadMore.view) .intLearnMoreBtn {
+    right: auto;
+    left: calc(var(--inta-nova-gap) + 14px);
+}
+
+/* ── Category toggle rows (intCookieSetting__form) — the compact switch list,
+   styled as bordered rows reading like the reference's category cards. ──── */
+
+.intCookieSetting__form {
+    display: flex;
+    flex-direction: column;
+}
+
+.intastellarSettings__control {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    margin: 0 0 8px;
+    border: 1px solid var(--inta-nova-panel-border);
+    border-radius: 12px;
+}
+
+.intastellarSettings__control:last-child {
+    margin-bottom: 0;
+}
+
+.checkMarkContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.intSettingsTitle {
+    color: var(--inta-nova-panel-fg);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+}
+
+.intastellar_privacyPolicy {
+    margin: 4px 0 14px;
+}
+
+/* ── Category details accordion (intReadMore) — description + per-category
+   cookie list, directly below the toggle list above. ──────────────────── */
+
+.intReadMore {
+    display: flex;
+    flex-direction: column;
+}
+
+.intReadMore > section {
+    padding: 14px 16px;
+    margin: 0 0 8px;
+    border: 1px solid var(--inta-nova-panel-border);
+    border-radius: 12px;
+}
+
+.intReadMore > section:last-child {
+    margin-bottom: 0;
+}
+
+.intaExpandCookieList {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0;
+    color: var(--inta-nova-panel-fg);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    cursor: pointer;
+}
+
+.intReadMore > section > p {
+    margin: 6px 0 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--inta-nova-panel-muted);
+}
+
+.intaCookieCount {
+    color: var(--inta-nova-panel-muted);
+    font-weight: 400;
+    font-size: 12px;
+    margin-left: auto;
+}
+
+.intastellar__arrow {
+    flex: 0 0 auto;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid var(--inta-nova-panel-muted);
+    transition: transform 0.15s ease-in-out;
+}
+
+.intastellar__arrow.open {
+    transform: rotate(180deg);
+}
+
+.intaCookieListOverview {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-in-out;
+}
+
+.intaCookieListOverview.view {
+    max-height: 60vh;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.intaCookieListOverview-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 0;
+    border-top: 1px solid var(--inta-nova-panel-border);
+}
+
+.intaCookieListOverview-grid:first-of-type {
+    padding-top: 4px;
+    border-top: none;
+}
+
+.intaCookieListOverview-heading,
+.intaCookieList-left .intaCookieList-CookieName {
+    margin: 10px 0 0;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--inta-nova-panel-muted);
+}
+
+.intaCookieListOverview-grid > .intaCookieList-left > .intaCookieListOverview-heading:first-child,
+.intaCookieListOverview-grid > section > .intaCookieListOverview-heading:first-child {
+    margin-top: 0;
+}
+
+.intaCookieListOverview-vendor,
+.intaCookieList-left p,
+.intaCookieList-left a {
+    margin: 2px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--inta-nova-panel-fg);
+}
+
+.intaCookieList-left a {
+    display: inline-block;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.intaCookieList-cookie {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--inta-nova-panel-border);
+}
+
+.intaCookieList-cookie:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+.intaCookieList-cookie .intaCookieList-CookieName {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: normal;
+    color: var(--inta-nova-panel-fg);
+}
+
+.intaCookieList-cookie p {
+    margin: 3px 0 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--inta-nova-panel-muted);
+}
+
+/* ── Category toggles (checkbox input, styled as an iOS-style switch) ──── */
+
+.intCheckmarkSliderContainer {
+    position: relative;
+    display: inline-block;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 22px;
+}
+
+.intCheckmarkSliderContainer .intCookieSetting__checkbox {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.intCheckmarkSliderContainer .checkmark.round {
+    position: absolute;
+    inset: 0;
+    background: #d7d7dd;
+    border-radius: 999px;
+    transition: background 0.15s ease-in-out;
+    pointer-events: none;
+}
+
+.intCheckmarkSliderContainer .checkmark.round::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    transition: transform 0.15s ease-in-out;
+}
+
+.intCookieSetting__checkbox:checked ~ .checkmark.round::after {
+    transform: translateX(18px);
+}
+
+.intCookieSetting__checkbox:disabled ~ .checkmark.round {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ── Persistent reopen bubble (shown once the compact card is dismissed) ── */
+
+.intastellarCookie-settingsContainer {
+    position: fixed;
+    z-index: 2147483000;
+    bottom: var(--inta-nova-gap);
+    right: var(--inta-nova-gap);
+    left: auto;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--inta-nova-card-bg);
+    box-shadow: var(--inta-nova-card-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+.intastellarCookie-settingsContainer--otherSide {
+    right: auto;
+    left: var(--inta-nova-gap);
+}
+
+.intastellarCookie-settingsContainer img,
+.intCookieIcon-openSettings {
+    width: 24px;
+    height: 24px;
+    filter: brightness(100) !important;
+}
+
+.intastellarToolTip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    white-space: nowrap;
+    background: var(--inta-nova-card-fg);
+    color: var(--inta-nova-card-bg);
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 8px;
+}
+
+.intastellarToolTip.--left {
+    right: auto;
+    left: 0;
+}
+
+/* ── Reopenable "manage settings" card (header/accept/decline only — no
+   category list lives here, see file header) ───────────────────────────── */
+
+.intastellarCookie-settings__container {
+    position: fixed;
+    z-index: 2147483000;
+    bottom: calc(48px + var(--inta-nova-gap) + 12px);
+    right: var(--inta-nova-gap);
+    left: auto;
+    width: calc(100% - (var(--inta-nova-gap) * 2));
+    max-width: var(--inta-nova-width);
+    max-height: calc(100vh - (var(--inta-nova-gap) * 2) - 60px);
+    overflow: hidden auto;
+    background: var(--inta-nova-card-bg);
+    border-radius: var(--inta-nova-radius);
+    box-shadow: var(--inta-nova-card-shadow);
+    box-sizing: border-box;
+    font-family: var(--inta-nova-font);
+    text-align: left;
+}
+
+.intastellarCookie-settings__container--otherSide {
+    right: auto;
+    left: var(--inta-nova-gap);
+}
+
+.intastellarCookie-settings__content {
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.intastellarCookie-settings__intHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--inta-nova-card-fg);
+    margin-bottom: 12px;
+}
+
+.intastellarCookie-settings__close {
+    margin-left: auto;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: var(--inta-nova-card-border);
+}
+
+/* ── Powered-by / privacy footer text ───────────────────────────────────── */
+
+/* The badge is the only indication this is the free tier — keep it legible
+   and un-missable rather than shrinking it down to a quiet footer afterthought. */
+.intSettingsPoweredBy,
+.intastellarCookie-settings__poweredBy {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 8px;
+    color: var(--inta-nova-card-muted);
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.intastellarCookie-settings__poweredByLink {
+    display: inline-flex;
+    align-items: center;
+}
+
+.intastellarCookie-settings__poweredByImg {
+    width: 150px !important;
+    height: auto !important;
+    object-fit: contain;
+}
+
+/* ── Blocked embed placeholders (YouTube/Facebook/etc.) — light card so it
+   reads cleanly against arbitrary page content, not the dark card theme. ── */
+
+.intCookie_ConsentContainer-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-height: 200px;
+    padding: 32px 28px;
+    box-sizing: border-box;
+    text-align: center;
+    background: var(--inta-nova-panel-bg);
+    color: var(--inta-nova-panel-fg);
+    border: 1px solid var(--inta-nova-panel-border);
+    border-radius: var(--inta-nova-radius);
+    box-shadow: 0 1px 2px rgba(20, 20, 30, 0.04), 0 8px 24px rgba(20, 20, 30, 0.1);
+    overflow: hidden;
+}
+
+.intCookie_ConsentContainer-bgIMG {
+    display: none;
+}
+
+.intCookie_ConsentContainer-info {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+.intCookie_ConsentContainer-info p {
+    color: var(--inta-nova-panel-fg);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0;
+    max-width: 30ch;
+}
+
+.intCookie_ConsentContainer-info .intastellarCookie-settings__btn {
+    width: auto;
+    min-width: 170px;
+    min-height: 44px;
+    padding: 0 20px;
+    background: var(--inta-nova-card-bg);
+    color: #fff;
+}
+
+.intCookie_ConsentLogo-container {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--inta-nova-panel-bg);
+    border: 1px solid var(--inta-nova-panel-border);
+}
+
+.intCookie_ConsentLogo {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+}
+
+.inta-poweredBy {
+    color: var(--inta-nova-panel-muted) !important;
+    font-size: 12px !important;
+    margin-top: 0;
+}
+
+.inta-poweredByImg {
+    width: 90px;
+    height: auto;
+    object-fit: contain;
+    margin-left: 6px;
+}
+
+/* ── CCPA/CPRA "Do not sell or share my personal data" opt-out pill + popup ─
+   Independent of arrange/--otherSide (it's a separate top-level sibling, not
+   part of .intastellarCookieConstents) — always bottom-left. If the main card
+   is also bottom-left (arrange: "ltr"), the two will overlap; resolving that
+   needs the two elements aware of each other's height, which isn't available
+   from CSS alone on this shared markup. ───────────────────────────────────── */
+
+.intastellarCCPAContainer {
+    position: fixed;
+    z-index: 2147483000;
+    bottom: var(--inta-nova-gap);
+    left: var(--inta-nova-gap);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 280px;
+    padding: 10px 16px;
+    box-sizing: border-box;
+    border-radius: 999px;
+    background: var(--inta-nova-card-bg);
+    color: var(--inta-nova-card-fg);
+    box-shadow: var(--inta-nova-card-shadow);
+    font-family: var(--inta-nova-font);
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.3;
+    cursor: pointer;
+    text-align: left;
+}
+
+.intastellarCCPA__icon {
+    flex: 0 0 auto;
+}
+
+.intastellarCCPApopup {
+    display: none;
+}
+
+.intastellarCCPApopup.--active {
+    display: block;
+    position: fixed;
+    z-index: 2147483003;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(92vw, var(--inta-nova-panel-width));
+    max-height: 85vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    background: var(--inta-nova-panel-bg);
+    color: var(--inta-nova-panel-fg);
+    border-radius: var(--inta-nova-radius);
+    box-shadow: 0 0 0 9999px rgba(12, 12, 20, 0.55), 0 24px 60px rgba(0, 0, 0, 0.35);
+    font-family: var(--inta-nova-font);
+    text-align: left;
+}
+
+.intastellarCCPApopup__content {
+    position: relative;
+    padding: 22px 24px 24px;
+}
+
+.intastellarCCPApopup__content h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 28px 10px 0;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: var(--inta-nova-panel-fg);
+}
+
+.intastellarCCPApopup__content h3 {
+    margin: 16px 0 6px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--inta-nova-panel-muted);
+}
+
+.intastellarCCPApopup__content p {
+    margin: 0 0 10px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--inta-nova-panel-fg);
+}
+
+.intastellarCCPApopup__content ul {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--inta-nova-panel-fg);
+}
+
+.intastellarCCPApopup__content .intastellarCookie-settings__privacyLink {
+    display: inline-block;
+    color: var(--inta-nova-panel-fg);
+    font-size: 13px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    margin: 0 0 10px;
+}
+
+.intastellarCCPA__popupClose {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    font-size: 0;
+    cursor: pointer;
+}
+
+/* A plain "X" background-color pill (from cb.dev.js's brand-color override)
+   reads better as a round glyph button than the raw text node it ships as. */
+.intastellarCCPA__popupClose::before {
+    content: "\2715";
+    font-size: 13px;
+    line-height: 1;
+}
+
+/* ── LGPD / POPIA rights modals — #lgpd-modal and #popia-modal share the same
+   .inta-lgpd-* classes (createLGPDModal()/createPOPIAModal() in cb.dev.js).
+   Unstyled, these render as plain unhidden text inline in the page — there's
+   no default display:none anywhere in the shared markup/CSS for them. A
+   full-screen takeover (not corner-anchored) since cb.dev.js's own
+   show/closeLGPDModal()/show/closePOPIAModal() already hide the compact card
+   behind it (intastellarConsents.style.display = 'none'), unlike the
+   categories panel. ─────────────────────────────────────────────────────── */
+
+#lgpd-modal,
+#popia-modal {
+    display: none;
+}
+
+#lgpd-modal.inta-lgpd-active,
+#popia-modal.inta-lgpd-active {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 2147483010;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    background: rgba(12, 12, 20, 0.55);
+    font-family: var(--inta-nova-font);
+}
+
+.inta-lgpd-modal-box {
+    width: min(100%, 560px);
+    max-height: 85vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    background: var(--inta-nova-panel-bg);
+    color: var(--inta-nova-panel-fg);
+    border-radius: var(--inta-nova-radius);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    text-align: left;
+}
+
+.inta-lgpd-modal-header {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 22px 24px 18px;
+    background: var(--inta-nova-panel-bg);
+    border-bottom: 1px solid var(--inta-nova-panel-border);
+}
+
+.inta-lgpd-modal-header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.inta-lgpd-modal-header-icon {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--inta-nova-card-bg);
+    color: #fff;
+    font-size: 20px;
+}
+
+.inta-lgpd-modal-title {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--inta-nova-panel-fg);
+}
+
+.inta-lgpd-modal-subtitle {
+    margin-top: 2px;
+    font-size: 12.5px;
+    color: var(--inta-nova-panel-muted);
+}
+
+.inta-lgpd-modal-close {
+    flex: 0 0 auto;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--inta-nova-panel-border);
+    color: var(--inta-nova-panel-fg);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.inta-lgpd-modal-close:hover {
+    background: #d9d9e0;
+}
+
+.inta-lgpd-modal-body {
+    padding: 20px 24px 4px;
+}
+
+.inta-lgpd-modal-intro {
+    margin: 0 0 16px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--inta-nova-panel-fg);
+}
+
+.inta-lgpd-rights-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.inta-lgpd-right-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--inta-nova-panel-border);
+    border-radius: 12px;
+}
+
+.inta-lgpd-right-number {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--inta-nova-card-bg);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.inta-lgpd-right-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--inta-nova-panel-fg);
+    margin-bottom: 2px;
+}
+
+.inta-lgpd-right-desc {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--inta-nova-panel-muted);
+}
+
+.inta-lgpd-dpo-section {
+    margin: 16px 0 20px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--inta-nova-panel-border);
+}
+
+.inta-lgpd-dpo-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--inta-nova-panel-muted);
+    margin-bottom: 6px;
+}
+
+.inta-lgpd-dpo-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--inta-nova-panel-fg);
+}
+
+.inta-lgpd-dpo-text a {
+    color: var(--inta-nova-panel-fg);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.inta-lgpd-modal-footer {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 24px;
+    background: var(--inta-nova-panel-bg);
+    border-top: 1px solid var(--inta-nova-panel-border);
+}
+
+.inta-lgpd-footer-note {
+    font-size: 11.5px;
+    color: var(--inta-nova-panel-muted);
+}
+
+.inta-lgpd-btn-close-modal {
+    flex: 0 0 auto;
+    min-height: 40px;
+    padding: 0 20px;
+    border: none;
+    border-radius: 10px;
+    background: var(--inta-nova-card-bg);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.inta-lgpd-btn-close-modal:hover {
+    opacity: 0.9;
+}
+
+@media (max-width: 480px) {
+    .inta-lgpd-modal-header,
+    .inta-lgpd-modal-body,
+    .inta-lgpd-modal-footer {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+/* ── Small screens: full width with side margins, panel fills the viewport
+   instead of floating at a fixed max-width ─────────────────────────────── */
+
+@media (max-width: 480px) {
+    :root {
+        --inta-nova-gap: 12px;
+        --inta-nova-width: none;
+        --inta-nova-panel-width: none;
+    }
+
+    .intastellarCookieConstents,
+    .intastellarCookie-settings__container,
+    .intastellarCookieConstents__content-footer,
+    .intastellarCCPApopup.--active {
+        max-width: none;
+        width: calc(100% - 24px);
+    }
+
+    .intastellarCCPAContainer {
+        max-width: calc(100% - 24px);
+    }
+
+    .intCookieSaveSettingsContainer {
+        grid-template-columns: 1fr;
+    }
+
+    .intLearnMoreBtn {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .intSettingsButton {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .openVendorList {
+        grid-row: 3;
+    }
+
+    .intastellarCookie-settings__poweredBy {
+        grid-row: 4;
+    }
+}
