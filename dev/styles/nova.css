@@ -303,6 +303,18 @@ intastellarconsents .intastellarCCPAContainer {
     margin-bottom: 10px;
 }
 
+/* In the default (rtl) arrangement the badge overlaps the top-RIGHT corner
+   while this logo sits top-left — no collision, since they're on opposite
+   sides. arrange: "ltr" moves the badge to the top-LEFT instead (see the
+   badge's own --otherSide rule), putting it directly above this
+   same-side logo with only ~2px of clearance (badge bottom edge sits just
+   above the card content's own top padding) — enough to visually collide.
+   Pushing the logo down clears the badge regardless of which corner it's
+   currently anchored to. */
+.intastellarCookieConstents--otherSide .intSettingsCompanyLogo {
+    margin-top: 20px;
+}
+
 /* ── Action row: exactly 2 buttons ("decline/save" + "Accept All"), with
    "Show details" promoted from a plain text link into the secondary button
    slot — see the file header comment for why there's no explicit third
@@ -497,7 +509,11 @@ intastellarconsents .intastellarCCPAContainer {
 }
 
 .intastellarCookieConstents__content-footer::before {
-    content: "Categories";
+    /* Set inline on :root by cb.dev.js from the same already-localized string
+       used for the "Cookie Settings" tooltip/title elsewhere — a hardcoded
+       "Categories" here would only ever show in English regardless of the
+       visitor's language, unlike every category name inside the panel. */
+    content: var(--inta-nova-panel-heading, "Categories");
     display: block;
     padding-right: 36px;
     font-size: 17px;

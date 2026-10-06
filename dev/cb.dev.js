@@ -2198,6 +2198,18 @@ if (intastellarCookieLanguage == "de" || intastellarCookieLanguage == "de-DE" ||
     intastellarCookieLanguageSettings = "Налаштування куків";
 }
 
+// nova's categories-panel heading (nova.css's content-footer::before) was a
+// hardcoded English "Categories" — CSS `content` has no way to be
+// locale-aware on its own, so every other language in the panel was
+// correctly translated except that one heading. Reusing the
+// already-fully-translated intastellarCookieLanguageSettings string above
+// (the same "Cookie Settings"/"Cookie Einstellungen"/… computed for every
+// supported language right above this) avoids needing a second translation
+// table just for this heading.
+if (window.INTA.settings.design === "nova") {
+    document.documentElement.style.setProperty("--inta-nova-panel-heading", JSON.stringify(intastellarCookieLanguageSettings));
+}
+
 moreSettings.setAttribute("class", "intastellarCookieConstents");
 moreSettingsContent.setAttribute("class", "intastellarCookieConstents__content");
 moreintHeader.setAttribute("class", "intastellarCookieConstents__content-intHeader");
