@@ -5303,8 +5303,9 @@ function updateConsents(consent, type = null) {
         let newArray = [...inta_marketingCookieList.map((cookie) => cookie.cookies.map((c) => (c.cookie != undefined) ? c.cookie : ""))].flat(1)
         int__cookiesToKeep.push.apply(int__cookiesToKeep, newArray);
         deleteAllCookies();
-
-        fbq('consent', 'grant');
+       if( typeof fbq !== "undefined" || typeof fbq !== "null"){
+           fbq('consent', 'grant');
+       }
 
         window.allScripts.map((script) => {
             if (script.type == "marketing") {
