@@ -43,14 +43,16 @@
     /* Default navy — overridden inline (higher precedence than this
        stylesheet regardless of load order) by cb.dev.js when
        window.INTA.settings.novaBackgroundColor is set, so a site can match
-       its own brand instead of this fixed color. Everything derived from
-       this variable (badge ring, reopen bubble, CCPA pill, LGPD/POPIA icon +
-       buttons) follows automatically; --inta-nova-card-fg stays fixed white,
-       so a very light override color will read poorly. */
+       its own brand instead of this fixed color. cb.dev.js sets
+       --inta-nova-card-fg alongside it (darkLightCheck() on the same color)
+       so text/border contrast flips to dark-on-light automatically for a
+       light override — --inta-nova-card-muted/-border below are derived from
+       whatever --inta-nova-card-fg ends up being, rather than hardcoded to
+       white, so they follow that flip instead of needing their own JS logic. */
     --inta-nova-card-bg: #2b2a42;
     --inta-nova-card-fg: #ffffff;
-    --inta-nova-card-muted: rgba(255, 255, 255, 0.68);
-    --inta-nova-card-border: rgba(255, 255, 255, 0.14);
+    --inta-nova-card-muted: color-mix(in srgb, var(--inta-nova-card-fg) 68%, transparent);
+    --inta-nova-card-border: color-mix(in srgb, var(--inta-nova-card-fg) 14%, transparent);
     --inta-nova-card-shadow: 0 1px 2px rgba(10, 10, 20, 0.2), 0 12px 28px rgba(10, 10, 20, 0.28), 0 28px 64px rgba(10, 10, 20, 0.32);
     --inta-nova-radius: 20px;
     --inta-nova-gap: 24px;
@@ -435,7 +437,7 @@ intastellarconsents .intastellarCCPAContainer {
     margin: 0;
     border-radius: 12px;
     background: transparent;
-    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    border: 1.5px solid color-mix(in srgb, var(--inta-nova-card-fg) 40%, transparent);
     color: var(--inta-nova-card-fg);
     font-size: 12.5px;
     font-weight: 700;
@@ -448,8 +450,8 @@ intastellarconsents .intastellarCCPAContainer {
 }
 
 .intLearnMoreBtn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.65);
+    background: color-mix(in srgb, var(--inta-nova-card-fg) 8%, transparent);
+    border-color: color-mix(in srgb, var(--inta-nova-card-fg) 65%, transparent);
 }
 
 /* The vendor list is always shown inside the categories panel for nova (see
@@ -1127,7 +1129,7 @@ intastellarconsents .intastellarCCPAContainer {
     min-height: 44px;
     padding: 0 20px;
     background: var(--inta-nova-card-bg);
-    color: #fff;
+    color: var(--inta-nova-card-fg);
 }
 
 .intCookie_ConsentLogo-container {
@@ -1361,7 +1363,7 @@ intastellarconsents .intastellarCCPAContainer {
     height: 44px;
     border-radius: 50%;
     background: var(--inta-nova-card-bg);
-    color: #fff;
+    color: var(--inta-nova-card-fg);
     font-size: 20px;
 }
 
@@ -1433,7 +1435,7 @@ intastellarconsents .intastellarCCPAContainer {
     height: 24px;
     border-radius: 50%;
     background: var(--inta-nova-card-bg);
-    color: #fff;
+    color: var(--inta-nova-card-fg);
     font-size: 12px;
     font-weight: 700;
 }
@@ -1503,7 +1505,7 @@ intastellarconsents .intastellarCCPAContainer {
     border: none;
     border-radius: 10px;
     background: var(--inta-nova-card-bg);
-    color: #fff;
+    color: var(--inta-nova-card-fg);
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;

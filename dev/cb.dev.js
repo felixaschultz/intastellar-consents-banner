@@ -2132,11 +2132,19 @@ intaInsertStylesheetLinkInHead(intaStyleLink);
 // --inta-nova-card-bg (and everything derived from it — the badge ring, the
 // reopen bubble, the CCPA pill, the LGPD/POPIA icon + buttons) is set as an
 // inline custom property on the root element, which beats the stylesheet's
-// :root default regardless of load order. Nova's text/border colors are
-// fixed white-on-dark, so a light novaBackgroundColor will read poorly —
-// that's a call for whoever sets it, not something this does automatically.
+// :root default regardless of load order. --inta-nova-card-fg is set
+// alongside it (same darkLightCheck() used for the brand/accept button
+// elsewhere in this file) so text/border contrast flips to dark-on-light for
+// a light override instead of staying white-on-white; nova.css's own
+// --inta-nova-card-muted/-border and the "Show details" button border all
+// derive from this one variable, so setting it is enough to keep the whole
+// card readable regardless of which background color a site picks.
 if (window.INTA.settings.design === "nova" && window.INTA.settings.novaBackgroundColor) {
     document.documentElement.style.setProperty("--inta-nova-card-bg", window.INTA.settings.novaBackgroundColor);
+    document.documentElement.style.setProperty(
+        "--inta-nova-card-fg",
+        darkLightCheck(window.INTA.settings.novaBackgroundColor) === "light" ? "#1a1a1f" : "#ffffff"
+    );
 }
 
 let intastellarCookieLanguageSettings = "Cookie Indstillinger";
