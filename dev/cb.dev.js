@@ -2469,7 +2469,18 @@ bannerContent.setAttribute("title", intastellarCookieLanguageSettings);
 cookieSettings.setAttribute("class", "intastellarCookie-settings__container");
 banner.setAttribute("onclick", "javascript:IntastellarCookieConsent.renew();");
 const arrange = window?.INTA?.settings === undefined || window?.INTA?.settings.arrange === undefined ? "" : window?.INTA?.settings.arrange;
-const intastellarLogo = darkLightCheck(window.INTA.settings.color) === "light" ? intastellarLogoDark : intastellarLogoLight;
+// The "Powered by" logo normally sits against the brand/accept color
+// (cookieColor), so contrasting it against window.INTA.settings.color makes
+// sense generically — except for "nova", where the powered-by row sits on
+// nova's own card surface (--inta-nova-card-bg, i.e. novaBackgroundColor or
+// nova's fixed navy default) instead — same mismatch class as the reopen
+// bubble's icon further below in this file. Without this, a light
+// novaBackgroundColor still loads the white logo variant and it disappears
+// into the card.
+const intastellarLogoContrastColor = (window.INTA.settings.design === "nova")
+    ? (window.INTA.settings.novaBackgroundColor || "#2b2a42")
+    : window.INTA.settings.color;
+const intastellarLogo = darkLightCheck(intastellarLogoContrastColor) === "light" ? intastellarLogoDark : intastellarLogoLight;
 
 function intaGetDocumentHead() {
     return (typeof intHead !== "undefined" && intHead)
