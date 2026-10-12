@@ -2884,7 +2884,18 @@ function intaCbApplyMainBannerDomAndInitialize() {
 
     banner.setAttribute("class", "intastellarCookie-settings");
 
-    bannerContent.innerHTML = '<img class="intCookieIcon-openSettings" style="filter: brightness(' + (darkLightCheck(window.INTA.settings.color) === "light" ? "0" : "100") + ') !important" src="' + intCookieIcon + '" alt="Cookie Icon">' + IntastellarToolTip + ' ' + text;
+    // This icon's own background is normally the site's brand/accept color
+    // (cookieColor), so contrasting against window.INTA.settings.color makes
+    // sense generically — except for "nova", where nova.css's own override
+    // (see the file header comment there) forces this container's background
+    // to --inta-nova-card-bg instead, i.e. novaBackgroundColor (or nova's
+    // fixed navy default) rather than the brand color. Contrasting against
+    // the wrong color is exactly how a white novaBackgroundColor ends up with
+    // a white icon on a white bubble.
+    let intCookieIconContrastColor = (window.INTA.settings.design === "nova")
+        ? (window.INTA.settings.novaBackgroundColor || "#2b2a42")
+        : window.INTA.settings.color;
+    bannerContent.innerHTML = '<img class="intCookieIcon-openSettings" style="filter: brightness(' + (darkLightCheck(intCookieIconContrastColor) === "light" ? "0" : "100") + ') !important" src="' + intCookieIcon + '" alt="Cookie Icon">' + IntastellarToolTip + ' ' + text;
 
     banner.appendChild(bannerContent);
     moreSettings.appendChild(moreSettingsContent);

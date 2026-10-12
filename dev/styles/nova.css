@@ -950,6 +950,7 @@ intastellarconsents .intastellarCCPAContainer {
     justify-content: center;
     cursor: pointer;
     padding: 0;
+    border: none;
 }
 
 .intastellarCookie-settingsContainer--otherSide {
