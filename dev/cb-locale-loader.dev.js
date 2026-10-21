@@ -100,7 +100,7 @@
         if (typeof intastellarDevMode !== "undefined" && intastellarDevMode) {
             return "../../dev/languages/" + slug + ".dev.js";
         }
-        return "https://consents.cdn.intastellarsolutions.com/languages/" + slug + ".js";
+        return "https://cdn.intastellar.eu/languages/" + slug + ".js";
     };
 
     window.intaLoadCmpLocaleScript = function intaLoadCmpLocaleScript(slug) {
