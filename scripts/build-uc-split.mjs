@@ -1,9 +1,26 @@
 /**
  * Splits dev/gdpr.dev.js into uc-boot (sync entry) + uc-core (async).
  * Run: node scripts/build-uc-split.mjs
+ *
+ * Boot/skip regions are marked directly in dev/gdpr.dev.js with comment markers
+ * instead of hardcoded line numbers, so the split survives code being added or
+ * removed above a region without needing to be manually re-aligned:
+ *
+ *   /* @uc-boot:start *\/ ... /* @uc-boot:end *\/
+ *     Code that must run synchronously, before uc-core.js (loaded async) arrives.
+ *     Included verbatim in uc-boot.dev.js; excluded from uc-core.dev.js.
+ *
+ *   /* @uc-core:skip:start *\/ ... /* @uc-core:skip:end *\/
+ *     Code present in the monolithic file that should be dropped from BOTH the
+ *     split outputs (e.g. covered some other way in split mode).
+ *
+ * Markers must not be nested and each :start must have a matching :end. Output
+ * is validated as real JS (via vm.Script) before being written, so a misplaced
+ * marker fails the build loudly instead of silently shipping broken JS.
  */
 import fs from "fs";
 import path from "path";
+import vm from "vm";
 import { fileURLToPath } from "url";
 import { spawnSync } from "child_process";
 
@@ -31,63 +48,76 @@ const patternSources = fs.readFileSync(patternsPath, "utf8").trim();
 
 const lines = fs.readFileSync(srcPath, "utf8").split("\n");
 
+const MARKERS = {
+    "@uc-boot:start": { kind: "boot", edge: "start" },
+    "@uc-boot:end": { kind: "boot", edge: "end" },
+    "@uc-core:skip:start": { kind: "skip", edge: "start" },
+    "@uc-core:skip:end": { kind: "skip", edge: "end" },
+};
+const MARKER_LINE_RE = /\/\*\s*(@uc-(?:boot|core:skip):(?:start|end))\s*\*\//;
+
 /**
- * Minimal sync boot — only code required before the parser hits tracking scripts.
- * Everything else stays in uc-core (async).
+ * Walk the source once, pairing up :start/:end markers of each kind.
+ * Returns { bootRegions, skipRegions, markerLineNos } — regions are
+ * 1-indexed [startContentLine, endContentLine] bounds (markers excluded).
  */
-const BOOT_RANGES = [
-    [1, 7],
-    [174, 618], // includes sync script-injection guard (was 174-505; guard inserted after 505, +114 lines)
-    [645, 646],
-    [1100, 1105],
-    [1111, 1134],
-    [1149, 1162],
-    [1164, 1235],
-    [1238, 1333],
-    [1348, 1361],
-    [1365, 1398],
-    [1400, 1471], // includes intaSetGtagConsentDefaults() + oaiq consent intercept — both must fire sync, before uc-core
-    [1717, 1735],
-    [1742, 1770],
-    [2019, 2311], // +49 lines: TCF encoder rewrite (IsRangeEncoding, VLI section, PublisherRestrictions); +1 analytics allowlist entry
-    [2381, 2408],
-    [4523, 4774], // was 4522-4773; +1 line from the "nova" entry added to cookieBannerStyles (line ~3829)
-    [5050, 5359], // was 5049-5358; +1 line from the "nova" entry added to cookieBannerStyles (line ~3829)
-];
+function parseRegions() {
+    const bootRegions = [];
+    const skipRegions = [];
+    const markerLineNos = new Set();
+    let open = null; // { kind, startedAtMarkerLine }
 
-const CORE_SKIP_LINES = new Set([5548, 5549, 5550]); // was 5547-5549; +1 line from the "nova" entry added to cookieBannerStyles (line ~3829)
+    for (let i = 0; i < lines.length; i++) {
+        const lineNo = i + 1;
+        const m = lines[i].match(MARKER_LINE_RE);
+        if (!m) continue;
+        const { kind, edge } = MARKERS[m[1]];
+        markerLineNos.add(lineNo);
 
-function lineDepth(line) {
-    let d = 0;
-    for (const c of line) {
-        if (c === "{") d++;
-        if (c === "}") d--;
+        if (edge === "start") {
+            if (open) {
+                throw new Error(
+                    `build-uc-split.mjs: nested marker at dev/gdpr.dev.js:${lineNo} — ` +
+                    `"${m[1]}" opened while "@${open.kind === "boot" ? "uc-boot" : "uc-core:skip"}:start" from line ${open.startedAtMarkerLine} is still open. Markers may not nest.`
+                );
+            }
+            open = { kind, startedAtMarkerLine: lineNo, contentStart: lineNo + 1 };
+        } else {
+            if (!open || open.kind !== kind) {
+                throw new Error(
+                    `build-uc-split.mjs: unmatched "${m[1]}" at dev/gdpr.dev.js:${lineNo} — ` +
+                    (open ? `expected "${open.kind}:end" (opened at line ${open.startedAtMarkerLine}) first.` : "no matching ':start' marker is open.")
+                );
+            }
+            const region = [open.contentStart, lineNo - 1];
+            (kind === "boot" ? bootRegions : skipRegions).push(region);
+            open = null;
+        }
     }
-    return d;
+
+    if (open) {
+        throw new Error(
+            `build-uc-split.mjs: "${open.kind}:start" at dev/gdpr.dev.js:${open.startedAtMarkerLine} is never closed with a matching ':end' marker.`
+        );
+    }
+
+    return { bootRegions, skipRegions, markerLineNos };
 }
 
-function sliceDepth(start, end) {
-    let d = 0;
-    for (let i = start - 1; i < end; i++) {
-        d += lineDepth(lines[i]);
-    }
-    return d;
-}
+const { bootRegions, skipRegions, markerLineNos } = parseRegions();
 
 function takeLines(start, end) {
     return lines.slice(start - 1, end).join("\n");
 }
 
-function isBootLine(lineNo) {
-    for (const [start, end] of BOOT_RANGES) {
-        if (lineNo >= start && lineNo <= end) {
-            return true;
-        }
+function isInAnyRegion(lineNo, regions) {
+    for (const [start, end] of regions) {
+        if (lineNo >= start && lineNo <= end) return true;
     }
     return false;
 }
 
-const bootSlices = BOOT_RANGES.map(([start, end]) => takeLines(start, end));
+const bootSlices = bootRegions.map(([start, end]) => takeLines(start, end));
 
 const bootBody = [
     "/*",
@@ -180,9 +210,8 @@ const coreLines = [
 
 for (let i = 0; i < lines.length; i++) {
     const lineNo = i + 1;
-    if (isBootLine(lineNo) || CORE_SKIP_LINES.has(lineNo)) {
-        continue;
-    }
+    if (markerLineNos.has(lineNo)) continue;
+    if (isInAnyRegion(lineNo, bootRegions) || isInAnyRegion(lineNo, skipRegions)) continue;
     coreLines.push(lines[i]);
 }
 
@@ -206,30 +235,30 @@ if (typeof sendToBackend === "function") {
 window.__intaUcCoreReady = true;
 `);
 
-let bootDepth = 0;
-for (const [start, end] of BOOT_RANGES) {
-    bootDepth += sliceDepth(start, end);
-}
+const bootOutput = bootBody.trim() + "\n";
+const coreOutput = coreLines.join("\n").trim() + "\n";
 
-let coreDepth = 0;
-for (let i = 0; i < lines.length; i++) {
-    const lineNo = i + 1;
-    if (isBootLine(lineNo) || CORE_SKIP_LINES.has(lineNo)) continue;
-    coreDepth += lineDepth(lines[i]);
-}
-
-if (bootDepth !== 0 || coreDepth !== 0) {
-    console.warn("Warning: brace imbalance boot=" + bootDepth + " core=" + coreDepth);
-    if (bootDepth !== 0) {
-        throw new Error("uc-boot split has brace imbalance " + bootDepth + " — fix build-uc-split.mjs line ranges");
+/** Real parse validation (not a heuristic) — throws with file/line context on bad syntax. */
+function assertValidJs(code, label, outPath) {
+    try {
+        new vm.Script(code, { filename: outPath });
+    } catch (e) {
+        throw new Error(
+            `build-uc-split.mjs: generated ${label} is not valid JavaScript — ${e.message}\n` +
+            `This means a @uc-boot/@uc-core:skip marker in dev/gdpr.dev.js is misplaced (likely mid-statement). ` +
+            `Check the regions near the error above.`
+        );
     }
 }
 
-fs.writeFileSync(bootPath, bootBody.trim() + "\n");
-fs.writeFileSync(corePath, coreLines.join("\n").trim() + "\n");
+assertValidJs(bootOutput, "dev/uc-boot.dev.js", bootPath);
+assertValidJs(coreOutput, "dev/uc-core.dev.js", corePath);
 
-const bootKb = (Buffer.byteLength(bootBody, "utf8") / 1024).toFixed(1);
-const coreKb = (Buffer.byteLength(coreLines.join("\n"), "utf8") / 1024).toFixed(1);
-const bootLines = bootBody.trim().split("\n").length;
-console.log("Wrote dev/uc-boot.dev.js (" + bootKb + " KB source, " + bootLines + " lines)");
+fs.writeFileSync(bootPath, bootOutput);
+fs.writeFileSync(corePath, coreOutput);
+
+const bootKb = (Buffer.byteLength(bootOutput, "utf8") / 1024).toFixed(1);
+const coreKb = (Buffer.byteLength(coreOutput, "utf8") / 1024).toFixed(1);
+const bootLineCount = bootOutput.split("\n").length;
+console.log("Wrote dev/uc-boot.dev.js (" + bootKb + " KB source, " + bootLineCount + " lines)");
 console.log("Wrote dev/uc-core.dev.js (" + coreKb + " KB source)");

@@ -7,16 +7,23 @@ if (window.__intaUcCoreExecuted) {
     console.warn("Intastellar uc-core: duplicate load.");
 }
 window.__intaUcCoreExecuted = true;
+/*
+ *  Cookie Consents Banner by Intastellar Solutions, International
+ *  intastellarsolutions.com/gdpr-cookiebanner
+ *  cdn.intastellar.eu/uc.js
+ *  @copy 2022-2025 Intastellar Solutions, International
+ *
+*/
 // --- Cross-site Consent Tracking ---
 // Request consent state for a user
 // Request consent state for a user
 function requestConsentState(userId, rootDomain, partnerDomains = []) {
-    consentIframe.contentWindow.postMessage({ type: 'getConsent', userId, rootDomain, partnerDomains }, 'https://consents.cdn.intastellarsolutions.com');
+    consentIframe.contentWindow.postMessage({ type: 'getConsent', userId, rootDomain, partnerDomains }, 'https://cdn.intastellar.eu');
 }
 
 // Set consent state for a user
 function setConsentState(userId, consents, rootDomain, partnerDomains = []) {
-    consentIframe.contentWindow.postMessage({ type: 'setConsent', userId, consents, rootDomain, partnerDomains }, 'https://consents.cdn.intastellarsolutions.com');
+    consentIframe.contentWindow.postMessage({ type: 'setConsent', userId, consents, rootDomain, partnerDomains }, 'https://cdn.intastellar.eu');
     // VWO consent update
     updateVwoConsent(consents);
 }
@@ -173,6 +180,92 @@ function intaShopifySetTrackingConsentSafe(consents, onDone) {
     }
 }
 
+/* ── Cookie detail list (dynamic, from API) ───────────────────────────── */
+let intaFoundCookieList;
+
+const intaGetDomainFoundCookieList = async (domain) => {
+    try {
+        const response = await fetch(`https://www.intastellarconsents.com/api/cookie-banner?domain=${domain}`);
+        
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching domain found cookie list:', error);
+        return null;
+    }
+};
+
+const intaCategoryDomOrder = ['necessary', 'functional', 'analytics', 'marketing'];
+
+function intaFormatCookieExpiry(c) {
+    if (c.session || !c.expires) return 'Session';
+    return new Date(c.expires * 1000).toLocaleDateString();
+}
+
+function intaBuildCategoryOverviewHTML(category) {
+    const data = intaFoundCookieList?.categories?.[category];
+    if (!data) return '';
+    const { cookies = [], vendors = [] } = data;
+    const vendorsWithCookies = vendors.filter(v => (v.cookies || []).length > 0);
+    const attributedNames = new Set(vendorsWithCookies.flatMap(v => v.cookies.map(c => c.name)));
+    const vendorRows = vendorsWithCookies.map(v => {
+        const vendorCookieRows = v.cookies.map(c => `
+            <article class="intaCookieList-cookie">
+                <h4 class="intaCookieList-CookieName">${c.name}</h4>
+                ${c.description ? `<p class="intaCookieList-description">${c.description}</p>` : ''}
+                <p>${c.domain} · ${intaFormatCookieExpiry(c)}</p>
+            </article>`).join('');
+        return `
+        <section class="intaCookieListOverview-grid">
+            <section class="intaCookieList-left">
+                <h3 class="intaCookieListOverview-heading">Provider</h3>
+                <p class="intaCookieListOverview-vendor">${v.service}</p>
+                ${v.description ? `<p class="intaCookieListOverview-vendorDesc">${v.description}</p>` : ''}
+                ${v.privacyUrl ? `<a class="intaCookieListOverview-privacy" href="${v.privacyUrl}" target="_blank" rel="noopener">Privacy Policy</a>` : ''}
+                <h4 class="intaCookieList-CookieName">Host</h4>
+                ${[].concat(v.hosts).map(h => `<p>${h}</p>`).join('')}
+            </section>
+            <section>${vendorCookieRows}</section>
+        </section>`;
+    }).join('');
+    const unattributed = cookies.filter(c => !attributedNames.has(c.name));
+    const unattributedBlock = unattributed.length ? `
+        <section class="intaCookieListOverview-grid">
+            <section class="intaCookieList-left">
+                <h3 class="intaCookieListOverview-heading">Provider</h3>
+                <p class="intaCookieListOverview-vendor">${window.INTA?.settings?.company || ''}</p>
+            </section>
+            <section>${unattributed.map(c => `
+                <article class="intaCookieList-cookie">
+                    <h4 class="intaCookieList-CookieName">${c.name}</h4>
+                    ${c.description ? `<p class="intaCookieList-description">${c.description}</p>` : ''}
+                    <p>${c.domain} · ${intaFormatCookieExpiry(c)}</p>
+                </article>`).join('')}
+            </section>
+        </section>` : '';
+    return vendorRows + unattributedBlock;
+}
+
+function intaInjectFoundCookieDetailList() {
+    if (!intaFoundCookieList) return false;
+    const overviews = document.querySelectorAll('.intReadMore .intaCookieListOverview');
+    if (!overviews.length) return false;
+    intaCategoryDomOrder.forEach((category, i) => {
+        if (overviews[i]) overviews[i].innerHTML = intaBuildCategoryOverviewHTML(category);
+    });
+    return true;
+}
+
+(async () => {
+    window.intaFoundCookieList = intaFoundCookieList = await intaGetDomainFoundCookieList(document.domain);
+    if (!intaInjectFoundCookieDetailList()) {
+        const observer = new MutationObserver(() => {
+            if (intaInjectFoundCookieDetailList()) observer.disconnect();
+        });
+        observer.observe(document.documentElement, { childList: true, subtree: true });
+    }
+})();
+/* ── End cookie detail list ───────────────────────────────────────────── */
 
 let __intaCookieEventFlushTimer = null;
 let __intaCookieEventPendingByKey = new Map();
@@ -183,7 +276,7 @@ let INTA_COOKIE_EVENTS_URL = 'https://consents.intastellarsolutions.com/api/v1/c
 
 // Listen for consent state response
 window.addEventListener('message', (event) => {
-    if (event.origin !== 'https://consents.cdn.intastellarsolutions.com') return;
+    if (event.origin !== 'https://cdn.intastellar.eu') return;
     if (event.data.type === 'consentState') {
         // Integrate with your banner logic
         window.intaCookieConsents = event.data.consents;
@@ -661,7 +754,7 @@ var COOKIE_CONSENT_TYPE_MAP = null;
 // Load uc-vendors.js on DOMContentLoaded to reduce initial parse/execute (detectCookieVendor + map ~15KB)
 function loadUcVendors() {
     if (window.__intaDetectCookieVendor) return;
-    var base = (typeof window.INTA !== 'undefined' && window.INTA.settings && window.INTA.settings.vendorsUrl) || 'https://consents.cdn.intastellarsolutions.com/uc-vendors.js';
+    var base = (typeof window.INTA !== 'undefined' && window.INTA.settings && window.INTA.settings.vendorsUrl) || 'https://cdn.intastellar.eu/uc-vendors.js';
     var s = document.createElement('script');
     s.src = base;
     s.async = true;
@@ -671,9 +764,6 @@ function loadUcVendors() {
     };
 }
 
-
-
-// --- Start Cookie Interception ---
 
 function IntastellarSnapShot(stage) {
 
@@ -691,7 +781,6 @@ function IntastellarSnapShot(stage) {
 let intaCookieConsentsUserId = (getCookie(int_hideCookieBannerName)) ? JSON.parse(decodeIntaConsentsObject(getCookie(int_hideCookieBannerName)?.split(".")[2]))?.uid : null;
 
 /** Intastellar script URL when `document.currentScript` is null (Remix, Vite, Webpack, ES modules). */
-
 
 let isWordPress = document.getElementById('intastellar-gdpr-settings-js') !== null;
 let FunctionalCheckbox = document.querySelector("#functional");
@@ -938,12 +1027,6 @@ function optOutCCPA() {
 // --- Server-Side Tagging & Interception Implementation ---
 // Helper: Determine consent type for a given URL using allScripts regex
 
-/**
- * Machine-readable IAB device-storage disclosures and GVL-listed vendor URLs.
- * cb.js sets `intaIsGvlVendorPassThroughUrl` / `__intaGvlPassThroughUrls` after vendors load; this also matches
- * common disclosure JSON paths so XHR is not blocked before the GVL finishes loading.
- */
-
 // Helper: Send intercepted data to backend for storage/categorization
 async function sendToBackend(data) {
     try {
@@ -977,7 +1060,7 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
         }
     } catch (e) { }
     let uid = (window.intaConsentsObjectVariable && window.intaConsentsObjectVariable.uid) || '';
-    let base = (typeof window.INTA !== 'undefined' && typeof window.INTA.settings?.backendUrl === 'string') ? window.INTA.settings.backendUrl : 'https://consents.cdn.intastellarsolutions.com/tests/backend/test.php';
+    let base = (typeof window.INTA !== 'undefined' && typeof window.INTA.settings?.backendUrl === 'string') ? window.INTA.settings.backendUrl : 'https://cdn.intastellar.eu/tests/backend/test.php';
     fetch(base, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1546,7 +1629,7 @@ let inta_requiredCookieList = [{
     vendor_privacy: "https://www.intastellarsolutions.com/about/legal/privacy",
     domains: [
         "intastellarsolutions.com",
-        "consents.cdn.intastellarsolutions.com",
+        "cdn.intastellar.eu",
         "intastellarconsents.com",
         window.location.host,
         window.INTA?.settings?.rootDomain
@@ -3095,10 +3178,10 @@ function intaExperimentChannelMatches(exp, expKey) {
 })();
 
 let intastellarCreateBanner = document.createElement("script");
-intastellarCreateBanner.src = "https://consents.cdn.intastellarsolutions.com/cb.js";
+intastellarCreateBanner.src = "https://cdn.intastellar.eu/cb.js";
 
-if(window.INTA.settings && window.INTA.settings.design === "premium") {
-    intastellarCreateBanner.src = "https://consents.cdn.intastellarsolutions.com/premium.js";
+if (window.INTA.settings && window.INTA.settings.design === "premium") {
+    intastellarCreateBanner.src = "https://cdn.intastellar.eu/premium.js";
 }
 
 if (intastellarDevMode) {
@@ -3198,7 +3281,7 @@ function intaUcCmpLocaleScriptUrl(slug) {
     if (typeof intastellarDevMode !== "undefined" && intastellarDevMode) {
         return "../../dev/languages/" + slug + ".dev.js";
     }
-    return "https://consents.cdn.intastellarsolutions.com/languages/" + slug + ".js";
+    return "https://cdn.intastellar.eu/languages/" + slug + ".js";
 }
 
 /** Load one locale file before cb.js so cb can skip the inline language branches. */
@@ -3374,6 +3457,8 @@ function recordCookie(value) {
 
     intaScheduleCookieEventFlush();
 }
+
+/* Helper function to create Consents Block message for iframes etc.*/
 
 /* - - - Helper function for message on the content block - - - */
 function handleInputChange(event) {
@@ -3650,6 +3735,8 @@ function processExistingScripts() {
     });
 }
 
+
+
 function deleteAllCookies() {
     var cookies = document.cookie.split(";");
 
@@ -3809,9 +3896,6 @@ function intaRunUcCoreIntegrations() {
             } catch (e) { /* ignore */ }
         }
         intaSetAmazonConsentSignal(true);
-        window.uetq.push('consent', 'update', {
-            'ad_storage': 'granted'
-        });
         window.clarity && window.clarity('consentv2', {
             ad_Storage: "granted",
             analytics_Storage: "denied"
@@ -3837,6 +3921,9 @@ function intaRunUcCoreIntegrations() {
     }
 
     if (hasConsent("functional")) {
+        gtag('consent', 'update', {
+            'functionality_storage': 'granted',
+        });
         window.uetq.push('consent', 'update', {
             'functionality_storage': 'granted'
         });

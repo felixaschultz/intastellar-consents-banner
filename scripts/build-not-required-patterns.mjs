@@ -13,13 +13,21 @@ const srcPath = path.join(root, "dev", "gdpr.dev.js");
 const outPath = path.join(root, "dev", "uc-not-required-patterns.dev.js");
 
 const gdprLines = fs.readFileSync(srcPath, "utf8").split("\n");
+const startIdx = gdprLines.findIndex((l) => /@uc-allScripts:start/.test(l));
+const endIdx = gdprLines.findIndex((l) => /@uc-allScripts:end/.test(l));
+if (startIdx === -1 || endIdx === -1 || endIdx <= startIdx) {
+    throw new Error(
+        "build-not-required-patterns.mjs: couldn't find a matched @uc-allScripts:start/:end " +
+        "marker pair around the `allScripts` declaration in dev/gdpr.dev.js."
+    );
+}
 const arraySrc = gdprLines
-    .slice(173, 314)
+    .slice(startIdx + 1, endIdx)
     .join("\n")
     .replace(/^let allScripts = window\.allScripts = /, "var allScripts = ");
 const allScripts = vm.runInNewContext(arraySrc + "\nallScripts;", {}, { timeout: 5000 });
 if (!Array.isArray(allScripts) || allScripts.length < 3) {
-    throw new Error("Failed to parse allScripts from gdpr.dev.js lines 174–314");
+    throw new Error("Failed to parse allScripts from the @uc-allScripts region in gdpr.dev.js");
 }
 
 function merge(first, second, third) {
