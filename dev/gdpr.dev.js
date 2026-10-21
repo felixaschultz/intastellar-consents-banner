@@ -171,6 +171,8 @@ function intaShopifySetTrackingConsentSafe(consents, onDone) {
     }
 }
 
+/* @uc-boot:start */
+/* @uc-allScripts:start */
 let allScripts = window.allScripts = [
     {
         /* Analytics Scripts which are beeing blocked */
@@ -312,6 +314,7 @@ let allScripts = window.allScripts = [
         ]
     }
 ];
+/* @uc-allScripts:end */
 
 let notRequired;
 
@@ -382,6 +385,7 @@ function intaBuildNotRequiredRegexp() {
 
 window.intaBuildNotRequiredRegexp = intaBuildNotRequiredRegexp;
 
+/* @uc-boot:end */
 /* ── Cookie detail list (dynamic, from API) ───────────────────────────── */
 let intaFoundCookieList;
 
@@ -468,6 +472,7 @@ function intaInjectFoundCookieDetailList() {
     }
 })();
 /* ── End cookie detail list ───────────────────────────────────────────── */
+/* @uc-boot:start */
 
 let __intaCompiledScriptPatterns = null;
 var __intaPatternRegExpCache = Object.create(null);
@@ -616,6 +621,7 @@ function intaGuardScriptNode(node) {
     }
 })();
 /* ── End synchronous script-injection guard ───────────────────────────── */
+/* @uc-boot:end */
 
 let __intaCookieEventFlushTimer = null;
 let __intaCookieEventPendingByKey = new Map();
@@ -642,8 +648,10 @@ window.addEventListener('message', (event) => {
     }
 });
 
+/* @uc-boot:start */
 window.INTA = window.INTA || {};
 window.INTA.observedCookieSource = 'unknown';
+/* @uc-boot:end */
 // --- VWO Cookie Consent Integration (latest, per docs) ---
 function updateVwoConsent(consents) {
     // VWO expects: 1 = accepted, 2 = pending, 3 = rejected
@@ -1097,17 +1105,20 @@ window.intaShopifyGetProcessingAllowedSnapshot = intaShopifyGetProcessingAllowed
 window.intaShopifyRefreshCustomerPrivacyState = intaShopifyRefreshCustomerPrivacyState;
 
 // --- Helper function to detect Vendors of Cookies (lazy-loaded; stub until uc-vendors loads) ---
+/* @uc-boot:start */
 function detectCookieVendor(cookie) {
     if (typeof window.__intaDetectCookieVendor === 'function') {
         return window.__intaDetectCookieVendor(cookie);
     }
     return 'unknown vendor';
 }
+/* @uc-boot:end */
 
 // --- Helper: Map cookie name to consent type (populated when uc-vendors loads) ---
 var COOKIE_CONSENT_TYPE_MAP = null;
 
 /** Append dynamically created scripts/styles; head may be missing briefly (SSR / Remix). */
+/* @uc-boot:start */
 function intaAppendToDocumentHead(node) {
     if (!node) {
         return;
@@ -1132,6 +1143,7 @@ function intaAppendToDocumentHead(node) {
         /* ignore */
     }
 }
+/* @uc-boot:end */
 
 // Load uc-vendors.js on DOMContentLoaded to reduce initial parse/execute (detectCookieVendor + map ~15KB)
 function loadUcVendors() {
@@ -1146,6 +1158,7 @@ function loadUcVendors() {
     };
 }
 
+/* @uc-boot:start */
 function getConsentTypeForCookie(cookieName) {
     // Delegate to uc-vendors when loaded
     if (typeof window.__intaGetConsentTypeForCookie === 'function') {
@@ -1331,6 +1344,7 @@ window.INTA.memorySet = function (key, value) {
     window.INTA._memory = window.INTA._memory || {};
     window.INTA._memory[key] = value;
 };
+/* @uc-boot:end */
 
 function IntastellarSnapShot(stage) {
 
@@ -1345,6 +1359,7 @@ function IntastellarSnapShot(stage) {
 
 /* - - - Setup - - - */
 
+/* @uc-boot:start */
 let intaCookiePref = "IntastellarConsentSolution";
 let int_hideCookieBannerName = window.int_hideCookieBannerName = intaCookiePref;
 let int_FunctionalCookies = intaCookiePref + ":Functional-cookies";
@@ -1359,9 +1374,11 @@ let intastellarCookieBannerRootDomain = "https://cdn.intastellar.eu";
 let intastellarAssetsCDNdomain = "https://www.intastellar-consents.com";
 let intaCookieConsents = window.intaCookieConsents = (getCookie(int_hideCookieBannerName)) ? JSON.parse(decodeIntaConsentsObject(getCookie(int_hideCookieBannerName)?.split(".")[2]))?.consents : null;
 window.uetq = window.uetq || [];
+/* @uc-boot:end */
 let intaCookieConsentsUserId = (getCookie(int_hideCookieBannerName)) ? JSON.parse(decodeIntaConsentsObject(getCookie(int_hideCookieBannerName)?.split(".")[2]))?.uid : null;
 
 /** Intastellar script URL when `document.currentScript` is null (Remix, Vite, Webpack, ES modules). */
+/* @uc-boot:start */
 function intaGuessIntastellarScriptSrc() {
     try {
         if (document.currentScript && document.currentScript.src) {
@@ -1469,6 +1486,7 @@ intaSetGtagConsentDefaults();
         }
     });
 }());
+/* @uc-boot:end */
 
 let isWordPress = document.getElementById('intastellar-gdpr-settings-js') !== null;
 let FunctionalCheckbox = document.querySelector("#functional");
@@ -1714,6 +1732,7 @@ function optOutCCPA() {
 
 // --- Server-Side Tagging & Interception Implementation ---
 // Helper: Determine consent type for a given URL using allScripts regex
+/* @uc-boot:start */
 function getConsentTypeForUrl(url) {
     if (!url) return 'marketing';
     for (let i = 0; i < window.allScripts.length; i++) {
@@ -1768,6 +1787,7 @@ function intaIsGvlPassThroughRequest(url) {
     } catch (e0) { /* ignore */ }
     return false;
 }
+/* @uc-boot:end */
 
 // Helper: Send intercepted data to backend for storage/categorization
 async function sendToBackend(data) {
@@ -2016,6 +2036,7 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
 })(window);
 
 // Consent check helper
+/* @uc-boot:start */
 function hasConsent(type) {
     // type: 'functional', 'statistics', 'marketing'
     if (!window.intaCookieConsents) return false;
@@ -2309,6 +2330,7 @@ function getCookie(cname) {
     }
     return "";
 }
+/* @uc-boot:end */
 
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min)
@@ -2378,6 +2400,7 @@ function intaSyncSalesOfDataAllowedOnConsents(consents) {
     consents.salesOfDataAllowed = intaMarketingConsentImpliesSaleAllowed(consents);
 }
 
+/* @uc-boot:start */
 function encodeIntaConsentsObject(string, base) {
     try {
         var parsed = JSON.parse(string);
@@ -2406,6 +2429,7 @@ function decodeIntaConsentsObject(number) {
 
     return string;
 }
+/* @uc-boot:end */
 
 let tmpl = document.createElement('template');
 tmpl.innerHTML = `
@@ -4524,6 +4548,7 @@ function recordCookie(value) {
 }
 
 /* Helper function to create Consents Block message for iframes etc.*/
+/* @uc-boot:start */
 function ConsentsBlock(logo, textLanguage, btnText, datatype, img) {
     let p = "";
     if (window.location.host.indexOf("intastellarsolutions.com") == -1) {
@@ -4774,6 +4799,7 @@ function blockBlockQuotes(tweet, script, logo) {
         }
     }
 }
+/* @uc-boot:end */
 
 /* - - - Helper function for message on the content block - - - */
 function handleInputChange(event) {
@@ -5051,6 +5077,7 @@ function processExistingScripts() {
 }
 
 
+/* @uc-boot:start */
 function restartObserver() {
     // Disconnect any existing observer
     if (window.currentObserver) {
@@ -5359,6 +5386,7 @@ function startObserving(observer) {
         attributeFilter: ["src", "href", "type", "value", "checked", "innerText"],
     })
 }
+/* @uc-boot:end */
 
 function deleteAllCookies() {
     var cookies = document.cookie.split(";");
@@ -5519,9 +5547,11 @@ function intaRunUcCoreIntegrations() {
             } catch (e) { /* ignore */ }
         }
         intaSetAmazonConsentSignal(true);
+/* @uc-core:skip:start */
         window.uetq.push('consent', 'update', {
             'ad_storage': 'granted'
         });
+/* @uc-core:skip:end */
         window.clarity && window.clarity('consentv2', {
             ad_Storage: "granted",
             analytics_Storage: "denied"
