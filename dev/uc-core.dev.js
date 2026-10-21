@@ -7,6 +7,94 @@ if (window.__intaUcCoreExecuted) {
     console.warn("Intastellar uc-core: duplicate load.");
 }
 window.__intaUcCoreExecuted = true;
+
+/* ── Cookie detail list (dynamic, from API) ───────────────────────────── */
+let intaFoundCookieList;
+
+const intaGetDomainFoundCookieList = async (domain) => {
+    try {
+        const response = await fetch(`https://www.intastellarconsents.com/api/cookie-banner?domain=${domain}`);
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching domain found cookie list:', error);
+        return null;
+    }
+};
+
+const intaCategoryDomOrder = ['necessary', 'functional', 'analytics', 'marketing'];
+
+function intaFormatCookieExpiry(c) {
+    if (c.session || !c.expires) return 'Session';
+    return new Date(c.expires * 1000).toLocaleDateString();
+}
+
+function intaBuildCategoryOverviewHTML(category) {
+    const data = intaFoundCookieList?.categories?.[category];
+    if (!data) return '';
+    const { cookies = [], vendors = [] } = data;
+    const vendorsWithCookies = vendors.filter(v => (v.cookies || []).length > 0);
+    const attributedNames = new Set(vendorsWithCookies.flatMap(v => v.cookies.map(c => c.name)));
+    const vendorRows = vendorsWithCookies.map(v => {
+        const vendorCookieRows = v.cookies.map(c => `
+            <article class="intaCookieList-cookie">
+                <h4 class="intaCookieList-CookieName">${c.name}</h4>
+                ${c.description ? `<p class="intaCookieList-description">${c.description}</p>` : ''}
+                <p>${c.domain} · ${intaFormatCookieExpiry(c)}</p>
+            </article>`).join('');
+        return `
+        <section class="intaCookieListOverview-grid">
+            <section class="intaCookieList-left">
+                <h3 class="intaCookieListOverview-heading">Provider</h3>
+                <p class="intaCookieListOverview-vendor">${v.service}</p>
+                ${v.description ? `<p class="intaCookieListOverview-vendorDesc">${v.description}</p>` : ''}
+                ${v.privacyUrl ? `<a class="intaCookieListOverview-privacy" href="${v.privacyUrl}" target="_blank" rel="noopener">Privacy Policy</a>` : ''}
+                <h4 class="intaCookieList-CookieName">Host</h4>
+                ${[].concat(v.hosts).map(h => `<p>${h}</p>`).join('')}
+            </section>
+            <section>${vendorCookieRows}</section>
+        </section>`;
+    }).join('');
+    const unattributed = cookies.filter(c => !attributedNames.has(c.name));
+    const unattributedBlock = unattributed.length ? `
+        <section class="intaCookieListOverview-grid">
+            <section class="intaCookieList-left">
+                <h3 class="intaCookieListOverview-heading">Provider</h3>
+                <p class="intaCookieListOverview-vendor">${window.INTA?.settings?.company || ''}</p>
+            </section>
+            <section>${unattributed.map(c => `
+                <article class="intaCookieList-cookie">
+                    <h4 class="intaCookieList-CookieName">${c.name}</h4>
+                    ${c.description ? `<p class="intaCookieList-description">${c.description}</p>` : ''}
+                    <p>${c.domain} · ${intaFormatCookieExpiry(c)}</p>
+                </article>`).join('')}
+            </section>
+        </section>` : '';
+    return vendorRows + unattributedBlock;
+}
+
+function intaInjectFoundCookieDetailList() {
+    if (!intaFoundCookieList) return false;
+    const overviews = document.querySelectorAll('.intReadMore .intaCookieListOverview');
+    if (!overviews.length) return false;
+    intaCategoryDomOrder.forEach((category, i) => {
+        if (overviews[i]) overviews[i].innerHTML = intaBuildCategoryOverviewHTML(category);
+    });
+    return true;
+}
+
+(async () => {
+    window.intaFoundCookieList = intaFoundCookieList = await intaGetDomainFoundCookieList(document.domain);
+    if (!intaInjectFoundCookieDetailList()) {
+        const observer = new MutationObserver(() => {
+            if (intaInjectFoundCookieDetailList()) observer.disconnect();
+        });
+        observer.observe(document.documentElement, { childList: true, subtree: true });
+    }
+})();
+/* ── End cookie detail list ───────────────────────────────────────────── */
+
 // --- Cross-site Consent Tracking ---
 // Request consent state for a user
 // Request consent state for a user

@@ -37,7 +37,11 @@ const lines = fs.readFileSync(srcPath, "utf8").split("\n");
  */
 const BOOT_RANGES = [
     [1, 7],
-    [174, 618], // includes sync script-injection guard (was 174-505; guard inserted after 505, +114 lines)
+    [174, 384], // sync script-injection guard
+    // 385-470 ("Cookie detail list (dynamic, from API)") intentionally excluded:
+    // fires a fetch to /api/cookie-banner + sets up a document-wide MutationObserver,
+    // neither of which the sync CMP guard needs — keep it in async uc-core instead.
+    [471, 618],
     [645, 646],
     [1100, 1105],
     [1111, 1134],
@@ -52,7 +56,7 @@ const BOOT_RANGES = [
     [2019, 2311], // +49 lines: TCF encoder rewrite (IsRangeEncoding, VLI section, PublisherRestrictions); +1 analytics allowlist entry
     [2381, 2408],
     [4498, 4749],
-    [5025, 5334],
+    [4997, 5352], // was [5025, 5334] — stale bounds truncated checkCookieStatus() mid-body; fixed to clean function boundaries (updateNotRequiredRegexp..checkCookieStatus)
 ];
 
 const CORE_SKIP_LINES = new Set([5523, 5524, 5525]);
