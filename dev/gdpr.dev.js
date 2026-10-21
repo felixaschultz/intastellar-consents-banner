@@ -1,7 +1,7 @@
 /*
  *  Cookie Consents Banner by Intastellar Solutions, International
  *  intastellarsolutions.com/gdpr-cookiebanner
- *  consents.cdn.intastellarsolutions.com/uc.js
+ *  cdn.intastellar.eu/uc.js
  *  @copy 2022-2025 Intastellar Solutions, International
  *
 */
@@ -9,12 +9,12 @@
 // Request consent state for a user
 // Request consent state for a user
 function requestConsentState(userId, rootDomain, partnerDomains = []) {
-    consentIframe.contentWindow.postMessage({ type: 'getConsent', userId, rootDomain, partnerDomains }, 'https://consents.cdn.intastellarsolutions.com');
+    consentIframe.contentWindow.postMessage({ type: 'getConsent', userId, rootDomain, partnerDomains }, 'https://cdn.intastellar.eu');
 }
 
 // Set consent state for a user
 function setConsentState(userId, consents, rootDomain, partnerDomains = []) {
-    consentIframe.contentWindow.postMessage({ type: 'setConsent', userId, consents, rootDomain, partnerDomains }, 'https://consents.cdn.intastellarsolutions.com');
+    consentIframe.contentWindow.postMessage({ type: 'setConsent', userId, consents, rootDomain, partnerDomains }, 'https://cdn.intastellar.eu');
     // VWO consent update
     updateVwoConsent(consents);
 }
@@ -626,7 +626,7 @@ let INTA_COOKIE_EVENTS_URL = 'https://consents.intastellarsolutions.com/api/v1/c
 
 // Listen for consent state response
 window.addEventListener('message', (event) => {
-    if (event.origin !== 'https://consents.cdn.intastellarsolutions.com') return;
+    if (event.origin !== 'https://cdn.intastellar.eu') return;
     if (event.data.type === 'consentState') {
         // Integrate with your banner logic
         window.intaCookieConsents = event.data.consents;
@@ -1136,7 +1136,7 @@ function intaAppendToDocumentHead(node) {
 // Load uc-vendors.js on DOMContentLoaded to reduce initial parse/execute (detectCookieVendor + map ~15KB)
 function loadUcVendors() {
     if (window.__intaDetectCookieVendor) return;
-    var base = (typeof window.INTA !== 'undefined' && window.INTA.settings && window.INTA.settings.vendorsUrl) || 'https://consents.cdn.intastellarsolutions.com/uc-vendors.js';
+    var base = (typeof window.INTA !== 'undefined' && window.INTA.settings && window.INTA.settings.vendorsUrl) || 'https://cdn.intastellar.eu/uc-vendors.js';
     var s = document.createElement('script');
     s.src = base;
     s.async = true;
@@ -1173,7 +1173,7 @@ function loadUcBlockedIframeMessages() {
     }
     __intaBlockedIframeLoadStarted = true;
     var base = (typeof window.INTA !== "undefined" && window.INTA.settings && window.INTA.settings.blockedIframeUrl)
-        || "https://consents.cdn.intastellarsolutions.com/uc-blocked-iframe.js";
+        || "https://cdn.intastellar.eu/uc-blocked-iframe.js";
     if (typeof intastellarDevMode !== "undefined" && intastellarDevMode) {
         base = "../../dev/uc-blocked-iframe.dev.js";
     }
@@ -1355,7 +1355,7 @@ let button__acceptAll = document.querySelector(".intastellarCookieBanner__accept
 let button__acceptAllNecessary = document.querySelector(".intastellarCookieBanner__acceptNecessary");
 let intastellarShowHideDetailsText = "Show details";
 let adsbygoogle = window.adsbygoogle || [];
-let intastellarCookieBannerRootDomain = "https://consents.cdn.intastellarsolutions.com";
+let intastellarCookieBannerRootDomain = "https://cdn.intastellar.eu";
 let intastellarAssetsCDNdomain = "https://www.intastellar-consents.com";
 let intaCookieConsents = window.intaCookieConsents = (getCookie(int_hideCookieBannerName)) ? JSON.parse(decodeIntaConsentsObject(getCookie(int_hideCookieBannerName)?.split(".")[2]))?.consents : null;
 window.uetq = window.uetq || [];
@@ -1802,7 +1802,7 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
         }
     } catch (e) { }
     let uid = (window.intaConsentsObjectVariable && window.intaConsentsObjectVariable.uid) || '';
-    let base = (typeof window.INTA !== 'undefined' && typeof window.INTA.settings?.backendUrl === 'string') ? window.INTA.settings.backendUrl : 'https://consents.cdn.intastellarsolutions.com/tests/backend/test.php';
+    let base = (typeof window.INTA !== 'undefined' && typeof window.INTA.settings?.backendUrl === 'string') ? window.INTA.settings.backendUrl : 'https://cdn.intastellar.eu/tests/backend/test.php';
     fetch(base, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -2692,7 +2692,7 @@ let inta_requiredCookieList = [{
     vendor_privacy: "https://www.intastellarsolutions.com/about/legal/privacy",
     domains: [
         "intastellarsolutions.com",
-        "consents.cdn.intastellarsolutions.com",
+        "cdn.intastellar.eu",
         "intastellarconsents.com",
         window.location.host,
         window.INTA?.settings?.rootDomain
@@ -4241,9 +4241,9 @@ function intaExperimentChannelMatches(exp, expKey) {
 })();
 
 let intastellarCreateBanner = document.createElement("script");
-intastellarCreateBanner.src = "https://consents.cdn.intastellarsolutions.com/cb.js";
+intastellarCreateBanner.src = "https://cdn.intastellar.eu/cb.js";
 if (window.INTA.settings.design === "premium") {
-    intastellarCreateBanner.src = "https://consents.cdn.intastellarsolutions.com/premium.js";
+    intastellarCreateBanner.src = "https://cdn.intastellar.eu/premium.js";
 }
 if (intastellarDevMode) {
     if (window.INTA.settings.design === "premium") {
@@ -4346,7 +4346,7 @@ function intaUcCmpLocaleScriptUrl(slug) {
     if (typeof intastellarDevMode !== "undefined" && intastellarDevMode) {
         return "../../dev/languages/" + slug + ".dev.js";
     }
-    return "https://consents.cdn.intastellarsolutions.com/languages/" + slug + ".js";
+    return "https://cdn.intastellar.eu/languages/" + slug + ".js";
 }
 
 /** Load one locale file before cb.js so cb can skip the inline language branches. */
