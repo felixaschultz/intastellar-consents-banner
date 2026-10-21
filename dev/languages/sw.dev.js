@@ -16,6 +16,14 @@
     marketing: {
         title: "Uuzaji",
         description: "Tunatumia teknolojia za wavuti (ikiwa ni pamoja na vidakuzi) kutoka kwa washirika wanaoaminika ili kukupatia maudhui na matangazo yaliyoundwa mahususi kwa ajili yako kwenye tovuti na mitandao ya kijamii. Maudhui haya huchaguliwa na kuonyeshwa kulingana na tabia yako ya kuvinjari. Vidakuzi vya matangazo na uuzaji hutumika kuonyesha matangazo na kampeni zinazofaa, kufuatilia wageni kwenye tovuti mbalimbali, na kukusanya taarifa ili kuwasilisha matangazo binafsishwa."
+    },
+    security: {
+        title: "Usalama",
+        description: "Vidakuzi vya usalama husaidia kutambua na kuzuia hatari za usalama, kugundua shughuli za udanganyifu, na kulinda tovuti yetu na watumiaji wake."
+    },
+    unclassified: {
+        title: "Ambavyo Havijawekwa Kundi",
+        description: "Vidakuzi ambavyo bado havijawekwa katika kundi lolote vimeorodheshwa hapa. Tunafanya kazi na watoa huduma wa vidakuzi hivi mahususi ili kuvipanga katika makundi."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "kushoto" : "kulia";

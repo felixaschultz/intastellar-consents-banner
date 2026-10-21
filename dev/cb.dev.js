@@ -118,6 +118,22 @@ function darkLightCheck(color) {
     if(!color) return 'dark';
     let r, g, b, hsp;
 
+    // Named CSS colors (e.g. "white") and anything else beyond hex/rgb() fall
+    // through the parsing below as NaN -> 0,0,0 (black), so a white
+    // novaBackgroundColor: "white" was silently treated as "dark" and picked
+    // the light/white logo variant, vanishing into the white card. Letting
+    // the browser's own CSS color parser resolve the string first (via a
+    // throwaway element's style.color round-trip) normalizes any valid CSS
+    // color syntax — named, hex, rgb/rgba, hsl, etc. — to "rgb(r, g, b)"
+    // before the parsing below ever runs.
+    try {
+        let probe = document.createElement('span');
+        probe.style.color = color;
+        if (probe.style.color) {
+            color = probe.style.color;
+        }
+    } catch (e) { /* ignore — fall back to raw input below */ }
+
     // Check the format of the color, HEX or RGB?
     if (color.match(/^rgb/)) {
 
@@ -1806,6 +1822,27 @@ function intaApplyCmpVisibilityFromCookie() {
         settingsPanel.classList.remove('intastellarCookie-settings__container--expand');
     }
 
+    // Same idea for the categories/"Show details" panel: learnMore() only
+    // ever toggles .intReadMore's "view" class, nothing ever clears it when
+    // the card itself closes (Accept/Decline/Save all funnel through here).
+    // Without this, declining or saving while the panel is open leaves
+    // "view" set, and reopening the banner later (nova's :has(.intReadMore
+    // .view) panel in particular) jumps straight back into the categories
+    // panel instead of the compact card.
+    var readMore = document.querySelector('.intReadMore');
+    if (readMore && hasConsent) {
+        readMore.classList.remove('view');
+        // learnMore() also flips this button's label between show/hide
+        // based on the class it's toggling — reset it to match, so it
+        // doesn't say "Hide details" right after reopening a banner whose
+        // categories panel isn't actually open.
+        var learnMoreBtn = document.querySelector('.intLearnMoreBtn');
+        if (learnMoreBtn) {
+            learnMoreBtn.innerHTML = (typeof intastellarShowHideDetailsText !== 'undefined' && intastellarShowHideDetailsText)
+                || 'Show details';
+        }
+    }
+
     if (hasConsent) {
         document.documentElement.classList.remove('noScroll');
     } else {
@@ -1832,15 +1869,36 @@ const IntastellarCookieConsent = {
     // Store reference to the banner element
     _banner: null,
     renew: function () {
+        // nova only, and only once a choice has already been recorded
+        // (returning visitor, html.inta-cmp-has-consent): clicking the
+        // persistent cookie icon toggles the card open/closed instead of
+        // only ever opening it. First-time visitors (no consent cookie yet)
+        // keep the original "always open" behavior on every other design —
+        // the card is the thing they're meant to be deciding on, not
+        // something to casually dismiss by clicking its own badge.
+        var isActive = true;
         if (typeof moreSettings !== 'undefined') {
-            moreSettings.classList.add("--active");
-            document.documentElement.classList.add("noScroll");
+            var isNovaReturningVisitorToggle = window.INTA && window.INTA.settings
+                && window.INTA.settings.design === "nova"
+                && document.documentElement.classList.contains('inta-cmp-has-consent');
+            if (isNovaReturningVisitorToggle) {
+                moreSettings.classList.toggle("--active");
+                isActive = moreSettings.classList.contains("--active");
+                document.documentElement.classList.toggle("noScroll", isActive);
+            } else {
+                moreSettings.classList.add("--active");
+                document.documentElement.classList.add("noScroll");
+            }
         }
         if (window.intaconsents) {
             var floatBtn = window.intaconsents.querySelector('.intastellarCookie-settings');
             if (floatBtn) {
                 floatBtn.style.display = '';
             }
+        }
+        if (!isActive) {
+            // Closing, not opening — skip the "shown" side effects below.
+            return;
         }
         if (typeof window._intaBannerShownAt === 'undefined') {
             window._intaBannerShownAt = Date.now();
@@ -2427,7 +2485,18 @@ bannerContent.setAttribute("title", intastellarCookieLanguageSettings);
 cookieSettings.setAttribute("class", "intastellarCookie-settings__container");
 banner.setAttribute("onclick", "javascript:IntastellarCookieConsent.renew();");
 const arrange = window?.INTA?.settings === undefined || window?.INTA?.settings.arrange === undefined ? "" : window?.INTA?.settings.arrange;
-const intastellarLogo = darkLightCheck(window.INTA.settings.color) === "light" ? intastellarLogoDark : intastellarLogoLight;
+// The "Powered by" logo normally sits against the brand/accept color
+// (cookieColor), so contrasting it against window.INTA.settings.color makes
+// sense generically — except for "nova", where the powered-by row sits on
+// nova's own card surface (--inta-nova-card-bg, i.e. novaBackgroundColor or
+// nova's fixed navy default) instead — same mismatch class as the reopen
+// bubble's icon further below in this file. Without this, a light
+// novaBackgroundColor still loads the white logo variant and it disappears
+// into the card.
+const intastellarLogoContrastColor = (window.INTA.settings.design === "nova")
+    ? (window.INTA.settings.novaBackgroundColor || "#2b2a42")
+    : window.INTA.settings.color;
+const intastellarLogo = darkLightCheck(intastellarLogoContrastColor) === "light" ? intastellarLogoDark : intastellarLogoLight;
 
 function intaGetDocumentHead() {
     return (typeof intHead !== "undefined" && intHead)
@@ -2509,9 +2578,20 @@ function setIntastellarPartnerDomain() {
 
 function generatePoweredBy() {
     if (window.location.host.indexOf("intastellar") == -1) {
+        // "nova always shows attribution" (see the call site in
+        // cb-locale-loader.dev.js) means this runs for nova on every locale
+        // re-render, re-overwriting the correctly nova-aware `poweredBy` set
+        // at module load (line ~2480) with this function's own, separate
+        // logic — which only ever checked "bannerV2" vs the brand color, so
+        // nova always got the light/white logo regardless of
+        // novaBackgroundColor. Same fix as the module-load computation: for
+        // nova, contrast against the card surface, not the brand color.
         let intastellarLogo = intastellarLogoLight;
         if (window.INTA.settings.design == "bannerV2") {
             intastellarLogo = intastellarLogoDark;
+        } else if (window.INTA.settings.design == "nova") {
+            let contrastColor = window.INTA.settings.novaBackgroundColor || "#2b2a42";
+            intastellarLogo = darkLightCheck(contrastColor) === "light" ? intastellarLogoDark : intastellarLogoLight;
         }
         poweredBy = "<span class='intastellarCookie-settings__poweredBy' alt='This cookie banner is powered by Intastellar Consents Solutions'>Powered by <a class='intastellarCookie-settings__poweredByLink' href='https://www.intastellar.eu' target='_blank' rel='noopener'><img class='intastellarCookie-settings__poweredByImg' width='100px' height='100px' src='" + intastellarLogo + "' alt='Intastellar Solutions, International'></a></span>";
     }
@@ -2578,12 +2658,13 @@ let withText = `
     border-radius: 50%;
 }
 
+${window.INTA.settings.design === "premium" ? "" : `
 .intastellarCookieConstents__content-main p,
 .intastellarCookieConstents__content-main h3,
 .intastellarCookieConstents__content-main ol li,
 .intastellarCookieConstents__content-main .intastellarCookie-settings__privacyLink{
     color: ${(darkLightCheck(window.INTA.settings.color) === "light") ? "#000" : "#fff"} !important;
-}
+}`}
 
 .intaGDPR-content p{
     color: #000 !important;
@@ -2689,7 +2770,29 @@ if (textSettings) {
     text = "";
     cookieSize = "25%";
 }
-intaCookieBannerStyle.innerHTML = ".intastellarCookie-settingsContainer,.intastellarCookieConstents__contentC, .intastellarCCPAContainer, .intastellarCookie-settings__btn.intastellarCookieSettings--acceptAll{background: " + cookieColor + " !important;color: #fff !important;} .intCookie_ConsentLogo-container{border-color: #fff; background: linear-gradient(#fff 0 0) padding-box, " + cookieColor + " border-box;} .intCookie_ConsentContainer-content{border-color: #fff; background: linear-gradient(#fff 0 0) padding-box, " + cookieColor + " border-box;} .intastellarCookie-settings__btn.--changePermission{background: transparent !important; border-image-slice: 1;border-color: " + cookieColor + ";border-image:" + cookieColor + " 1 !important; border-width: 3px; border-style: solid; transition: background .25s ease-in-out; width: max-content; margin-inline: auto !important;} .intastellarCookie-settings__btn.--changePermission:hover{background: " + cookieColor + " !important; color: #fff !important;} .intCookieSetting__checkbox:checked ~ .checkmark{background: " + checkMarkColor + ";}.intastellarCCPA__popupClose{background:" + cookieColor + "; color: #fff;} .intastellarCookie-settings__close:hover{background: " + brightColor + " !important;} .intastellarCookieConstents__content-main .intastellarCookie-settings__privacyLink{color: #fff !important;} .intastellarCookie-settings__privacyLink{text-decoration: underline !important;}.intastellarCookie-settings__content .intastellarCookie-settings__privacyLink{color: " + cookieTextColor + ";}.intastellarCookie-settings__content p{color: " + cookieTextColor + " !important;}.intastellarCookie-settings__intHeader{color:" + cookieTextColor + " !important;}.intastellarCookie-settings__container{background-color: " + backgroundColor + " !important;} .intastellarCookie-settingsMoreContainer{display:none;position: fixed; top: 50%; left: 50%; background: #fff; padding: 15px;z-index: 1000; transform: translate(-50%,-50%);}" + withText;
+if (window.INTA.settings.design === "premium") {
+    /* Premium: gentle tinted/outlined accents (thin border + soft-tint buttons) instead of the
+     * solid, full-strength color blocks the other designs use. Background/text colors are
+     * intentionally left to premium.css so it can follow prefers-color-scheme (light/dark mode). */
+    let cookieColorSoftBg = pSBC(0.88, cookieColor);
+    let cookieColorSoftBorder = pSBC(0.55, cookieColor);
+    intaCookieBannerStyle.innerHTML = "" +
+        ".intastellarCookieConstents,.intastellarCookie-settings__container,.intastellarCookieConstents__content-footer.view,.intCookie_ConsentContainer-content{border-top: 3px solid " + cookieColor + " !important;}" +
+        ".intastellarCookieConstents__content-footer,.intastellarCookieConstents__content{border-color: " + cookieColorSoftBorder + ";}" +
+        ".intastellarCookie-settings__btn.--bg{background-color:" + cookieColorSoftBg + " !important;color: " + cookieColor + " !important;border: 1px solid " + cookieColorSoftBorder + " !important;}" +
+        ".intastellarCookie-settings__btn.--bg:hover{background-color: " + cookieColor + " !important;color: #fff !important;}" +
+        ".intastellarCookie-settings__btn.--changePermission{background: transparent !important; color: " + cookieColor + " !important; border: 1px solid " + cookieColorSoftBorder + " !important; transition: background .2s ease-in-out, color .2s ease-in-out; width: max-content; margin-inline: auto !important;}" +
+        ".intastellarCookie-settings__btn.--changePermission:hover{background: " + cookieColorSoftBg + " !important; color: " + cookieColor + " !important; border-color: " + cookieColor + " !important;}" +
+        ".intCookieSetting__checkbox:checked ~ .checkmark{background: " + checkMarkColor + ";}" +
+        ".intastellarCCPA__popupClose{background:" + cookieColorSoftBg + "; color: " + cookieColor + ";}" +
+        ".intastellarCookie-settings__close:hover{background: " + cookieColorSoftBg + " !important;}" +
+        ".intastellarCookie-settings__privacyLink{text-decoration: underline !important;}" +
+        ".intastellarCookie-settings__content .intastellarCookie-settings__privacyLink{color: " + cookieColor + ";}" +
+        ".intastellarCookie-settingsMoreContainer{display:none;position: fixed; top: 50%; left: 50%; background: #fff; padding: 15px;z-index: 1000; transform: translate(-50%,-50%);}" +
+        withText;
+} else {
+    intaCookieBannerStyle.innerHTML = ".intastellarCookie-settingsContainer,.intastellarCookieConstents__contentC, .intastellarCCPAContainer, .intastellarCookie-settings__btn.intastellarCookieSettings--acceptAll{background: " + cookieColor + " !important;color: #fff !important;} .intCookie_ConsentLogo-container{border-color: #fff; background: linear-gradient(#fff 0 0) padding-box, " + cookieColor + " border-box;} .intCookie_ConsentContainer-content{border-color: #fff; background: linear-gradient(#fff 0 0) padding-box, " + cookieColor + " border-box;} .intastellarCookie-settings__btn.--changePermission{background: transparent !important; border-image-slice: 1;border-color: " + cookieColor + ";border-image:" + cookieColor + " 1 !important; border-width: 3px; border-style: solid; transition: background .25s ease-in-out; width: max-content; margin-inline: auto !important;} .intastellarCookie-settings__btn.--changePermission:hover{background: " + cookieColor + " !important; color: #fff !important;} .intCookieSetting__checkbox:checked ~ .checkmark{background: " + checkMarkColor + ";}.intastellarCCPA__popupClose{background:" + cookieColor + "; color: #fff;} .intastellarCookie-settings__close:hover{background: " + brightColor + " !important;} .intastellarCookieConstents__content-main .intastellarCookie-settings__privacyLink{color: #fff !important;} .intastellarCookie-settings__privacyLink{text-decoration: underline !important;}.intastellarCookie-settings__content .intastellarCookie-settings__privacyLink{color: " + cookieTextColor + ";}.intastellarCookie-settings__content p{color: " + cookieTextColor + " !important;}.intastellarCookie-settings__intHeader{color:" + cookieTextColor + " !important;}.intastellarCookie-settings__container{background-color: " + backgroundColor + " !important;} .intastellarCookie-settingsMoreContainer{display:none;position: fixed; top: 50%; left: 50%; background: #fff; padding: 15px;z-index: 1000; transform: translate(-50%,-50%);}" + withText;
+}
 intaGetDocumentHead().appendChild(intaCookieBannerStyle);
 
 /* US opt-out laws: CCPA/CPRA (CA), CDPA (VA), CPA (CO), UCPA (UT), CTDPA (CT) — "Do not sell" opt-out widget */
@@ -2795,7 +2898,7 @@ function intaCbApplyMainBannerDomAndInitialize() {
     let CompanyLogoName = cookieLogo == intCookieIcon ? "Cookie Icon" : `${document.domain} logo`;
 
     moreintHeader.innerHTML = `
-    ${typeof window?.INTA?.settings.logo != "undefined" ? '<img onerror="this.onerror=null; this.style.display:none;" class="intSettingsCompanyLogo" src="' + window?.INTA?.settings.logo + '" alt="' + CompanyLogoName + '" title="' + CompanyLogoName + '">' : ``}
+    ${(window.INTA.settings.design != "premium" && typeof window?.INTA?.settings.logo != "undefined") ? '<img onerror="this.onerror=null; this.style.display:none;" class="intSettingsCompanyLogo" src="' + window?.INTA?.settings.logo + '" alt="' + CompanyLogoName + '" title="' + CompanyLogoName + '">' : ``}
     ${(window.INTA.settings.design == "overlay" || window.INTA.settings.design == undefined || window.innerWidth < 900) ? `<section class="intSettingsPoweredBy">${poweredBy}</section>` : ""}
     `;
 
@@ -2839,6 +2942,29 @@ function intaCbApplyMainBannerDomAndInitialize() {
     intaconsents.appendChild(moreSettings);
     window._intaCookieConstents = intaconsents;
     IntastellarCookieConsent.initialize(intaconsents);
+
+    // nova's cookie badge (nova.css's .intastellarCookieConstents::before) is
+    // a pseudo-element, not a real node — it can't carry its own click
+    // listener, and a generic listener on the card would also fire for every
+    // button/link/toggle inside it. Since .intastellarCookieConstents__content
+    // fills the rest of the card edge-to-edge, the badge's overflow area
+    // (rendered outside that child, directly on the card itself via
+    // overflow: visible) is the only region where a click's event.target is
+    // the card element itself rather than some descendant — that's the
+    // signal used here to mean "the badge, specifically, was clicked".
+    // Same returning-visitor-only gating as the reopen icon (see renew()).
+    moreSettings.addEventListener("click", function (e) {
+        if (e.target !== moreSettings) {
+            return;
+        }
+        if (!(window.INTA && window.INTA.settings && window.INTA.settings.design === "nova")) {
+            return;
+        }
+        if (!document.documentElement.classList.contains("inta-cmp-has-consent")) {
+            return;
+        }
+        IntastellarCookieConsent.renew();
+    });
 
     if (document.querySelector(".intastellarCCPAContainer") != null) {
         document.querySelector(".intastellarCCPAContainer").addEventListener("click", function () {
@@ -3006,6 +3132,19 @@ function IntaSaveSettings() {
     dispatchTCFConsentChangedIfAvailable();
 };
 
+/** The cross-site sharing iframe is only created inside onWindowLoad() further
+ *  down this file — it doesn't exist yet if a visitor clicks Accept/Decline/
+ *  Save before the window "load" event has fired (plausible on a page with
+ *  many third-party scripts), so every caller needs this guard rather than
+ *  assuming the querySelector always finds it.
+ */
+function intaPostMessageToSharingIframe(payload) {
+    var iframe = document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]");
+    if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage(payload, "*");
+    }
+}
+
 function IntaAcceptAll() {
     recordTimeToDecision('accept_all');
     intaConsentsObjectVariable.consents = {
@@ -3041,8 +3180,7 @@ function IntaAcceptAll() {
     intaApplyCmpVisibilityFromCookie();
     dataLayer.push({ 'event': 'intastellar_consents_widget_visible' });
 
-    document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-        .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+    intaPostMessageToSharingIframe(JSON.stringify(intaConsentsObjectVariable));
 
     gtag('consent', 'update', {
         'ad_storage': 'granted',
@@ -3131,8 +3269,7 @@ function IntaSaveNeccessary() {
     window._intaCookieConstents.classList.toggle("--active");
     dataLayer.push({ 'event': 'intastellar_consents_widget_visible' });
 
-    document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-        .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+    intaPostMessageToSharingIframe(JSON.stringify(intaConsentsObjectVariable));
 
     gtag('consent', 'update', {
         'ad_storage': 'denied',
@@ -3366,16 +3503,6 @@ onWindowLoad(function () {
         document.querySelectorAll(".intCookie_ConsentLogo").forEach((logo) => {
             logo.src = window?.INTA?.settings.logo;
         });
-        /* - - - Helper function for learn more click - - - */
-        /* document.querySelectorAll(".intLearnMoreBtn").forEach((btn) => {
-            btn.addEventListener("click", function (e) {
-                learnMore(this);
-            })
-        }) */
-
-        /* if (window.INTA.settings.tcf) {
-            document.querySelector(".openVendorList").addEventListener("click", openVendorList);
-        } */
 
         window?.INTA?.settings?.partnerDomain?.forEach((domain) => {
             intaConsentsObjectVariable.sharingDomains.push(domain);
@@ -3478,8 +3605,7 @@ onWindowLoad(function () {
                     intCookieDomain +
                     "";
 
-                document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-                    .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+                intaPostMessageToSharingIframe(JSON.stringify(intaConsentsObjectVariable));
 
                 document.querySelector("html").classList.toggle("noScroll");
                 window._intaCookieConstents.classList.toggle("--active");
@@ -3585,8 +3711,7 @@ onWindowLoad(function () {
                 }
                 window.addEventListener("message", function (e) {
                     if (e.data != "ready" && e.origin != intastellarCookieBannerRootDomain) return
-                    document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-                        .postMessage(JSON.stringify(intastellarShared), "*");
+                    intaPostMessageToSharingIframe(JSON.stringify(intastellarShared));
 
                 })
 
@@ -3673,8 +3798,7 @@ onWindowLoad(function () {
                 }
                 window.addEventListener("message", function (e) {
                     if (e.data != "ready" && e.origin != intastellarCookieBannerRootDomain) return
-                    document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-                        .postMessage(JSON.stringify(intastellarShared), "*");
+                    intaPostMessageToSharingIframe(JSON.stringify(intastellarShared));
                 })
                 gtag('consent', 'update', {
                     'ad_storage': 'denied',
@@ -3775,8 +3899,7 @@ onWindowLoad(function () {
 
         window.addEventListener("message", (e) => {
             if (e.data == "ready") {
-                document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-                    .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+                intaPostMessageToSharingIframe(JSON.stringify(intaConsentsObjectVariable));
             }
             if (e.data) {
                 const sharedCookies = e.data;
@@ -4883,16 +5006,43 @@ function intaTriggerCookieBannerScan(domain) {
         });
 }
 
-function intaApplyCookieBannerApiData(data) {
-    var categories = { functional: [], statistics: [], marketing: [] };
+/* Maps the live cookie-banner-scan API's category keys onto our internal category
+   keys ("analytics" -> "statistics"). */
+var INTA_API_CATEGORY_TO_INTERNAL = { necessary: 'necessary', functional: 'functional', analytics: 'statistics', statistics: 'statistics', marketing: 'marketing', security: 'security', unclassified: 'unclassified' };
 
-    if (Array.isArray(data)) {
+/* Categories with no consent toggle that only appear in the details view when the
+   API actually found cookies for them; hidden by default (see cb-locale-loader.dev.js). */
+var INTA_OPTIONAL_DETAIL_CATEGORIES = ['security', 'unclassified'];
+
+function intaToggleCookieCategorySection(cat, hasItems) {
+    if (INTA_OPTIONAL_DETAIL_CATEGORIES.indexOf(cat) === -1) return;
+    var section = document.getElementById('inta-cookie-section-' + cat);
+    if (section) section.style.display = hasItems ? '' : 'none';
+}
+
+function intaApplyCookieBannerApiData(data) {
+    var categories = { necessary: [], functional: [], statistics: [], marketing: [], security: [], unclassified: [] };
+    var counts = { necessary: null, functional: null, statistics: null, marketing: null, security: null, unclassified: null };
+
+    var apiCategories = data && typeof data === 'object' && !Array.isArray(data) ? data.categories : null;
+    if (apiCategories && typeof apiCategories === 'object') {
+        /* Real API shape: { categories: { necessary|functional|analytics|marketing|security: { count, cookies, vendors } } }
+           `count` is server-computed — use it directly instead of re-deriving it from the vendor list. */
+        Object.keys(apiCategories).forEach(function (apiCat) {
+            var internalCat = INTA_API_CATEGORY_TO_INTERNAL[apiCat];
+            if (!internalCat) return;
+            var entry = apiCategories[apiCat] || {};
+            var vendors = Array.isArray(entry.vendors) ? entry.vendors : [];
+            categories[internalCat] = vendors;
+            counts[internalCat] = (typeof entry.count === 'number') ? entry.count : intaCountCookiesInList(vendors);
+        });
+    } else if (Array.isArray(data)) {
         data.forEach(function (vendor) {
             var cat = String(vendor.type || vendor.category || 'marketing').toLowerCase();
             if (categories[cat]) categories[cat].push(vendor);
             else categories.marketing.push(vendor);
         });
-    } else {
+    } else if (data) {
         if (Array.isArray(data.functional))  categories.functional  = data.functional;
         if (Array.isArray(data.statistics))  categories.statistics  = data.statistics;
         if (Array.isArray(data.marketing))   categories.marketing   = data.marketing;
@@ -4905,9 +5055,20 @@ function intaApplyCookieBannerApiData(data) {
     Object.keys(categories).forEach(function (cat) {
         var el = document.getElementById('inta-cookie-list-' + cat);
         var list = categories[cat];
-        intaSetCookieCountBadge(cat, intaCountCookiesInList(list));
+        var count = (counts[cat] !== null) ? counts[cat] : intaCountCookiesInList(list);
+        intaSetCookieCountBadge(cat, count);
+        intaToggleCookieCategorySection(cat, list.length > 0);
         if (!el) return;
-        el.innerHTML = list.length ? listAllCookies(list) : '';
+        /* listAllCookies() still expects the older vendor.domains/vendor.cookies[].cookie shape
+           and can throw on the live API's vendor.hosts/vendor.cookies[].name shape — isolate that
+           so one category's list-rendering failure can't take down the count badge for the rest. */
+        try {
+            el.innerHTML = list.length ? listAllCookies(list) : '';
+        } catch (e) {
+            if (typeof intastellarDevMode !== "undefined" && intastellarDevMode) {
+                console.error('[intaApplyCookieBannerApiData] listAllCookies failed for "' + cat + '":', e);
+            }
+        }
     });
 }
 
@@ -5199,8 +5360,9 @@ function updateConsents(consent, type = null) {
         let newArray = [...inta_marketingCookieList.map((cookie) => cookie.cookies.map((c) => (c.cookie != undefined) ? c.cookie : ""))].flat(1)
         int__cookiesToKeep.push.apply(int__cookiesToKeep, newArray);
         deleteAllCookies();
-
-        fbq('consent', 'grant');
+       if( typeof fbq !== "undefined" || typeof fbq !== "null"){
+           fbq('consent', 'grant');
+       }
 
         window.allScripts.map((script) => {
             if (script.type == "marketing") {

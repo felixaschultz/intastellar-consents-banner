@@ -16,6 +16,14 @@
     marketing: {
         title: "Pemasaran",
         description: "Kami menggunakan teknologi web (termasuk cookie) dari mitra tepercaya untuk menyajikan konten dan iklan yang disesuaikan khusus untuk Anda di situs web dan platform media sosial. Konten ini dipilih dan ditampilkan berdasarkan perilaku menjelajah Anda. Cookie iklan dan pemasaran digunakan untuk menampilkan iklan dan kampanye yang relevan, melacak pengunjung di berbagai situs, dan mengumpulkan informasi untuk menyajikan iklan yang dipersonalisasi."
+    },
+    security: {
+        title: "Keamanan",
+        description: "Cookie keamanan membantu mengidentifikasi dan mencegah risiko keamanan, mendeteksi aktivitas penipuan, dan melindungi situs web kami beserta penggunanya."
+    },
+    unclassified: {
+        title: "Belum Diklasifikasikan",
+        description: "Cookie yang belum diklasifikasikan ke dalam kategori tercantum di sini. Kami sedang bekerja sama dengan penyedia masing-masing cookie ini untuk mengklasifikasikannya."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "kiri" : "kanan";

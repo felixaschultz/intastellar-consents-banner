@@ -16,6 +16,14 @@
     marketing: {
         title: "Margaíocht",
         description: "Úsáidimid teicneolaíochtaí gréasáin (lena n-áirítear fianáin) ó chomhpháirtithe iontaofa chun ábhar agus fógraí atá curtha in oiriúint go sonrach duitse a sholáthar ar shuímh ghréasáin agus ar ardáin na meán sóisialta. Roghnaítear agus taispeántar an t-ábhar seo bunaithe ar d'iompar brabhsála. Úsáidtear fianáin fógraíochta agus margaíochta chun fógraí agus feachtais ábhartha a thaispeáint, chun cuairteoirí a rianú thar shuímh éagsúla, agus chun faisnéis a bhailiú chun fógraí pearsantaithe a chur i láthair."
+    },
+    security: {
+        title: "Slándáil",
+        description: "Cuidíonn fianáin slándála le rioscaí slándála a aithint agus a chosc, gníomhaíocht chalaoiseach a bhrath, agus ár suíomh gréasáin agus a úsáideoirí a chosaint."
+    },
+    unclassified: {
+        title: "Neamhaicmithe",
+        description: "Liostaítear anseo fianáin nár aicmíodh fós i gcatagóir. Táimid ag obair le soláthraithe na bhfianán aonair seo chun iad a aicmiú."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "clé" : "deis";

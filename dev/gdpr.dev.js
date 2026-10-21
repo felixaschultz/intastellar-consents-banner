@@ -4266,15 +4266,13 @@ function intaExperimentChannelMatches(exp, expKey) {
 
 let intastellarCreateBanner = document.createElement("script");
 intastellarCreateBanner.src = "https://cdn.intastellar.eu/cb.js";
-if (window.INTA.settings.design === "premium") {
+
+if (window.INTA.settings && window.INTA.settings.design === "premium") {
     intastellarCreateBanner.src = "https://cdn.intastellar.eu/premium.js";
 }
+
 if (intastellarDevMode) {
-    if (window.INTA.settings.design === "premium") {
-        intastellarCreateBanner.src = "../../dev/styles/premium.js";
-    } else {
-        intastellarCreateBanner.src = "../../dev/cb.dev.js";
-    }
+    intastellarCreateBanner.src = "../../dev/cb.dev.js";
 }
 
 intastellarCreateBanner.async = true;
@@ -4456,8 +4454,8 @@ function updateCookiePreferenceOfBlockedIframes(dataType) {
         document.querySelector("#functional").checked = true;
     }
     saveINTCookieSettings("changePermission");
-    document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-        .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+    document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]")?.contentWindow
+        ?.postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
     // Dispatch TCF event after user action
     dispatchTCFConsentChangedIfAvailable();
 

@@ -16,6 +16,14 @@
     marketing: {
         title: "Marknadsföring",
         description: "Vi använder webbteknologier (även cookies) från utvalda partners för att kunna visa dig innehåll och annonser som är speciellt anpassade för dig på webbplatser och sociala medier. Detta innehåll väljs och visas baserat på ditt användarbeteende. Annons- eller marknadsföringscookies används för att ge besökare relevanta annonser och marknadsföringskampanjer. Dessa cookies spårar besökare över webbplatser och samlar in information för att tillhandahålla anpassade annonser."
+    },
+    security: {
+        title: "Säkerhet",
+        description: "Säkerhetscookies hjälper till att identifiera och förhindra säkerhetsrisker, upptäcka bedräglig aktivitet och skydda vår webbplats och dess användare."
+    },
+    unclassified: {
+        title: "Oklassificerade",
+        description: "Cookies som ännu inte har klassificerats i en kategori listas här. Vi arbetar med leverantörerna av dessa enskilda cookies för att klassificera dem."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "vänster" : "höger";

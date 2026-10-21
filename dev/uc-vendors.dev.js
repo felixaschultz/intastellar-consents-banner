@@ -1,7 +1,7 @@
 /*
  *  Intastellar Consents – Lazy-loaded vendor/cookie maps
  *  Reduces initial uc.js parse & execution time
- *  consents.cdn.intastellarsolutions.com/uc-vendors.js
+ *  cdn.intastellar.eu/uc-vendors.js
  *  @copy 2022-2025 Intastellar Solutions, International
  */
 (function () {

@@ -16,6 +16,14 @@
     marketing: {
         title: "Markedsføring",
         description: "Vi bruker webteknologier (også informasjonskapsler) fra utvalgte partnere for å kunne vise deg innhold og annonser som er spesielt tilpasset deg på nettsteder og sosiale medier. Dette innholdet velges og vises basert på bruksatferden din. Annonse- eller markedsføringskapsler brukes til å gi besøkende relevante annonser og markedsføringskampanjer. Disse informasjonskapslene sporer besøkende på tvers av nettsteder og samler inn informasjon for å levere tilpassede annonser."
+    },
+    security: {
+        title: "Sikkerhet",
+        description: "Sikkerhetsinformasjonskapsler hjelper til med å identifisere og forhindre sikkerhetsrisikoer, oppdage svindelaktivitet og beskytte nettstedet vårt og dets brukere."
+    },
+    unclassified: {
+        title: "Uklassifiserte",
+        description: "Informasjonskapsler som ennå ikke er klassifisert i en kategori, er oppført her. Vi jobber med leverandørene av disse individuelle informasjonskapslene for å klassifisere dem."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "venstre" : "høyre";

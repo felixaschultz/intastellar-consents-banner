@@ -100,7 +100,7 @@
         if (typeof intastellarDevMode !== "undefined" && intastellarDevMode) {
             return "../../dev/languages/" + slug + ".dev.js";
         }
-        return "https://consents.cdn.intastellarsolutions.com/languages/" + slug + ".js";
+        return "https://cdn.intastellar.eu/languages/" + slug + ".js";
     };
 
     window.intaLoadCmpLocaleScript = function intaLoadCmpLocaleScript(slug) {
@@ -173,13 +173,30 @@
             + ((window.INTA.settings.design == "banner" || window.INTA.settings.design == "bannerV2" && window.INTA.settings.logo && window.INTA.settings.logo != "")
                 ? '<img class="intSettingsCompanyLogo" src="' + window.INTA.settings.logo + '" alt="Intastellar Solutions, International">' : "")
             + generateCookieSettingsButton(C.saveSettings, acceptShort)
-            + '<button class="intLearnMoreBtn" onclick="learnMore(this)">' + intastellarShowHideDetailsText + '</button>'
-            + '<button class="openVendorList" onclick="openVendorList()">' + intaVendorListButtonLabel() + '</button>'
+            // No inline onclick here: these are wired via addEventListener
+            // just below instead (see the comment there) — keeping both
+            // double-fires every click (CSP-permissive browsers run the
+            // inline handler AND the listener), toggling .view on then
+            // immediately back off, so the panel never visibly opens.
+            + '<button class="intLearnMoreBtn">' + intastellarShowHideDetailsText + '</button>'
+            + '<button class="openVendorList">' + intaVendorListButtonLabel() + '</button>'
             // "nova" always shows attribution (no width gate) — the design is
             // free to use and must keep the "powered by" badge visible at all
             // times, on every viewport size.
             + ((window.INTA.settings.design == "bannerV2" && window.innerWidth > 768) || window.INTA.settings.design == "nova" ? generatePoweredBy() : "")
             + "</section>";
+        /* Wired via addEventListener rather than an onclick="" attribute: many production sites run a
+           Content-Security-Policy without 'unsafe-inline', which silently drops inline event handlers
+           (the buttons render but do nothing when clicked) while leaving script-attached listeners like
+           this one unaffected. */
+        var intaLearnMoreBtnEl = intastellarCookieButtons.querySelector(".intLearnMoreBtn");
+        if (intaLearnMoreBtnEl) {
+            intaLearnMoreBtnEl.addEventListener("click", function () { learnMore(this); });
+        }
+        var intaOpenVendorListBtnEl = intastellarCookieButtons.querySelector(".openVendorList");
+        if (intaOpenVendorListBtnEl) {
+            intaOpenVendorListBtnEl.addEventListener("click", function () { openVendorList(); });
+        }
         moreFooter.innerHTML = intaBuildCmpSettingsFooterHtml(C);
         window.intaCmpUiState = {
             message: builtMessage,
@@ -220,7 +237,7 @@
             + '<section class="intastellar_privacyPolicy"></section>'
             + '<article class="intReadMore">'
             + '<section class="required">' + uidHtml
-            + '<h3 class="intaExpandCookieList">' + C.necessary.title + ' <span class="intaCookieCount">(' + intaCountCookiesInList(inta_requiredCookieList) + ')</span> <i class="intastellar__arrow"></i></h3><p>' + C.necessary.description + '</p>'
+            + '<h3 class="intaExpandCookieList">' + C.necessary.title + ' <span class="intaCookieCount" id="inta-cookie-count-necessary">(' + intaCountCookiesInList(inta_requiredCookieList) + ')</span> <i class="intastellar__arrow"></i></h3><p>' + C.necessary.description + '</p>'
             + '<article class="intaCookieListOverview">' + listAllCookies(inta_requiredCookieList) + "</article></section>"
             + "<section><h3 class=\"intaExpandCookieList\">" + C.functional.title + ' <span class="intaCookieCount" id="inta-cookie-count-functional"></span> <i class="intastellar__arrow"></i></h3><p>' + C.functional.description + '</p>'
             + '<article class="intaCookieListOverview" id="inta-cookie-list-functional"></article></section>'
@@ -228,6 +245,13 @@
             + '<article class="intaCookieListOverview" id="inta-cookie-list-statistics"></article></section>'
             + "<section><h3 class=\"intaExpandCookieList\">" + C.marketing.title + ' <span class="intaCookieCount" id="inta-cookie-count-marketing"></span> <i class="intastellar__arrow"></i></h3><p>' + C.marketing.description + '</p>'
             + '<article class="intaCookieListOverview" id="inta-cookie-list-marketing"></article></section>'
+            /* Security and unclassified are informational-only categories from the cookie-banner API
+               (no consent toggle). They're hidden until intaApplyCookieBannerApiData finds cookies in
+               them, since most sites will have none. */
+            + '<section id="inta-cookie-section-security" style="display:none;"><h3 class="intaExpandCookieList">' + (C.security ? C.security.title : 'Security') + ' <span class="intaCookieCount" id="inta-cookie-count-security"></span> <i class="intastellar__arrow"></i></h3><p>' + (C.security ? C.security.description : 'Security cookies help identify and prevent security risks, detect fraudulent activity, and protect our website and its users.') + '</p>'
+            + '<article class="intaCookieListOverview" id="inta-cookie-list-security"></article></section>'
+            + '<section id="inta-cookie-section-unclassified" style="display:none;"><h3 class="intaExpandCookieList">' + (C.unclassified ? C.unclassified.title : 'Unclassified') + ' <span class="intaCookieCount" id="inta-cookie-count-unclassified"></span> <i class="intastellar__arrow"></i></h3><p>' + (C.unclassified ? C.unclassified.description : 'Cookies that have not yet been classified into a category are listed here. We are working with the providers of these individual cookies to classify them.') + '</p>'
+            + '<article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article></section>'
             + "</article>";
     };
 

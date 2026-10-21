@@ -16,6 +16,14 @@
     marketing: {
         title: "Marketing",
         description: "Gumagamit kami ng mga teknolohiya sa web (kasama ang cookies) mula sa mga pinagkakatiwalaang kasosyo upang maghatid ng nilalaman at mga advertisement na espesyal na iniangkop para sa iyo sa mga website at social media platform. Pinipili at ipinapakita ang nilalamang ito batay sa iyong pag-uugali sa pag-browse. Ginagamit ang mga cookies sa advertising at marketing upang magpakita ng mga kaugnay na ad at kampanya, subaybayan ang mga bisita sa iba't ibang site, at mangalap ng impormasyon upang magbigay ng mga personalized na ad."
+    },
+    security: {
+        title: "Seguridad",
+        description: "Ang mga cookies sa seguridad ay tumutulong na matukoy at maiwasan ang mga panganib sa seguridad, matuklasan ang mapanlinlang na aktibidad, at protektahan ang aming website at mga gumagamit nito."
+    },
+    unclassified: {
+        title: "Hindi Nakaklasipika",
+        description: "Ang mga cookies na hindi pa naiuuri sa isang kategorya ay nakalista dito. Nakikipagtulungan kami sa mga tagapagbigay ng mga indibidwal na cookies na ito upang uriin ang mga ito."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "kaliwa" : "kanan";

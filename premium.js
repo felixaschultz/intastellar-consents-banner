@@ -682,6 +682,14 @@ const intastellarSupportedLanguagesFallback = {
     marketing: {
         title: "Marketing",
         description: "We use web technologies (including cookies) from trusted partners to deliver content and advertisements tailored specifically to you on websites and social media platforms. This content is selected and displayed based on your browsing behavior. Advertising and marketing cookies are used to show relevant ads and campaigns, tracking visitors across sites and gathering information to present personalized advertisements."
+    },
+    security: {
+        title: "Security",
+        description: "Security cookies help identify and prevent security risks, detect fraudulent activity, and protect our website and its users."
+    },
+    unclassified: {
+        title: "Unclassified",
+        description: "Cookies that have not yet been classified into a category are listed here. We are working with the providers of these individual cookies to classify them."
     }
 };
 /* cb-locale-loader.dev.js (loaded before this file, see uc-core.dev.js) already resolves the
@@ -791,6 +799,16 @@ if (intastellarCookieLanguage != null) {
             }
                 </article>
             </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.danish.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.danish.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+            </section>
         </article>
        
     `;
@@ -885,6 +903,16 @@ if (intastellarCookieLanguage != null) {
                 ${listAllCookies(inta_marketingCookieList)
             }
                 </article>
+            </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.german.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.german.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.german.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.german.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
     `;
@@ -986,6 +1014,16 @@ if (intastellarCookieLanguage != null) {
             }
                 </article>
             </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.english.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.english.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.english.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.english.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+            </section>
         </article>
     `;
     } else if (intastellarCookieLanguage == "es" || intastellarCookieLanguage == "es-ES") {
@@ -1080,6 +1118,16 @@ if (intastellarCookieLanguage != null) {
                 <article class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)}
                 </article>
+            </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.spanish.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.spanish.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.spanish.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.spanish.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
     `;
@@ -1178,6 +1226,16 @@ if (intastellarCookieLanguage != null) {
             }
                 </article>
             </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.french.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.french.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.french.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.french.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+            </section>
         </article>
     `;
     } else if (intastellarCookieLanguage == "sv" || intastellarCookieLanguage == "sv-SE") {
@@ -1275,6 +1333,16 @@ if (intastellarCookieLanguage != null) {
             }
                 </article>
             </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.swedish.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.swedish.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.swedish.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.swedish.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+            </section>
         </article>
     `;
     } else if (intastellarCookieLanguage == "no" || intastellarCookieLanguage == "no-NO") {
@@ -1344,6 +1412,16 @@ if (intastellarCookieLanguage != null) {
                 ${listAllCookies(inta_marketingCookieList)
             }
                 </article>
+            </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.norwegian.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.norwegian.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.norwegian.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.norwegian.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -1441,6 +1519,16 @@ if (intastellarCookieLanguage != null) {
             }
                 </article>
             </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.dutch.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.dutch.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.dutch.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.dutch.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+            </section>
         </article>
         <article class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
@@ -1536,6 +1624,16 @@ if (intastellarCookieLanguage != null) {
                 ${listAllCookies(inta_marketingCookieList)
             }
                 </article>
+            </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.italian.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.italian.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.italian.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.italian.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -1633,6 +1731,16 @@ if (intastellarCookieLanguage != null) {
             }
                 </article>
             </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.finnish.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.finnish.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.finnish.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.finnish.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+            </section>
         </article>
         <article class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
@@ -1728,6 +1836,16 @@ if (intastellarCookieLanguage != null) {
                 ${listAllCookies(inta_marketingCookieList)
             }
                 </article>
+            </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.russian.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.russian.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.russian.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.russian.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -1825,6 +1943,16 @@ if (intastellarCookieLanguage != null) {
             }
                 </article>
             </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.polish.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.polish.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.polish.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.polish.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+            </section>
         </article>
         <article class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
@@ -1921,6 +2049,16 @@ if (intastellarCookieLanguage != null) {
             }
                 </article>
             </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.afrikaans.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.afrikaans.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.afrikaans.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.afrikaans.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+            </section>
         </article>
         <article class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
@@ -2016,6 +2154,16 @@ if (intastellarCookieLanguage != null) {
                 ${listAllCookies(inta_marketingCookieList)
             }
                 </article>
+            </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.korean.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.korean.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.korean.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.korean.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -2114,6 +2262,16 @@ if (intastellarCookieLanguage != null) {
             }
                 </article>
             </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.arabic.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.arabic.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.arabic.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.arabic.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+            </section>
         </article>
         <article class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
@@ -2211,6 +2369,16 @@ if (intastellarCookieLanguage != null) {
             }
                 </article>
             </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.estonian.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.estonian.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.estonian.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.estonian.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+            </section>
         </article>
         <article class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
@@ -2306,6 +2474,16 @@ if (intastellarCookieLanguage != null) {
                 ${listAllCookies(inta_marketingCookieList)
             }
                 </article>
+            </section>
+            <section id="inta-cookie-section-security" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.security.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.danish.security.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+            </section>
+            <section id="inta-cookie-section-unclassified" style="display:none;">
+                <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.unclassified.title} <i class="intastellar__arrow"></i></h3>
+                <p>${intastellarSupportedLanguages.danish.unclassified.description}</p>
+                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
             </section>
         </article>
         <article class="intCookieSetting__form">
@@ -2591,7 +2769,7 @@ cookieSettings.appendChild(cookieSettingsContent);
 
 banner.setAttribute("class", "intastellarCookie-settings");
 
-bannerContent.innerHTML = '<img class="intCookieIcon-openSettings" style="filter: brightness(' + (darkLightCheck(window.INTA.settings.color) === "light" ? "0" : "100") + ') !important" src="' + intCookieIcon + '" alt="Cookie Icon">' + IntastellarToolTip + ' ' + text;
+bannerContent.innerHTML = '<img class="intCookieIcon-openSettings" src="' + intCookieIcon + '" alt="Cookie Icon">' + IntastellarToolTip + ' ' + text;
 
 banner.appendChild(bannerContent);
 /* moreFooter (settings checkboxes + category list) must live inside the card, not as a
@@ -2870,7 +3048,7 @@ onWindowLoad(function () {
             });
         });
 
-        document.querySelector(".--save").addEventListener("click", () => {
+        /* document.querySelector(".--save").addEventListener("click", () => {
             const accepted = [];
             if (FunctionalCheckbox?.checked) {
                 gtag('consent', 'update', {
@@ -2893,7 +3071,7 @@ onWindowLoad(function () {
                     'ad_storage': 'granted',
                     'ad_user_data': 'granted',
                 })
-                window.clarity('consentv2', {
+                window.clarity && window.clarity('consentv2', {
                     ad_Storage: "denied",
                     analytics_Storage: "granted"
                 });
@@ -2903,7 +3081,7 @@ onWindowLoad(function () {
                     'analytics_storage': 'denied',
                 })
 
-                window.clarity('consentv2', {
+                window.clarity && window.clarity('consentv2', {
                     ad_Storage: "denied",
                     analytics_Storage: "denied"
                 });
@@ -2925,7 +3103,7 @@ onWindowLoad(function () {
                 window.uetq.push('consent', 'update', {
                     'ad_storage': 'granted'
                 });
-                window.clarity('consentv2', {
+                window.clarity && window.clarity('consentv2', {
                     ad_Storage: "granted",
                     analytics_Storage: "denied"
                 });
@@ -2942,7 +3120,7 @@ onWindowLoad(function () {
                     'ad_personalization': 'denied',
                 });
 
-                window.clarity('consent', false);
+                window.clarity && window.clarity('consent', false);
 
                 const index = accepted.indexOf("advertisementCookies");
                 if (index > -1) { // only splice array when item is found
@@ -2950,7 +3128,7 @@ onWindowLoad(function () {
                 }
             }
             saveINTCookieSettings("changePermission", accepted);
-        });
+        }); */
 
         if (window?.INTA?.settings.ccpa !== undefined && window?.INTA?.settings.ccpa.on) {
             const closeCCPAButton = document.querySelector(".intastellarCCPA__popupClose");
@@ -2963,6 +3141,7 @@ onWindowLoad(function () {
         if (button__acceptAll != null || button__acceptAll != undefined) {
             button__acceptAll.addEventListener("click", function () {
 
+                recordTimeToDecision('accept_all');
                 var cV = 0;
                 intaConsentsObjectVariable.consents = {
                     staticsticCookies: "checked",
@@ -3007,7 +3186,7 @@ onWindowLoad(function () {
                 window.uetq.push('consent', 'update', {
                     'ad_storage': 'granted'
                 });
-                window.clarity('consentv2', {
+                window.clarity && window.clarity('consentv2', {
                     ad_Storage: "granted",
                     analytics_Storage: "granted"
                 });
@@ -3018,7 +3197,15 @@ onWindowLoad(function () {
                     advertisement: true,
                     functionality: true,
                 }]);
+                if (typeof pintrk === 'function') {
+                    try { pintrk('setconsent', true); } catch (e) { /* ignore */ }
+                }
+                if (typeof oaiq === 'function') {
+                    try { oaiq('consent', true); } catch (e) { /* ignore */ }
+                }
+                intaShopifySetTrackingConsentSafe({ analytics: true, marketing: true, preferences: true }, function () {});
                 updateConsents("all");
+                dispatchTCFConsentChangedIfAvailable();
                 /*window.location.reload();*/
             });
         }
@@ -3026,6 +3213,7 @@ onWindowLoad(function () {
         if (button__acceptAll != null || button__acceptAll != undefined) {
             button__acceptAll.addEventListener("click", function () {
 
+                recordTimeToDecision('accept_all');
                 var cV = 1;
                 intaConsentsObjectVariable.consents = {
                     staticsticCookies: "checked",
@@ -3084,18 +3272,27 @@ onWindowLoad(function () {
                     advertisement: true,
                     functionality: true,
                 }]);
-                window.clarity('consentv2', {
+                window.clarity && window.clarity('consentv2', {
                     ad_Storage: "granted",
                     analytics_Storage: "granted"
                 });
                 dataLayer.push({ 'event': 'cookie_consent_update', 'cookie_consent': intaConsentsObjectVariable.consents });
+                if (typeof pintrk === 'function') {
+                    try { pintrk('setconsent', true); } catch (e) { /* ignore */ }
+                }
+                if (typeof oaiq === 'function') {
+                    try { oaiq('consent', true); } catch (e) { /* ignore */ }
+                }
+                intaShopifySetTrackingConsentSafe({ analytics: true, marketing: true, preferences: true }, function () {});
                 updateConsents("all");
+                dispatchTCFConsentChangedIfAvailable();
                 /*window.location.reload();*/
             });
         }
 
         if (button__acceptAll != null || button__acceptAll != undefined) {
             button__acceptAllNecessary.addEventListener("click", function () {
+                recordTimeToDecision('decline_all');
                 intaConsentsObjectVariable.consents = {
                     staticsticCookies: false,
                     functionalCookies: false,
@@ -3146,11 +3343,19 @@ onWindowLoad(function () {
                     advertisement: false,
                     functionality: false,
                 }]);
-                window.clarity('consentv2', {
+                window.clarity && window.clarity('consentv2', {
                     ad_Storage: "granted",
                     analytics_Storage: "granted"
                 });
                 dataLayer.push({ 'event': 'cookie_consent_update', 'cookie_consent': intaConsentsObjectVariable.consents });
+                if (typeof pintrk === 'function') {
+                    try { pintrk('setconsent', false); } catch (e) { /* ignore */ }
+                }
+                if (typeof oaiq === 'function') {
+                    try { oaiq('consent', false); } catch (e) { /* ignore */ }
+                }
+                intaShopifySetTrackingConsentSafe({ analytics: false, marketing: false, preferences: false }, function () {});
+                dispatchTCFConsentChangedIfAvailable();
                 /*window.location.reload();*/
 
             });
@@ -3196,6 +3401,7 @@ onWindowLoad(function () {
             ness.forEach((n) => {
                 n.addEventListener("click", function () {
 
+                    recordTimeToDecision('decline_all');
                     intaConsentsObjectVariable.consents = {
                         staticsticCookies: false,
                         functionalCookies: false,
@@ -3245,16 +3451,25 @@ onWindowLoad(function () {
                         advertisement: false,
                         functionality: false,
                     }]);
-                    window.clarity('consent', false);
+                    window.clarity && window.clarity('consent', false);
                     document.querySelector("#marketing").checked = false;
                     document.querySelector("#statics").checked = false;
                     document.querySelector("#functional").checked = false;
+                    if (typeof pintrk === 'function') {
+                        try { pintrk('setconsent', false); } catch (e) { /* ignore */ }
+                    }
+                    if (typeof oaiq === 'function') {
+                        try { oaiq('consent', false); } catch (e) { /* ignore */ }
+                    }
+                    intaShopifySetTrackingConsentSafe({ analytics: false, marketing: false, preferences: false }, function () {});
+                    dispatchTCFConsentChangedIfAvailable();
                     /*window.location.reload();*/
                 });
             });
 
             all.forEach((a) => {
                 a.addEventListener("click", function () {
+                    recordTimeToDecision('accept_all');
                     intaConsentsObjectVariable.consents = {
                         staticsticCookies: "checked",
                         functionalCookies: "checked",
@@ -3302,7 +3517,7 @@ onWindowLoad(function () {
                     window.uetq.push('consent', 'update', {
                         'ad_storage': 'granted'
                     });
-                    window.clarity('consentv2', {
+                    window.clarity && window.clarity('consentv2', {
                         ad_Storage: "granted",
                         analytics_Storage: "granted"
                     });
@@ -3319,6 +3534,14 @@ onWindowLoad(function () {
                     document.querySelector("#marketing").checked = true;
                     document.querySelector("#statics").checked = true;
                     document.querySelector("#functional").checked = true;
+                    if (typeof pintrk === 'function') {
+                        try { pintrk('setconsent', true); } catch (e) { /* ignore */ }
+                    }
+                    if (typeof oaiq === 'function') {
+                        try { oaiq('consent', true); } catch (e) { /* ignore */ }
+                    }
+                    intaShopifySetTrackingConsentSafe({ analytics: true, marketing: true, preferences: true }, function () {});
+                    dispatchTCFConsentChangedIfAvailable();
                     /*window.location.reload();*/
                 })
             });
@@ -3408,7 +3631,7 @@ onWindowLoad(function () {
                         advertisement: false,
                         functionality: false,
                     }]);
-                    window.clarity('consent', false);
+                    window.clarity && window.clarity('consent', false);
 
                     dataLayer.push({ 'event': 'cookie_consent_update', 'cookie_consent': intaConsentsObjectVariable.consents });
                     /*window.location.reload();*/
@@ -3472,7 +3695,7 @@ onWindowLoad(function () {
                         functionality: true,
                     }]);
 
-                    window.clarity('consentv2', {
+                    window.clarity && window.clarity('consentv2', {
                         ad_Storage: "granted",
                         analytics_Storage: "granted"
                     });
@@ -4252,6 +4475,61 @@ function listAllCookies(cookieList) {
     }).join(" ")
 }
 
+/* security/unclassified have no static vendor list (see dev/gdpr.dev.js) — they only
+   ever come from the live cookie-banner-scan API, so they're populated and unhidden
+   here instead of at template-render time. Mirrors dev/cb.dev.js. */
+var _intaOptionalCategoriesLoaded = false;
+var INTA_OPTIONAL_DETAIL_CATEGORIES = ['security', 'unclassified'];
+
+function intaToggleCookieCategorySection(cat, hasItems) {
+    if (INTA_OPTIONAL_DETAIL_CATEGORIES.indexOf(cat) === -1) return;
+    var section = document.getElementById('inta-cookie-section-' + cat);
+    if (section) section.style.display = hasItems ? '' : 'none';
+}
+
+function intaApplyOptionalCookieCategories(data) {
+    var apiCategories = data && typeof data === 'object' && !Array.isArray(data) ? data.categories : null;
+    if (!apiCategories || typeof apiCategories !== 'object') return;
+
+    INTA_OPTIONAL_DETAIL_CATEGORIES.forEach(function (cat) {
+        var entry = apiCategories[cat] || {};
+        var vendors = Array.isArray(entry.vendors) ? entry.vendors : [];
+        var el = document.getElementById('inta-cookie-list-' + cat);
+        intaToggleCookieCategorySection(cat, vendors.length > 0);
+        if (!el) return;
+        try {
+            el.innerHTML = vendors.length ? listAllCookies(vendors) : '';
+        } catch (e) {
+            if (typeof intastellarDevMode !== "undefined" && intastellarDevMode) {
+                console.error('[intaApplyOptionalCookieCategories] listAllCookies failed for "' + cat + '":', e);
+            }
+        }
+    });
+}
+
+function intaFetchOptionalCookieCategories() {
+    if (_intaOptionalCategoriesLoaded) return;
+    _intaOptionalCategoriesLoaded = true;
+
+    if (window.intaFoundCookieList?.categories) {
+        intaApplyOptionalCookieCategories(window.intaFoundCookieList);
+        return;
+    }
+
+    var domain = location.hostname;
+    var apiUrl = 'https://www.intastellarconsents.com/api/cookie-banner.js?domain=' + encodeURIComponent(domain);
+
+    fetch(apiUrl)
+        .then(function (res) {
+            if (!res.ok) throw new Error('API returned ' + res.status);
+            return res.json();
+        })
+        .then(function (data) {
+            intaApplyOptionalCookieCategories(data);
+        })
+        .catch(function () { /* leave sections hidden */ });
+}
+
 function isURL(str) {
     const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
         '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
@@ -4430,6 +4708,10 @@ function generateCookieButtons(allCookiesText, necessaryCookiesText, cookieSetti
     var acceptAllText = intaGetTextOverride("acceptAllButton", allCookiesText);
     var necessaryOnlyText = intaGetNecessaryButtonText(necessaryCookiesText);
     var settingsText = intaGetTextOverride("settingsButton", cookieSettingsText);
+    /* Accept-all/necessary-only/open-settings are already wired via addEventListener
+       further down (on .intastellarCookieSettings--acceptAll / .intastellarCookieBanner__accpetNecssery
+       / .intastellarCookieBanner__settings respectively) — no onclick needed here, and
+       IntaAcceptAll()/IntaSaveNeccessary() aren't defined in this file (they're cb.dev.js-only). */
     return '<button class="intastellarCookie-settings__btn --bg intastellarCookieSettings--acceptAll">' + acceptAllText + '</button>'
         + '<button class="intastellarCookie-settings__btn intastellarCookieBanner__accpetNecssery">' + necessaryOnlyText + '</button>'
         + '<button class="intastellarCookie-settings__btn intastellarCookieBanner__settings">' + settingsText + '</button>';
@@ -4439,7 +4721,7 @@ function generateCookieSettingsButton(settingsText, allCookiesText) {
     var saveSettingsText = intaGetTextOverride("saveSettingsButton", settingsText);
     var acceptAllText = intaGetTextOverride("acceptAllButton", allCookiesText);
     return '<section class="intSettingsButton"><button class="intastellarCookie-settings__btn --noBorderRadius --bg intastellarCookieSettings--acceptAll">' + acceptAllText + '</button>'
-        + '<button class="intastellarCookie-settings__btn intastellarCookieBanner__settings --save">' + saveSettingsText + '</button>'
+        + '<button class="intastellarCookie-settings__btn intastellarCookieBanner__settings --save" onclick="javascript:IntaSaveSettings();">' + saveSettingsText + '</button>'
         + '</section>';
 }
 /* - - - Helper function for ccpa URL generator */
@@ -4483,6 +4765,7 @@ function learnMore(e) {
     //document.querySelector(".intastellarCookieConstents").classList.toggle("--active");
 
     if (document.querySelector(".intastellarCookieConstents__content-footer").classList.contains("view")) {
+        intaFetchOptionalCookieCategories();
         if (intastellarCookieLanguage == "da-DK" || intastellarCookieLanguage == "da" || intastellarCookieLanguage == "dk") {
             e.innerHTML = "Skjul detaljer";
         } else if (intastellarCookieLanguage != null && intastellarCookieLanguage === "en" || intastellarCookieLanguage === "en-GB" || intastellarCookieLanguage === "en-US") {
@@ -4618,7 +4901,7 @@ function updateConsents(consent, type = null) {
         deleteAllCookies();
 
         window.allScripts.map((script) => {
-            console.log(script);
+            
             if (script.type == "statics") {
                 script.scripts.forEach((src) => {
                     document.querySelectorAll("script").forEach((script) => {
@@ -4755,9 +5038,7 @@ function updateConsents(consent, type = null) {
 }
 
 function saveINTCookieSettings(consent, type = null) {
-    document.querySelector("html").classList.remove("noScroll");
-    document.querySelector(".intastellarCookieConstents").classList.remove("--active");
-    intaApplyCmpVisibilityFromCookie();
+    recordTimeToDecision(type || 'save_settings');
     const FunctionalCheckbox = document.querySelector("#functional");
     const StaticsCheckBox = document.querySelector("#statics");
     const MarketingCheckBox = document.querySelector("#marketing");
@@ -4778,7 +5059,7 @@ function saveINTCookieSettings(consent, type = null) {
         window.uetq.push('consent', 'update', {
             'ad_storage': 'granted'
         });
-        window.clarity('consentv2', {
+        window.clarity && window.clarity('consentv2', {
             ad_Storage: "granted",
             analytics_Storage: "denied"
         });
@@ -4809,7 +5090,8 @@ function saveINTCookieSettings(consent, type = null) {
         window.uetq.push('consent', 'update', {
             'ad_storage': 'denied'
         });
-        window.clarity('consent', false);
+        window.clarity && window.clarity('consent', false);
+
         /* window.allScripts.map((script) => {
             if (script.type == "marketing") {
                 script.scripts.forEach((src) => {
@@ -4831,9 +5113,10 @@ function saveINTCookieSettings(consent, type = null) {
             'url_passthrough': true,
         })
 
-        window.clarity('consent', false);
+        window.clarity && window.clarity('consent', false);
 
         window._hsp.push(['doNotTrack', false]);
+
         /* window.allScripts.map((script) => {
             if (script.type == "functional") {
                 script.scripts.forEach((src) => {
@@ -4850,10 +5133,11 @@ function saveINTCookieSettings(consent, type = null) {
     } else {
         window._hsp.push(['doNotTrack']);
         window._hsp.push(['revokeCookieConsent']);
-        window.clarity('consent', false);
+        window.clarity && window.clarity('consent', false);
         gtag('consent', 'update', {
             'functionality_storage': 'denied',
         })
+
         /* window.allScripts.map((script) => {
             if (script.type == "functional") {
                 script.scripts.forEach((src) => {
@@ -4870,19 +5154,19 @@ function saveINTCookieSettings(consent, type = null) {
     }
 
     if (StaticsCheckBox?.checked) {
+        window["optimizely"].push({
+            "type": "optOut",
+            "isOptOut": false
+        });
         gtag('consent', 'update', {
             'analytics_storage': 'granted',
-            'ad_storage': 'granted',
-            'ad_user_data': 'granted',
-            'ad_personalization': 'granted',
             'url_passthrough': true,
         })
         window._hsp.push(['doNotTrack', false]);
-        window.clarity('consentv2', {
+        window.clarity && window.clarity('consentv2', {
             ad_Storage: "denied",
             analytics_Storage: "granted"
         });
-
         /* window.allScripts.map((script) => {
             if (script.type == "statics") {
                 script.scripts.forEach((src) => {
@@ -4897,21 +5181,18 @@ function saveINTCookieSettings(consent, type = null) {
             }
         }) */
     } else {
-
+        window["optimizely"].push({
+            "type": "optOut",
+            "isOptOut": true
+        });
         window._hsp.push(['doNotTrack']);
         window._hsp.push(['revokeCookieConsent']);
         gtag('consent', 'update', {
             'analytics_storage': 'denied',
-            'ad_user_data': 'denied',
-            'ad_personalization': 'denied',
             'url_passthrough': true,
         })
 
-        window.uetq.push('consent', 'update', {
-            'ad_storage': 'denied'
-        });
-        window.clarity('consent', false);
-
+        window.clarity && window.clarity('consent', false);
         /* window.allScripts.map((script) => {
             if (script.type == "statics") {
                 script.scripts.forEach((src) => {
@@ -4930,18 +5211,198 @@ function saveINTCookieSettings(consent, type = null) {
         functionalCookies: (FunctionalCheckbox?.checked) ? "checked" : false,
         advertisementCookies: (MarketingCheckBox?.checked) ? "checked" : false,
     };
-    dataLayer.push({ 'event': 'cookie_consent_update', 'cookie_consent': intaConsentsObjectVariable.consents });
+    window.intaCookieConsents = intaConsentsObjectVariable.consents;
+    /* One full-matrix Shopify sync (per-category calls removed — they caused multiple consent log entries). */
+    intaCbShopifySyncFromBannerCheckboxes();
+    dataLayer.push({
+        'event': 'cookie_consent_update',
+        'cookie_consent': intaConsentsObjectVariable.consents,
+        'time_to_decision_ms': intaConsentsObjectVariable.time_to_decision
+    });
     intaConsentsObjectVariable.time = new Date().getTime()
 
     document.cookie = int_hideCookieBannerName + "=__inta1." + encodeIntaConsentsObject(JSON.stringify(intaConsentsObjectVariable), randomIntFromInterval(20, 34)) + "; expires=" + cookieLifeTime +
         "; path=/; " +
         intCookieDomain +
         "";
+    intaApplyCmpVisibilityFromCookie();
     /*window.location.reload();*/
     updateConsents(consent, type);
     setTimeout(() => {
         restartObserver();
     }, 1000);
-    document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
-        .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+    if (document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]") != null) {
+        document.querySelector("[name=intastellar-solutions-sharinglibrary-iframe]").contentWindow
+            .postMessage(JSON.stringify(intaConsentsObjectVariable), "*");
+    }
+    dispatchTCFConsentChangedIfAvailable(true);
+}
+
+/* Time-to-decision: ported from cb.dev.js — ships its own timestamp bookkeeping via
+   window._intaBannerShownAt (already set elsewhere in this file when the banner shows)
+   and only touches globals (intaConsentsObjectVariable, window.dataLayer) that already
+   exist here, so it's a straight port. */
+function recordTimeToDecision(decisionType) {
+    let shownAt = window._intaBannerShownAt;
+    if (typeof shownAt !== 'number') return;
+    let elapsed = Math.round(Date.now() - shownAt);
+    window._intaBannerShownAt = undefined;
+    if (typeof intaConsentsObjectVariable !== 'undefined') {
+        intaConsentsObjectVariable.time_to_decision = elapsed;
+    }
+    if (window.dataLayer) {
+        window.dataLayer.push({ event: 'intastellar_consent_decision', time_to_decision_ms: elapsed, decision_type: decisionType });
+    }
+    return elapsed;
+}
+
+/* Ported from cb.dev.js. premium.js doesn't load the TCF/IAB machinery this checks for,
+   so the guard inside makes every call here a safe no-op — kept for parity so a future
+   TCF integration (or a site that injects __tcfapi itself) picks it up automatically. */
+function dispatchTCFConsentChangedIfAvailable(wasUserInteraction) {
+    if (typeof window.__tcfapiDispatchConsentChanged === 'function') {
+        let eventStatus = (wasUserInteraction === false || wasUserInteraction === 'tcloaded') ? 'tcloaded' : 'useractioncomplete';
+        window.__tcfapiDispatchConsentChanged(eventStatus);
+    }
+}
+
+function IntaSaveSettings() {
+    recordTimeToDecision('save_settings');
+    const FunctionalCheckbox = document.querySelector("#functional");
+    const StaticsCheckBox = document.querySelector("#statics");
+    const MarketingCheckBox = document.querySelector("#marketing");
+    const accepted = [];
+    if (FunctionalCheckbox?.checked) {
+        gtag('consent', 'update', {
+            'functionality_storage': 'granted',
+        })
+        accepted.push("functionalCookies");
+
+    } else if (!FunctionalCheckbox?.checked) {
+        gtag('consent', 'update', {
+            'functionality_storage': 'denied',
+        });
+
+        const index = accepted.indexOf("functionalCookies");
+        if (index > -1) { // only splice array when item is found
+            accepted.splice(index, 1); // 2nd parameter means remove one item only
+        }
+    }
+
+    if (StaticsCheckBox?.checked) {
+        gtag('consent', 'update', {
+            'analytics_storage': 'granted',
+        })
+        window.clarity && window.clarity('consentv2', {
+            analytics_Storage: "granted"
+        });
+        accepted.push("staticsticCookies");
+        // Matomo (only present on sites that load it themselves — window._paq = window._paq || [])
+        window._paq && window._paq.push(['setConsentGiven']);
+    } else if (!StaticsCheckBox?.checked) {
+        gtag('consent', 'update', {
+            'analytics_storage': 'denied',
+        })
+
+        window._paq && window._paq.push(['forgetConsentGiven']);
+
+        window.clarity && window.clarity('consentv2', {
+            analytics_Storage: "denied"
+        });
+
+        const index = accepted.indexOf("staticsticCookies");
+        if (index > -1) { // only splice array when item is found
+            accepted.splice(index, 1); // 2nd parameter means remove one item only
+        }
+    }
+
+    if (MarketingCheckBox?.checked) {
+        gtag('consent', 'update', {
+            'ad_storage': 'granted',
+            'personalization_storage': 'granted',
+            'ads_data_redaction': 'granted',
+            'ad_user_data': 'granted',
+            'ad_personalization': 'granted',
+        });
+        window.uetq.push('consent', 'update', {
+            'ad_storage': 'granted'
+        });
+        window.clarity && window.clarity('consentv2', {
+            ad_Storage: "granted",
+            analytics_Storage: "denied"
+        });
+        accepted.push("advertisementCookies");
+        // Pintrk
+        if (typeof pintrk === 'function') {
+            try {
+                pintrk('setconsent', true);
+            } catch (e) { /* ignore */ }
+        }
+        // OpenAI Ads measurement consent mode
+        if (typeof oaiq === 'function') {
+            try {
+                oaiq('consent', true);
+            } catch (e) { /* ignore */ }
+        }
+        updateVwoConsent(intaConsentsObjectVariable.consents);
+
+    } else if (!MarketingCheckBox?.checked || intastellar) {
+        window.uetq.push('consent', 'update', {
+            'ad_storage': 'denied'
+        });
+        gtag('consent', 'update', {
+            'ad_storage': 'denied',
+            'personalization_storage': 'denied',
+            'ads_data_redaction': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied',
+        });
+
+        updateVwoConsent(intaConsentsObjectVariable.consents);
+        // Pintrk
+        if (typeof pintrk === 'function') {
+            try {
+                pintrk('setconsent', false);
+            } catch (e) { /* ignore */ }
+        }
+        // OpenAI Ads measurement consent mode
+        if (typeof oaiq === 'function') {
+            try {
+                oaiq('consent', false);
+            } catch (e) { /* ignore */ }
+        }
+
+        window.clarity && window.clarity('consent', false);
+
+        const index = accepted.indexOf("advertisementCookies");
+        if (index > -1) { // only splice array when item is found
+            accepted.splice(index, 1); // 2nd parameter means remove one item only
+        }
+    }
+    if (typeof intaWpApplyConsentFromIntastellarChoices === "function") {
+        intaWpApplyConsentFromIntastellarChoices(
+            !!FunctionalCheckbox?.checked,
+            !!StaticsCheckBox?.checked,
+            !!MarketingCheckBox?.checked,
+        );
+    }
+    saveINTCookieSettings("changePermission", accepted);
+    // Dispatch TCF event after user action
+    dispatchTCFConsentChangedIfAvailable();
+};
+
+function intaCbShopifySyncFromBannerCheckboxes() {
+    const fn = document.querySelector("#functional");
+    const st = document.querySelector("#statics");
+    const mk = document.querySelector("#marketing");
+    const payload = {
+        analytics: !!(st && st.checked),
+        marketing: !!(mk && mk.checked),
+        preferences: !!(fn && fn.checked),
+    };
+    intaShopifySetTrackingConsentSafe(payload, function () {
+        if (typeof window !== "undefined" && window.INTA_DEBUG) {
+            console.log("Shopify Customer Privacy synced from banner", payload);
+        }
+    });
 }

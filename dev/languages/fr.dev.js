@@ -16,6 +16,14 @@
     marketing: {
         title: "Marketing",
         description: "Nous utilisons des technologies web (également des cookies) de partenaires sélectionnés pour pouvoir vous montrer du contenu et de la publicité spécialement adaptés à vous sur des sites web et des réseaux sociaux. Ce contenu est sélectionné et affiché sur la base de votre comportement d'utilisation. Les cookies publicitaires ou de marketing sont utilisés pour fournir aux visiteurs des annonces et des campagnes marketing pertinentes. Ces cookies suivent les visiteurs à travers les sites web et collectent des informations pour fournir des annonces personnalisées."
+    },
+    security: {
+        title: "Sécurité",
+        description: "Les cookies de sécurité aident à identifier et à prévenir les risques de sécurité, à détecter les activités frauduleuses et à protéger notre site web et ses utilisateurs."
+    },
+    unclassified: {
+        title: "Non classés",
+        description: "Les cookies qui n'ont pas encore été classés dans une catégorie sont répertoriés ici. Nous travaillons avec les fournisseurs de ces cookies individuels pour les classer."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "gauche" : "droite";

@@ -16,6 +16,14 @@
     marketing: {
         title: "Pazarlama",
         description: "Web sitelerinde ve sosyal medya platformlarında size özel olarak hazırlanmış içerik ve reklamlar sunmak için güvenilir ortaklardan gelen web teknolojilerini (çerezler dahil) kullanıyoruz. Bu içerik, gezinme davranışınıza göre seçilir ve görüntülenir. Reklam ve pazarlama çerezleri, ilgili reklamları ve kampanyaları göstermek, ziyaretçileri siteler arasında takip etmek ve kişiselleştirilmiş reklamlar sunmak için bilgi toplamak amacıyla kullanılır."
+    },
+    security: {
+        title: "Güvenlik",
+        description: "Güvenlik çerezleri, güvenlik risklerini belirlemeye ve önlemeye, sahtekarlık faaliyetlerini tespit etmeye ve web sitemizi ve kullanıcılarını korumaya yardımcı olur."
+    },
+    unclassified: {
+        title: "Sınıflandırılmamış",
+        description: "Henüz bir kategoriye sınıflandırılmamış çerezler burada listelenmektedir. Bu tekil çerezlerin sağlayıcılarıyla birlikte bunları sınıflandırmak için çalışıyoruz."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "sol" : "sağ";

@@ -153,7 +153,7 @@ function intaLoadUcCore() {
     }
     window.__intaUcCoreLoading = true;
     var base = (typeof window.INTA !== "undefined" && window.INTA.settings && window.INTA.settings.coreUrl)
-        || "https://consents.cdn.intastellarsolutions.com/uc-core.js";
+        || "https://cdn.intastellar.eu/uc-core.js";
     if (typeof intastellarDevMode !== "undefined" && intastellarDevMode) {
         base = "../../dev/uc-core.dev.js";
     }

@@ -16,6 +16,14 @@
     marketing: {
         title: "Tiếp thị",
         description: "Chúng tôi sử dụng các công nghệ web (bao gồm cookie) từ các đối tác đáng tin cậy để cung cấp nội dung và quảng cáo được thiết kế riêng cho bạn trên các trang web và nền tảng mạng xã hội. Nội dung này được lựa chọn và hiển thị dựa trên hành vi duyệt web của bạn. Cookie quảng cáo và tiếp thị được sử dụng để hiển thị quảng cáo và chiến dịch phù hợp, theo dõi khách truy cập trên nhiều trang web và thu thập thông tin để đưa ra quảng cáo được cá nhân hóa."
+    },
+    security: {
+        title: "Bảo mật",
+        description: "Cookie bảo mật giúp xác định và ngăn chặn các rủi ro bảo mật, phát hiện hoạt động gian lận và bảo vệ trang web của chúng tôi cùng người dùng."
+    },
+    unclassified: {
+        title: "Chưa phân loại",
+        description: "Các cookie chưa được phân loại vào danh mục nào được liệt kê tại đây. Chúng tôi đang làm việc với các nhà cung cấp của từng cookie này để phân loại chúng."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "trái" : "phải";

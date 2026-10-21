@@ -16,6 +16,14 @@
     marketing: {
         title: "Reklama",
         description: "Korzystamy z technologii internetowych (w tym plików cookie) od wybranych partnerów, aby móc wyświetlać Ci treści i reklamy specjalnie dostosowane do Ciebie na stronach internetowych i w mediach społecznościowych. Treści te są wybierane i wyświetlane na podstawie Twojego zachowania podczas korzystania z sieci. Pliki cookie reklamowe lub marketingowe są używane do dostarczania odwiedzającym odpowiednich reklam i kampanii marketingowych. Te pliki cookie śledzą odwiedzających na różnych stronach internetowych i zbierają informacje w celu dostarczenia spersonalizowanych reklam."
+    },
+    security: {
+        title: "Bezpieczeństwo",
+        description: "Pliki cookie związane z bezpieczeństwem pomagają identyfikować i zapobiegać zagrożeniom bezpieczeństwa, wykrywać oszukańcze działania oraz chronić naszą stronę internetową i jej użytkowników."
+    },
+    unclassified: {
+        title: "Niesklasyfikowane",
+        description: "Pliki cookie, które nie zostały jeszcze przypisane do żadnej kategorii, są wymienione tutaj. Współpracujemy z dostawcami tych poszczególnych plików cookie, aby je sklasyfikować."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "lewy" : "prawy";

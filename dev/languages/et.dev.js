@@ -16,6 +16,14 @@
     marketing: {
         title: "Turundus",
         description: "Kasutame valitud partnerite veebitehnoloogiaid (ka küpsiseid), et näidata teile sisu ja reklaame, mis on spetsiaalselt teie jaoks kohandatud veebisaitidel ja sotsiaalmeedias. See sisu valitakse ja kuvatakse vastavalt teie kasutuskäitumisele. Reklaami- või turundusküpsiseid kasutatakse külastajatele asjakohaste reklaamide ja turunduskampaaniate pakkumiseks. Need küpsised jälgivad külastajaid erinevatel veebisaitidel ja koguvad teavet isikupärastatud reklaamide esitamiseks."
+    },
+    security: {
+        title: "Turvalisus",
+        description: "Turvaküpsised aitavad tuvastada ja ennetada turvariske, avastada pettuseid ning kaitsta meie veebisaiti ja selle kasutajaid."
+    },
+    unclassified: {
+        title: "Liigitamata",
+        description: "Siin on loetletud küpsised, mida pole veel ühtegi kategooriasse liigitatud. Teeme koostööd nende üksikute küpsiste pakkujatega, et need liigitada."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "vasakus" : "paremas";

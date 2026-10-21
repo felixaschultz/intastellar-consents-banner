@@ -16,6 +16,14 @@
     marketing: {
         title: "Marketing",
         description: "Nużaw teknoloġiji tal-web (inklużi cookies) minn sħab affidabbli biex nagħtu kontenut u riklami mfassla apposta għalik fuq websajts u pjattaformi tal-midja soċjali. Dan il-kontenut jintgħażel u jintwera abbażi tal-imġieba tal-browsing tiegħek. Il-cookies tar-riklamar u tal-marketing jintużaw biex juru riklami u kampanji rilevanti, jissorveljaw viżitaturi minn sit għal ieħor, u jiġbru informazzjoni biex jippreżentaw riklami personalizzati."
+    },
+    security: {
+        title: "Sigurtà",
+        description: "Il-cookies tas-sigurtà jgħinu jidentifikaw u jipprevjenu riskji ta' sigurtà, jaqbdu attività frawdolenti, u jipproteġu l-websajt tagħna u l-utenti tagħha."
+    },
+    unclassified: {
+        title: "Mhux Ikklassifikati",
+        description: "Il-cookies li għadhom ma ġewx ikklassifikati f'kategorija huma elenkati hawnhekk. Qed naħdmu mal-fornituri ta' dawn il-cookies individwali biex nikklassifikawhom."
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "xellug" : "lemin";
