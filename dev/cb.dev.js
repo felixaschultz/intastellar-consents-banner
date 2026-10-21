@@ -118,6 +118,22 @@ function darkLightCheck(color) {
     if(!color) return 'dark';
     let r, g, b, hsp;
 
+    // Named CSS colors (e.g. "white") and anything else beyond hex/rgb() fall
+    // through the parsing below as NaN -> 0,0,0 (black), so a white
+    // novaBackgroundColor: "white" was silently treated as "dark" and picked
+    // the light/white logo variant, vanishing into the white card. Letting
+    // the browser's own CSS color parser resolve the string first (via a
+    // throwaway element's style.color round-trip) normalizes any valid CSS
+    // color syntax — named, hex, rgb/rgba, hsl, etc. — to "rgb(r, g, b)"
+    // before the parsing below ever runs.
+    try {
+        let probe = document.createElement('span');
+        probe.style.color = color;
+        if (probe.style.color) {
+            color = probe.style.color;
+        }
+    } catch (e) { /* ignore — fall back to raw input below */ }
+
     // Check the format of the color, HEX or RGB?
     if (color.match(/^rgb/)) {
 
@@ -2562,9 +2578,20 @@ function setIntastellarPartnerDomain() {
 
 function generatePoweredBy() {
     if (window.location.host.indexOf("intastellar") == -1) {
+        // "nova always shows attribution" (see the call site in
+        // cb-locale-loader.dev.js) means this runs for nova on every locale
+        // re-render, re-overwriting the correctly nova-aware `poweredBy` set
+        // at module load (line ~2480) with this function's own, separate
+        // logic — which only ever checked "bannerV2" vs the brand color, so
+        // nova always got the light/white logo regardless of
+        // novaBackgroundColor. Same fix as the module-load computation: for
+        // nova, contrast against the card surface, not the brand color.
         let intastellarLogo = intastellarLogoLight;
         if (window.INTA.settings.design == "bannerV2") {
             intastellarLogo = intastellarLogoDark;
+        } else if (window.INTA.settings.design == "nova") {
+            let contrastColor = window.INTA.settings.novaBackgroundColor || "#2b2a42";
+            intastellarLogo = darkLightCheck(contrastColor) === "light" ? intastellarLogoDark : intastellarLogoLight;
         }
         poweredBy = "<span class='intastellarCookie-settings__poweredBy' alt='This cookie banner is powered by Intastellar Consents Solutions'>Powered by <a class='intastellarCookie-settings__poweredByLink' href='https://www.intastellar.eu' target='_blank' rel='noopener'><img class='intastellarCookie-settings__poweredByImg' width='100px' height='100px' src='" + intastellarLogo + "' alt='Intastellar Solutions, International'></a></span>";
     }
