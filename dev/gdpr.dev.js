@@ -187,6 +187,7 @@ let allScripts = window.allScripts = [
             "([\-\.]slideshare+)",
             "([\-\.]siteimproveanalytics+)",
             "([\-\.]hotjar+)",
+            "([\-\.]cloudflareinsights+)",
             "([\-\.]snapchat)",
             "([\-\.]contentsquare)",
             "([\-\.]6sc)",
