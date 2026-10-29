@@ -1,0 +1,68 @@
+TODO: Delegate cdn.intastellar.eu DNS to Vercel nameservers
+==============================================================
+
+Why
+---
+cdn.intastellar.eu (serves uc.js, uc-core.js, cb.js, etc.) is hosted on
+Vercel, but the intastellar.eu zone's authoritative nameservers are
+ns01.one.com / ns02.one.com (the registrar's DNS, not a global anycast
+network). Every visitor's resolver has to query one.com first before it
+ever reaches Vercel's edge. Delegating just the "cdn" subdomain to
+Vercel's own nameservers puts DNS resolution on the same anycast network
+as the CDN itself.
+
+Current state (checked 2026-10-21):
+  cdn.intastellar.eu.  CNAME  2fb4a865f6fe87f7.vercel-dns-016.com.
+  intastellar.eu.      NS     ns01.one.com. / ns02.one.com.
+  TTL on the cdn CNAME: ~276s
+
+Scope: subdomain-only delegation ("cdn" only) — NOT the whole
+intastellar.eu zone. Keeps mail (MX) and everything else on one.com
+untouched.
+
+Steps
+-----
+1. In Vercel:
+   - Go to the project's Domain settings, find cdn.intastellar.eu
+     (currently configured via the CNAME method).
+   - Switch it to the "Nameservers" delegation method instead.
+   - Vercel will show two NS targets to use for this subdomain
+     (typically ns1.vercel-dns.com / ns2.vercel-dns.com, but use
+     whatever the dashboard actually displays — it can vary).
+
+2. In one.com's DNS panel for intastellar.eu:
+   - Delete the existing CNAME record:
+       cdn  CNAME  2fb4a865f6fe87f7.vercel-dns-016.com.
+   - Add two NS records for "cdn" pointing to the values Vercel gave
+     you in step 1, e.g.:
+       cdn  NS  ns1.vercel-dns.com.
+       cdn  NS  ns2.vercel-dns.com.
+
+3. Propagation:
+   - The old CNAME's TTL is short (~276s) so it should clear fast.
+   - NS delegation changes can take longer to fully propagate
+     globally — budget a few hours to be safe before assuming it's
+     done everywhere.
+
+4. Verify afterward:
+   dig cdn.intastellar.eu NS +short        -> should show Vercel's nameservers
+   dig cdn.intastellar.eu A +short         -> should still resolve
+   curl -s -o /dev/null -w "dns=%{time_namelookup} connect=%{time_connect} tls=%{time_appconnect} ttfb=%{time_starttransfer} total=%{time_total}\n" https://cdn.intastellar.eu/uc.js
+
+Operational note
+-----------------
+Once "cdn" is nameserver-delegated to Vercel, any future DNS records
+under that subdomain (if ever needed) get managed in Vercel's
+dashboard, not one.com's — not a blocker, just don't add a record for
+cdn.intastellar.eu in the wrong place later.
+
+Context: this came out of investigating a 1,280ms render-blocking time
+reported for cdn.intastellar.eu/uc.js. Server-side (TLS 1.3, HTTP/2,
+edge cache HIT, cache-control: public, max-age=31536000, immutable)
+was already confirmed optimal from this vantage point — DNS provider
+was the one concrete, verifiable gap found. Note: if that 1,280ms
+number came from Lighthouse/PageSpeed's *simulated* throttling mode
+rather than a real measurement, this change may not move that specific
+number much — simulated throttling re-models timing under a fixed
+slow-4G profile regardless of real server/DNS speed. Worth confirming
+which tool produced that number before assuming this fixes it.
