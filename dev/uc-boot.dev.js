@@ -701,6 +701,20 @@ intaSetGtagConsentDefaults();
         }
     });
 }());
+// HubSpot: disableHubSpotCookieBanner + the first setHubSpotCookieConsent push must run
+// synchronously here, before HubSpot's own tracking script tag evaluates — same reason as
+// intaSetGtagConsentDefaults above. This previously lived in the async uc-core half, so on
+// a repeat visit HubSpot's script (often placed earlier on the page) ran and sent its first
+// tracking beacon with cc=0 before our consent push ever arrived.
+window.disableHubSpotCookieBanner = true;
+var _hsp = (window._hsp = window._hsp || []);
+if (intaCookieConsents) {
+    _hsp.push(['setHubSpotCookieConsent', {
+        analytics: intaCookieConsents.staticsticCookies === "checked",
+        advertisement: intaCookieConsents.advertisementCookies === "checked",
+        functional: intaCookieConsents.functionalCookies === "checked",
+    }]);
+}
 function getConsentTypeForUrl(url) {
     if (!url) return 'marketing';
     for (let i = 0; i < window.allScripts.length; i++) {

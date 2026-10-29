@@ -819,8 +819,6 @@ window.uetq.push('consent', 'default', {
 
 
 
-window.disableHubSpotCookieBanner = true;
-var _hsp = (window._hsp = window._hsp || []);
 
 function gtag() {
     dataLayer.push(arguments);
