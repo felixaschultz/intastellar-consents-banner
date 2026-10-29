@@ -3876,6 +3876,21 @@ function intaRunUcCoreIntegrations() {
         fbq('consent', 'revoke');
     }
 
+    // HubSpot: fire this alongside the gtag consent sync below, not after it — later
+    // code in this function (Amazon Ads script injection, Shopify/WP sync) can throw
+    // and abort the rest of the function, which silently dropped this call when it
+    // only ran at the very end, so HubSpot never received consent on page load.
+    if (window._hsp) {
+        window._hsp.push([
+            'setHubSpotCookieConsent',
+            {
+                'analytics': intaCookieConsents?.staticsticCookies === "checked",
+                'advertisement': intaCookieConsents?.advertisementCookies === "checked",
+                'functional': intaCookieConsents?.functionalCookies === "checked",
+            }
+        ]);
+    }
+
     if (hasConsent("advertisement")) {
         gtag('consent', 'update', {
             'personalization_storage': 'granted',
@@ -3942,17 +3957,6 @@ function intaRunUcCoreIntegrations() {
             return true;
         }
         return false;
-    }
-
-    if (window._hsp) {
-        window._hsp.push([
-            'setHubSpotCookieConsent',
-            {
-                'analytics': intaCookieConsents?.staticsticCookies === "checked",
-                'advertisement': intaCookieConsents?.advertisementCookies === "checked",
-                'functional': intaCookieConsents?.functionalCookies === "checked",
-            }
-        ]);
     }
 
     if (intaIsShopifyStorefrontContext()) {
