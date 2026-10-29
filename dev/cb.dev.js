@@ -3634,7 +3634,7 @@ onWindowLoad(function () {
                     'time_to_decision_ms': intaConsentsObjectVariable.time_to_decision
                 });
 
-                window._hsp.push(['setHubSpotConsent', {
+                window._hsp.push(['setHubSpotCookieConsent', {
                     analytics: true,
                     advertisement: true,
                     functionality: true,
@@ -3728,7 +3728,7 @@ onWindowLoad(function () {
                 window.uetq.push('consent', 'update', {
                     'ad_storage': 'granted'
                 });
-                window._hsp.push(['setHubSpotConsent', {
+                window._hsp.push(['setHubSpotCookieConsent', {
                     analytics: true,
                     advertisement: true,
                     functionality: true,
@@ -3813,7 +3813,7 @@ onWindowLoad(function () {
                 window.uetq.push('consent', 'update', {
                     'ad_storage': 'denied'
                 });
-                window._hsp.push(['setHubSpotConsent', {
+                window._hsp.push(['setHubSpotCookieConsent', {
                     analytics: false,
                     advertisement: false,
                     functionality: false,
