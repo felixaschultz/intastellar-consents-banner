@@ -402,19 +402,31 @@ const intaGetDomainFoundCookieList = async (domain) => {
     }
 };
 
-const intaCategoryDomOrder = ['necessary', 'functional', 'analytics', 'marketing'];
+/* API category -> suffix of the #inta-cookie-list-* / #inta-cookie-count-* ids in the details panel */
+const intaCategoryDomIds = { necessary: 'necessary', functional: 'functional', analytics: 'statistics', marketing: 'marketing', security: 'security', unclassified: 'unclassified' };
+/* No consent toggle; their sections stay hidden unless the API found cookies for them */
+const intaOptionalCategoryDomIds = ['security', 'unclassified'];
 
 function intaFormatCookieExpiry(c) {
     if (c.session || !c.expires) return 'Session';
     return new Date(c.expires * 1000).toLocaleDateString();
 }
 
-function intaBuildCategoryOverviewHTML(category) {
+/* Returns { html, count } — count is the API's per-category count (= data.cookies.length),
+   and every one of those cookies is rendered exactly once below. */
+function intaBuildCategoryOverview(category) {
     const data = intaFoundCookieList?.categories?.[category];
-    if (!data) return '';
+    if (!data) return { html: '', count: 0 };
     const { cookies = [], vendors = [] } = data;
-    const vendorsWithCookies = vendors.filter(v => (v.cookies || []).length > 0);
-    const attributedNames = new Set(vendorsWithCookies.flatMap(v => v.cookies.map(c => c.name)));
+    /* A vendor's `cookies` holds everything it is known to set, across categories — only show
+       the ones the scan found in this category (`data.cookies`), each under its first vendor. */
+    const categoryCookies = new Map(cookies.map(c => [c.name, c]));
+    const attributedNames = new Set();
+    const vendorsWithCookies = vendors.map(v => {
+        const own = (v.cookies || []).filter(c => categoryCookies.has(c.name) && !attributedNames.has(c.name));
+        own.forEach(c => attributedNames.add(c.name));
+        return { ...v, cookies: own.map(c => ({ ...c, ...categoryCookies.get(c.name) })) };
+    }).filter(v => v.cookies.length > 0);
     const vendorRows = vendorsWithCookies.map(v => {
         const vendorCookieRows = v.cookies.map(c => `
             <article class="intaCookieList-cookie">
@@ -450,15 +462,29 @@ function intaBuildCategoryOverviewHTML(category) {
                 </article>`).join('')}
             </section>
         </section>` : '';
-    return vendorRows + unattributedBlock;
+    const count = typeof data.count === 'number' ? data.count : cookies.length;
+    return { html: vendorRows + unattributedBlock, count };
 }
 
 function intaInjectFoundCookieDetailList() {
-    if (!intaFoundCookieList) return false;
-    const overviews = document.querySelectorAll('.intReadMore .intaCookieListOverview');
-    if (!overviews.length) return false;
-    intaCategoryDomOrder.forEach((category, i) => {
-        if (overviews[i]) overviews[i].innerHTML = intaBuildCategoryOverviewHTML(category);
+    if (!intaFoundCookieList?.categories) return false;
+    const readMore = document.querySelector('.intReadMore');
+    if (!readMore) return false;
+    Object.keys(intaCategoryDomIds).forEach((category) => {
+        const id = intaCategoryDomIds[category];
+        const { html, count } = intaBuildCategoryOverview(category);
+        /* The necessary list ships with our own cookies; keep it (and its count) when the scan found none */
+        if (id === 'necessary' && !count) return;
+        const list = id === 'necessary'
+            ? readMore.querySelector('.required .intaCookieListOverview')
+            : document.getElementById('inta-cookie-list-' + id);
+        if (list) list.innerHTML = html;
+        const badge = document.getElementById('inta-cookie-count-' + id);
+        if (badge) badge.textContent = '(' + count + ')';
+        if (intaOptionalCategoryDomIds.indexOf(id) > -1) {
+            const section = document.getElementById('inta-cookie-section-' + id);
+            if (section) section.style.display = count ? '' : 'none';
+        }
     });
     return true;
 }
