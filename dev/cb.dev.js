@@ -54,10 +54,37 @@ async function fetchGVL() {
  * @returns {Promise<Array>} Array of vendor objects
  */
 async function getVendorsForUI() {
-    const gvl = await fetchGVL();
+    await fetchGVL();
 
     // Returns an array of vendor objects (id, name, purposes, policyUrl, etc.)
-    return Object.values(gvl || {});
+    return Object.values(intaGvlVendorsMap());
+}
+
+/** Accepts both the full GVL ({vendorListVersion, vendors: {...}}) and the bare vendor map the API serves today. */
+function intaGvlVendorsMap() {
+    return (gvlCache && gvlCache.vendors) || gvlCache || {};
+}
+
+/** vendorListVersion of the loaded GVL, or `INTA.settings.gvlVersion`, or null when neither says. */
+function intaGvlVersion() {
+    return (gvlCache && gvlCache.vendorListVersion)
+        || (window.INTA && window.INTA.settings && window.INTA.settings.gvlVersion)
+        || null;
+}
+
+/** GVL vendors that still exist: v3 keeps deleted vendors in the list with a past `deletedDate`. */
+function intaGvlActiveVendors(vendors) {
+    let now = Date.now();
+    return (vendors || []).filter(function (vendor) {
+        if (!vendor || !(parseInt(vendor.id, 10) > 0)) return false;
+        return !(vendor.deletedDate && new Date(vendor.deletedDate).getTime() <= now);
+    });
+}
+
+/** GVL v3 names the field legIntPurposes; legitimateInterestPurposes kept for older payloads. */
+function intaGvlVendorHasLegit(vendor) {
+    let purposes = vendor && (vendor.legIntPurposes || vendor.legitimateInterestPurposes);
+    return Array.isArray(purposes) && purposes.length > 0;
 }
 
 function onSaveConsent() {
@@ -919,8 +946,10 @@ function generateTcString(consentObj) {
     model.created = consentObj.created || null;
     model.consentLanguage = consentObj.consentLanguage || model.consentLanguage;
     model.publisherCountryCode = consentObj.publisherCountryCode || model.publisherCountryCode;
+    model.vendorListVersion = consentObj.vendorListVersion || model.vendorListVersion;
     // Set purposes and vendors as boolean arrays (first 24)
     model.purposeConsents = (consentObj.purposes || []).slice(0, 24);
+    model.purposeLegitimateInterests = (consentObj.purposeLegitimateInterests || []).slice(0, 24);
     model.vendorConsents = (consentObj.vendors || []).slice(0);
     // TCF 2.3: vendors disclosed to the user in the CMP (default: same as vendors we collect consent for)
     model.disclosedVendors = Array.isArray(consentObj.disclosedVendors)
@@ -1000,7 +1029,9 @@ function intaTcfUpdateConsent(source) {
         return null;
     }
     let previous = intaTcfDecodeStored();
-    let gvlVendors = Object.values(gvlCache || {});
+    let gvlVendors = intaGvlActiveVendors(Object.values(intaGvlVendorsMap()));
+    if (gvlVendors.length) intaVendorChoicesInit(gvlVendors);
+    let choices = intaVendorChoices.ready ? intaVendorChoices : null;
     let gvlById = {};
     gvlVendors.forEach(function (vendor) {
         let id = parseInt(vendor.id, 10);
@@ -1013,9 +1044,7 @@ function intaTcfUpdateConsent(source) {
     let disclosedVendors = [];
     for (let id = 1; id <= maxVendorId; id++) {
         let gvlVendor = gvlById[id];
-        let hasLegit = !!(gvlVendor && Array.isArray(gvlVendor.legitimateInterestPurposes) && gvlVendor.legitimateInterestPurposes.length);
-        let cb = document.getElementById('vendor' + id);
-        let legitCb = document.getElementById('vendor' + id + '-legit');
+        let hasLegit = intaGvlVendorHasLegit(gvlVendor);
         let consent, legit;
         if (source === 'accept_all') {
             consent = !!gvlVendor;
@@ -1023,27 +1052,46 @@ function intaTcfUpdateConsent(source) {
         } else if (source === 'decline_all') {
             consent = false;
             legit = false;
+        } else if (choices && gvlVendor) {
+            consent = !!choices.consents[id];
+            legit = hasLegit && !!choices.legitimateInterests[id];
         } else {
-            consent = cb ? cb.checked : !!(previous && previous.vendors[id - 1]);
-            legit = legitCb ? legitCb.checked : !!(previous && previous.vendorsLI[id - 1]);
+            consent = !!(previous && previous.vendors[id - 1]);
+            legit = !!(previous && previous.vendorsLI[id - 1]);
         }
-        // Keep an already-rendered vendor list in step with accept/decline-all.
-        if (cb) cb.checked = consent;
-        if (legitCb) legitCb.checked = legit;
+        // Keep the vendor list (state + any rendered rows) in step with accept/decline-all.
+        if (choices && gvlVendor) {
+            choices.consents[id] = consent;
+            if (hasLegit) choices.legitimateInterests[id] = legit;
+            intaVendorSyncCheckboxes(id);
+        }
         vendors.push(consent);
         vendorLegitimateInterests.push(legit);
         disclosedVendors.push(!!gvlVendor || consent || legit);
     }
 
-    let tcString = generateTcString({
-        purposes: intaTcfPurposesFromCategories(intaConsentsObjectVariable.consents),
-        vendors: vendors,
-        disclosedVendors: disclosedVendors,
-        vendorLegitimateInterests: vendorLegitimateInterests,
-        created: previous ? previous.created : null,
-        consentLanguage: intaTcfConsentLanguage(),
-        publisherCountryCode: intaTcfPublisherCountryCode()
-    });
+    let purposes = intaTcfPurposesFromCategories(intaConsentsObjectVariable.consents);
+    let tcString;
+    try {
+        tcString = generateTcString({
+            purposes: purposes,
+            // The UI has no per-purpose objection, so declining a category objects to
+            // legitimate interest for its purposes too (the encoder drops 1 and 3-6).
+            purposeLegitimateInterests: purposes,
+            vendors: vendors,
+            disclosedVendors: disclosedVendors,
+            vendorLegitimateInterests: vendorLegitimateInterests,
+            created: previous ? previous.created : null,
+            // Vendor bits carried over from `previous` were collected against its GVL version.
+            vendorListVersion: intaGvlVersion() || (previous && previous.vendorListVersion) || null,
+            consentLanguage: intaTcfConsentLanguage(),
+            publisherCountryCode: intaTcfPublisherCountryCode()
+        });
+    } catch (e) {
+        // Never let TCF encoding break the consent save itself.
+        console.error('[Intastellar Consents] TC string encoding failed:', e);
+        return null;
+    }
     intaConsentsObjectVariable.tcString = tcString;
     window._latestTcString = tcString;
 
@@ -1890,6 +1938,11 @@ function intaInjectCmpCriticalStyles() {
 }
 
 function intaHasStoredConsentCookie() {
+    // With TCF on, a consent cookie saved before it was (no tcString) never disclosed the
+    // vendors, so it can't back a TC string — ask again instead of treating it as consent.
+    if (intaTcfIsRegistered() && !getTcStringFromCookie()) {
+        return false;
+    }
     try {
         var cookieName = (typeof int_hideCookieBannerName !== 'undefined' && int_hideCookieBannerName)
             || 'IntastellarConsentSolution';
@@ -1929,6 +1982,9 @@ function intaApplyCmpVisibilityFromCookie() {
             overlay.classList.add('--active');
             if (typeof window._intaBannerShownAt === 'undefined') {
                 window._intaBannerShownAt = Date.now();
+                if (typeof window.__tcfapiDispatchConsentChanged === 'function') {
+                    window.__tcfapiDispatchConsentChanged('cmpuishown');
+                }
             }
             if (window.dataLayer) {
                 window.dataLayer.push({ event: 'intastellar_consents_widget_visible' });
@@ -2207,17 +2263,74 @@ if (intaTcfIsRegistered()) {
     let lastUserActionAt = 0;  // timestamp when useractioncomplete was last dispatched
     const USER_ACTION_WINDOW_MS = 30000;  // getTCData returns useractioncomplete for this long after dispatch
 
+    let settings = window.INTA.settings;
+    // Calls vendor tags made against the boot stub (gdpr.dev.js) before this file loaded.
+    let stubQueue = (typeof window.__tcfapi === 'function' && Array.isArray(window.__tcfapi.a)) ? window.__tcfapi.a : [];
+
+    /** Boolean array (index 0 = ID 1) → TCF's {id: boolean} map. */
+    function idMap(flags) {
+        let map = {};
+        (flags || []).forEach(function (flag, i) { map[i + 1] = !!flag; });
+        return map;
+    }
+
+    function displayStatus() {
+        let banner = window._IntastellarConsentsBanner;
+        return (banner && banner.classList && banner.classList.contains('--active')) ? 'visible' : 'hidden';
+    }
+
     // Serve the string saved with the user's last choice (see intaTcfUpdateConsent) — never
     // re-encode here, or every call would mint new timestamps and drop the stored vendor choices.
     // No stored string yet means the user hasn't decided, so the UI is (about to be) shown.
     function buildTCData(eventStatus, listenerIdOverride) {
         let tcString = intaConsentsObjectVariable.tcString || getTcStringFromCookie();
+        let decoded = null;
+        if (tcString) {
+            try { decoded = window.IABTCF.TCString.decode(tcString); } catch (e) { decoded = null; }
+        }
         return {
             tcString: tcString || '',
+            tcfPolicyVersion: decoded ? decoded.tcfPolicyVersion : 5,
+            cmpId: settings.cmpId,
+            cmpVersion: settings.cmpVersion || 1,
+            gdprApplies: settings.gdprApplies !== false,
             eventStatus: tcString ? (eventStatus || 'tcloaded') : 'cmpuishown',
             cmpStatus: 'loaded',
-            gdprApplies: true,
-            listenerId: listenerIdOverride || null
+            listenerId: listenerIdOverride || undefined,
+            isServiceSpecific: decoded ? decoded.isServiceSpecific : true,
+            useNonStandardTexts: decoded ? decoded.useNonStandardStacks : false,
+            publisherCC: decoded ? decoded.publisherCC : intaTcfPublisherCountryCode(),
+            purposeOneTreatment: decoded ? decoded.purposeOneTreatment : false,
+            purpose: {
+                consents: idMap(decoded && decoded.purposes),
+                legitimateInterests: idMap(decoded && decoded.purposeLegitInterests)
+            },
+            vendor: {
+                consents: idMap(decoded && decoded.vendors),
+                legitimateInterests: idMap(decoded && decoded.vendorsLI)
+            },
+            specialFeatureOptins: idMap(decoded && decoded.specialFeatureOptIns.split('').map(function (b) { return b === '1'; })),
+            // No publisher TC segment is issued, so publisher purposes/restrictions are empty.
+            publisher: {
+                consents: {},
+                legitimateInterests: {},
+                customPurpose: { consents: {}, legitimateInterests: {} },
+                restrictions: {}
+            }
+        };
+    }
+
+    function buildPingReturn() {
+        return {
+            gdprApplies: settings.gdprApplies !== false,
+            cmpLoaded: true,
+            cmpStatus: 'loaded',
+            displayStatus: displayStatus(),
+            apiVersion: '2.2',
+            cmpVersion: settings.cmpVersion || 1,
+            cmpId: settings.cmpId,
+            gvlVersion: intaGvlVersion() || new window.IABTCF.TCModel().vendorListVersion,
+            tcfPolicyVersion: 5
         };
     }
 
@@ -2234,7 +2347,12 @@ if (intaTcfIsRegistered()) {
     }
 
     window.__tcfapi = function (command, version, callback, parameter) {
-        if (command === 'getTCData') {
+        if (typeof callback !== 'function') {
+            return;
+        }
+        if (command === 'ping') {
+            callback(buildPingReturn());
+        } else if (command === 'getTCData') {
             let getStatus = (lastUserActionAt && (Date.now() - lastUserActionAt) < USER_ACTION_WINDOW_MS)
                 ? 'useractioncomplete' : 'tcloaded';
             let tcData = buildTCData(getStatus);
@@ -2263,6 +2381,11 @@ if (intaTcfIsRegistered()) {
     window.__tcfapiDispatchConsentChanged = function (eventStatus) {
         dispatchTCFEvent(eventStatus);
     };
+
+    stubQueue.forEach(function (args) {
+        window.__tcfapi.apply(null, args);
+    });
+    stubQueue.length = 0;
 
     // Accept/decline-all encode against the GVL's vendors, so have it ready before the first click.
     if (typeof requestIdleCallback === 'function') {
@@ -2409,43 +2532,6 @@ vendorListContainer.id = 'vendor-list';
 vendorListContainer.classList.add("vendor-container");
 vendorListContainer.innerHTML = '<h3>Vendors</h3>';
 
-function applyTcStringToVendorCheckboxes(tcString, vendors) {
-    if (typeof intastellarDevMode !== 'undefined' && intastellarDevMode) {
-        console.log('[applyTcStringToVendorCheckboxes] called with tcString:', tcString ? 'present (' + tcString.length + ' chars)' : null, 'vendors:', vendors ? vendors.length : 0);
-    }
-    if (!tcString || !vendors || !vendors.length) {
-        if (typeof intastellarDevMode !== 'undefined' && intastellarDevMode) {
-            console.log('[applyTcStringToVendorCheckboxes] early return: missing tcString or empty vendors');
-        }
-        return;
-    }
-    try {
-        let decoded = window.IABTCF && window.IABTCF.TCString && typeof window.IABTCF.TCString.decode === 'function'
-            ? window.IABTCF.TCString.decode(tcString) : null;
-        if (typeof intastellarDevMode !== 'undefined' && intastellarDevMode) {
-            console.log('[applyTcStringToVendorCheckboxes] decoded:', decoded);
-        }
-        if (!decoded || !decoded.vendors) {
-            if (typeof intastellarDevMode !== 'undefined' && intastellarDevMode) {
-                console.log('[applyTcStringToVendorCheckboxes] early return: no decoded vendors');
-            }
-            return;
-        }
-        vendors.forEach(function (vendor, i) {
-            let idx = parseInt(vendor.id, 10) - 1;
-            if (idx < 0 || idx >= decoded.vendors.length) return;
-            let cb = document.getElementById('vendor' + vendor.id);
-            let legitCb = document.getElementById('vendor' + vendor.id + '-legit');
-            if (cb) cb.checked = !!decoded.vendors[idx];
-            if (legitCb && decoded.vendorsLI && decoded.vendorsLI[idx] !== undefined) {
-                legitCb.checked = !!decoded.vendorsLI[idx];
-            }
-        });
-    } catch (e) {
-        console.log(e);
-    }
-}
-
 function getTcStringFromCookie() {
     try {
         let c = typeof getCookie === 'function' ? getCookie(int_hideCookieBannerName) : null;
@@ -2463,61 +2549,458 @@ function getTcStringFromCookie() {
         vendorListContainer.addEventListener("click", intaDeviceStorageToggleClick);
     }
 
+/**
+ * Per-vendor choices by GVL vendor ID: the source of truth for vendor consent / legitimate
+ * interest. Rendered checkboxes only mirror it, so the list can render in pages and the
+ * bulk buttons still cover vendors that were never scrolled into view.
+ */
+let intaVendorChoices = { ready: false, consents: {}, legitimateInterests: {} };
+
+/** Seed choices from the stored TC string; new visitors start with consent off and legitimate interest on (not objected). */
+function intaVendorChoicesInit(vendors) {
+    if (intaVendorChoices.ready) {
+        return;
+    }
+    let previous = intaTcfDecodeStored();
+    let defaultConsent = intaIsCapterraTraffic();
+    vendors.forEach(function (vendor) {
+        let id = parseInt(vendor.id, 10);
+        let known = previous && id <= previous.maxVendorId;
+        intaVendorChoices.consents[id] = known ? !!previous.vendors[id - 1] : defaultConsent;
+        if (intaGvlVendorHasLegit(vendor)) {
+            intaVendorChoices.legitimateInterests[id] = (previous && id <= previous.maxVendorIdLI) ? !!previous.vendorsLI[id - 1] : true;
+        }
+    });
+    intaVendorChoices.ready = true;
+}
+
+/** Mirror one vendor's stored choice onto its checkboxes, if that row is rendered. */
+function intaVendorSyncCheckboxes(id) {
+    let cb = document.getElementById('vendor' + id);
+    let legitCb = document.getElementById('vendor' + id + '-legit');
+    if (cb) cb.checked = !!intaVendorChoices.consents[id];
+    if (legitCb) legitCb.checked = !!intaVendorChoices.legitimateInterests[id];
+}
+
+const INTA_VENDOR_PAGE_SIZE = 50;
 let __intaVendorListLoaded = false;
+let __intaVendorList = [];
+let __intaVendorFiltered = [];
+let __intaVendorRendered = 0;
+let __intaVendorSearchTimer = null;
+
+function intaVendorText(key, fallback) {
+    return intaEscapeHtmlAttr(intaGetTextOverride(key, fallback));
+}
+
+/** Privacy / LI-claim URLs in the banner language, else English, else whatever comes first. */
+function intaVendorUrlsForLanguage(vendor) {
+    let urls = Array.isArray(vendor.urls) ? vendor.urls : [];
+    let lang = intaTcfConsentLanguage().toLowerCase();
+    return urls.filter(function (u) { return u && String(u.langId).toLowerCase() === lang; })[0]
+        || urls.filter(function (u) { return u && String(u.langId).toLowerCase() === 'en'; })[0]
+        || urls[0]
+        || {};
+}
+
+function intaVendorFormatDuration(seconds) {
+    if (seconds <= 0) {
+        return intaGetTextOverride('vendorCookieSession', 'Session');
+    }
+    let days = Math.round(seconds / 86400);
+    if (days >= 1) {
+        return days + ' ' + intaGetTextOverride(days === 1 ? 'vendorDay' : 'vendorDays', days === 1 ? 'day' : 'days');
+    }
+    let hours = Math.max(1, Math.round(seconds / 3600));
+    return hours + ' ' + intaGetTextOverride(hours === 1 ? 'vendorHour' : 'vendorHours', hours === 1 ? 'hour' : 'hours');
+}
+
+/**
+ * Standard TCF names (GVL v3, English), used when the loaded GVL payload carries no
+ * names (e.g. a cached vendors-only response). They are fixed by TCF policy, so this
+ * only needs touching when IAB adds or renames a purpose/feature.
+ */
+const INTA_TCF_DEFAULT_NAMES = {
+    purposes: {
+        1: "Store and/or access information on a device",
+        2: "Use limited data to select advertising",
+        3: "Create profiles for personalised advertising",
+        4: "Use profiles to select personalised advertising",
+        5: "Create profiles to personalise content",
+        6: "Use profiles to select personalised content",
+        7: "Measure advertising performance",
+        8: "Measure content performance",
+        9: "Understand audiences through statistics or combinations of data from different sources",
+        10: "Develop and improve services",
+        11: "Use limited data to select content"
+    },
+    specialPurposes: {
+        1: "Ensure security, prevent and detect fraud, and fix errors",
+        2: "Deliver and present advertising and content",
+        3: "Save and communicate privacy choices"
+    },
+    features: {
+        1: "Match and combine data from other data sources",
+        2: "Link different devices",
+        3: "Identify devices based on information transmitted automatically"
+    },
+    specialFeatures: {
+        1: "Use precise geolocation data",
+        2: "Identify devices based on information actively requested"
+    },
+    dataCategories: {
+        1: "IP addresses",
+        2: "Device characteristics",
+        3: "Device identifiers",
+        4: "Probabilistic identifiers",
+        5: "Authentication-derived identifiers",
+        6: "Browsing and interaction data",
+        7: "User-provided data",
+        8: "Non-precise location data",
+        9: "Precise location data",
+        10: "Users’ profiles",
+        11: "Privacy choices"
+    }
+};
+
+/** textOverrides key prefix per GVL section, e.g. `tcfPurpose3` — lets a site translate the names. */
+const INTA_TCF_NAME_OVERRIDE_PREFIX = {
+    purposes: "tcfPurpose",
+    specialPurposes: "tcfSpecialPurpose",
+    features: "tcfFeature",
+    specialFeatures: "tcfSpecialFeature",
+    dataCategories: "tcfDataCategory"
+};
+
+/** Human-readable name for a GVL purpose/feature/data category: site override → loaded GVL → built-in table. */
+function intaTcfName(kind, id) {
+    let override = intaGetRawTextOverride(INTA_TCF_NAME_OVERRIDE_PREFIX[kind] + id);
+    if (override !== null) {
+        return override;
+    }
+    let entry = gvlCache && gvlCache[kind] && gvlCache[kind][id];
+    if (entry && entry.name) {
+        return entry.name;
+    }
+    return (INTA_TCF_DEFAULT_NAMES[kind] && INTA_TCF_DEFAULT_NAMES[kind][id]) || String(id);
+}
+
+/** Full TCF vendor disclosure — built only when a row is expanded, since ~1000 of these up front is a lot of DOM. */
+function intaVendorDetailsHtml(vendor) {
+    let retention = vendor.dataRetention || {};
+    function nameOf(kind, id) {
+        return intaEscapeHtmlAttr(intaTcfName(kind, id));
+    }
+    function retentionFor(perId, id) {
+        let days = perId && perId[id] != null ? perId[id] : retention.stdRetention;
+        return days != null ? ' <span class="inta-vendor-retention">(' + intaVendorText('vendorRetention', 'retention') + ': ' + intaEscapeHtmlAttr(days) + ' ' + intaVendorText('vendorDays', 'days') + ')</span>' : '';
+    }
+    function section(title, items) {
+        if (!items.length) {
+            return '';
+        }
+        return '<div class="inta-vendor-section"><strong>' + title + '</strong><ul>'
+            + items.map(function (item) { return '<li>' + item + '</li>'; }).join('')
+            + '</ul></div>';
+    }
+    let urls = intaVendorUrlsForLanguage(vendor);
+    let parts = [];
+    let links = [];
+    if (urls.privacy) {
+        links.push('<a class="intSettingsTitleLink" href="' + intaEscapeHtmlAttr(urls.privacy) + '" target="_blank" rel="noopener noreferrer">' + intaVendorText('vendorPrivacyPolicy', 'Privacy policy') + '</a>');
+    }
+    if (urls.legIntClaim && intaGvlVendorHasLegit(vendor)) {
+        links.push('<a class="intSettingsTitleLink" href="' + intaEscapeHtmlAttr(urls.legIntClaim) + '" target="_blank" rel="noopener noreferrer">' + intaVendorText('vendorLegIntClaim', 'Legitimate interest at stake') + '</a>');
+    }
+    if (links.length) {
+        parts.push('<div class="inta-vendor-links">' + links.join('') + '</div>');
+    }
+    parts.push(section(intaVendorText('vendorPurposesConsent', 'Purposes (consent)'),
+        (vendor.purposes || []).map(function (id) { return nameOf('purposes', id) + retentionFor(retention.purposes, id); })));
+    parts.push(section(intaVendorText('vendorPurposesLegInt', 'Purposes (legitimate interest)'),
+        (vendor.legIntPurposes || []).map(function (id) { return nameOf('purposes', id) + retentionFor(retention.purposes, id); })));
+    parts.push(section(intaVendorText('vendorSpecialPurposes', 'Special purposes'),
+        (vendor.specialPurposes || []).map(function (id) { return nameOf('specialPurposes', id) + retentionFor(retention.specialPurposes, id); })));
+    parts.push(section(intaVendorText('vendorFeatures', 'Features'),
+        (vendor.features || []).map(function (id) { return nameOf('features', id); })));
+    parts.push(section(intaVendorText('vendorSpecialFeatures', 'Special features'),
+        (vendor.specialFeatures || []).map(function (id) { return nameOf('specialFeatures', id); })));
+    parts.push(section(intaVendorText('vendorDataCategories', 'Data categories'),
+        (vendor.dataDeclaration || []).map(function (id) { return nameOf('dataCategories', id); })));
+
+    let storage = [];
+    let yes = intaVendorText('vendorYes', 'Yes');
+    let no = intaVendorText('vendorNo', 'No');
+    storage.push(intaVendorText('vendorUsesCookies', 'Uses cookies') + ': ' + (vendor.usesCookies ? yes : no));
+    if (vendor.usesCookies && typeof vendor.cookieMaxAgeSeconds === 'number') {
+        storage.push(intaVendorText('vendorCookieMaxAge', 'Maximum cookie lifetime') + ': ' + intaEscapeHtmlAttr(intaVendorFormatDuration(vendor.cookieMaxAgeSeconds)));
+    }
+    if (vendor.usesCookies) {
+        storage.push(intaVendorText('vendorCookieRefresh', 'Cookie lifetime can be refreshed') + ': ' + (vendor.cookieRefresh ? yes : no));
+    }
+    storage.push(intaVendorText('vendorNonCookieAccess', 'Uses other storage (e.g. localStorage)') + ': ' + (vendor.usesNonCookieAccess ? yes : no));
+    parts.push(section(intaVendorText('vendorDeviceStorage', 'Device storage'), storage));
+    parts.push(intaDeviceStorageDisclosureBlock(vendor));
+    return parts.join('');
+}
+
+function intaVendorRowHtml(vendor) {
+    let id = parseInt(vendor.id, 10);
+    let name = intaEscapeHtmlAttr(String(vendor.name || '').trim());
+    let hasLegit = intaGvlVendorHasLegit(vendor);
+    return '<label class="checkMarkContainer">'
+        + '<span class="intSettingsTitle">'
+        + '<span class="inta-vendor-name">' + name + '</span>'
+        + '<button type="button" class="inta-vendor-details-toggle" aria-expanded="false" aria-controls="inta-vendor-details-' + id + '">' + intaVendorText('vendorShowDetails', 'Show details') + '</button>'
+        + '</span>'
+        + '<span class="intCheckmarkSliderContainer">'
+        + '<input id="vendor' + id + '" value="' + id + '" data-inta-vendor-id="' + id + '" class="intCookieSetting__checkbox inta-vendor-consent" type="checkbox" aria-label="' + intaVendorText('vendorConsentFor', 'Consent for') + ' ' + name + '"' + (intaVendorChoices.consents[id] ? ' checked' : '') + '>'
+        + '<span class="checkmark round"></span>'
+        + '</span>'
+        + '</label>'
+        + (hasLegit
+            ? '<label class="checkMarkContainer">'
+            + '<span class="intSettingsTitle">' + intaVendorText('vendorLegitimateInterest', 'Legitimate interest')
+            + '<span class="inta-vendor-hint">' + intaVendorText('vendorLegitimateInterestHint', 'Switch off to object') + '</span></span>'
+            + '<span class="intCheckmarkSliderContainer">'
+            + '<input id="vendor' + id + '-legit" value="' + id + '" data-inta-vendor-id="' + id + '" class="intCookieSetting__checkbox intCookieSetting__checkbox-legit inta-vendor-legit" type="checkbox" aria-label="' + intaVendorText('vendorLegitimateInterest', 'Legitimate interest') + ': ' + name + '"' + (intaVendorChoices.legitimateInterests[id] ? ' checked' : '') + '>'
+            + '<span class="checkmark round"></span>'
+            + '</span>'
+            + '</label>'
+            : '')
+        + '<div class="inta-vendor-details" id="inta-vendor-details-' + id + '" hidden></div>';
+}
+
+function intaRenderMoreVendors() {
+    let rows = vendorListContainer.querySelector('.inta-vendor-rows');
+    let more = vendorListContainer.querySelector('.inta-vendor-more');
+    if (!rows) {
+        return;
+    }
+    let html = [];
+    let end = Math.min(__intaVendorRendered + INTA_VENDOR_PAGE_SIZE, __intaVendorFiltered.length);
+    for (let i = __intaVendorRendered; i < end; i++) {
+        let vendor = __intaVendorFiltered[i];
+        html.push('<div class="vendor-item" data-inta-vendor-id="' + parseInt(vendor.id, 10) + '">' + intaVendorRowHtml(vendor) + '</div>');
+    }
+    rows.insertAdjacentHTML('beforeend', html.join(''));
+    __intaVendorRendered = end;
+    let remaining = __intaVendorFiltered.length - __intaVendorRendered;
+    if (more) {
+        more.hidden = remaining <= 0;
+        more.textContent = intaGetTextOverride('vendorShowMore', 'Show more') + ' (' + remaining + ')';
+    }
+}
+
+function intaFilterVendorList(query) {
+    let q = String(query || '').trim().toLowerCase();
+    __intaVendorFiltered = q
+        ? __intaVendorList.filter(function (v) { return String(v.name).toLowerCase().indexOf(q) !== -1; })
+        : __intaVendorList.slice(0);
+    __intaVendorRendered = 0;
+    let rows = vendorListContainer.querySelector('.inta-vendor-rows');
+    if (rows) rows.innerHTML = '';
+    let status = vendorListContainer.querySelector('.inta-vendor-status');
+    if (status) {
+        status.textContent = q
+            ? __intaVendorFiltered.length + ' ' + intaGetTextOverride('vendorSearchResults', 'matching vendors')
+            : '';
+    }
+    intaRenderMoreVendors();
+}
+
+function intaVendorListShellHtml(count) {
+    return '<h3>' + intaVendorText('vendorListHeading', 'Vendors') + ' <span class="inta-vendor-count">(' + count + ')</span></h3>'
+        + '<p class="inta-vendor-intro">' + intaVendorText('vendorListIntro', 'These partners of ours take part in the IAB Europe Transparency & Consent Framework. You can give or refuse consent per vendor, and object to processing based on legitimate interest by switching it off.') + '</p>'
+        + '<div class="inta-vendor-toolbar">'
+        + '<input type="search" class="inta-vendor-search" placeholder="' + intaVendorText('vendorSearchPlaceholder', 'Search vendors') + '" aria-label="' + intaVendorText('vendorSearchPlaceholder', 'Search vendors') + '">'
+        + '<div class="inta-vendor-bulk">'
+        + '<button type="button" data-inta-vendor-bulk="accept">' + intaVendorText('vendorAllowAll', 'Allow all vendors') + '</button>'
+        + '<button type="button" data-inta-vendor-bulk="reject">' + intaVendorText('vendorRejectAll', 'Reject all vendors') + '</button>'
+        + '</div>'
+        + '</div>'
+        + '<p class="inta-vendor-status" aria-live="polite"></p>'
+        + '<div class="inta-vendor-rows"></div>'
+        + '<button type="button" class="inta-vendor-more" hidden></button>';
+}
+
+function intaVendorBulkSet(granted) {
+    __intaVendorList.forEach(function (vendor) {
+        let id = parseInt(vendor.id, 10);
+        intaVendorChoices.consents[id] = granted;
+        if (intaGvlVendorHasLegit(vendor)) intaVendorChoices.legitimateInterests[id] = granted;
+        intaVendorSyncCheckboxes(id);
+    });
+    updateSaveButtonText();
+}
+
+function intaVendorListClick(ev) {
+    let target = ev.target;
+    if (!target || !target.closest) {
+        return;
+    }
+    let toggle = target.closest('.inta-vendor-details-toggle');
+    if (toggle) {
+        // The toggle sits inside the row's <label>; don't let the click flip the consent checkbox.
+        ev.preventDefault();
+        let item = toggle.closest('.vendor-item');
+        let panel = item && item.querySelector('.inta-vendor-details');
+        if (!panel) return;
+        let open = panel.hidden;
+        if (open && !panel.innerHTML) {
+            let id = parseInt(item.getAttribute('data-inta-vendor-id'), 10);
+            let vendor = __intaVendorList.filter(function (v) { return parseInt(v.id, 10) === id; })[0];
+            panel.innerHTML = vendor ? intaVendorDetailsHtml(vendor) : '';
+        }
+        panel.hidden = !open;
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        toggle.textContent = open
+            ? intaGetTextOverride('vendorHideDetails', 'Hide details')
+            : intaGetTextOverride('vendorShowDetails', 'Show details');
+        return;
+    }
+    let bulk = target.closest('[data-inta-vendor-bulk]');
+    if (bulk) {
+        intaVendorBulkSet(bulk.getAttribute('data-inta-vendor-bulk') === 'accept');
+        return;
+    }
+    if (target.closest('.inta-vendor-more')) {
+        intaRenderMoreVendors();
+    }
+}
+
+function intaVendorListChange(ev) {
+    let input = ev.target;
+    if (!input || !input.getAttribute) {
+        return;
+    }
+    let id = parseInt(input.getAttribute('data-inta-vendor-id'), 10);
+    if (!(id > 0)) {
+        return;
+    }
+    if (input.classList.contains('inta-vendor-consent')) {
+        intaVendorChoices.consents[id] = input.checked;
+    } else if (input.classList.contains('inta-vendor-legit')) {
+        intaVendorChoices.legitimateInterests[id] = input.checked;
+    }
+    updateSaveButtonText();
+}
+
+function intaVendorListInput(ev) {
+    if (!ev.target || !ev.target.classList || !ev.target.classList.contains('inta-vendor-search')) {
+        return;
+    }
+    let value = ev.target.value;
+    clearTimeout(__intaVendorSearchTimer);
+    __intaVendorSearchTimer = setTimeout(function () { intaFilterVendorList(value); }, 150);
+}
+
+/**
+ * Vendor list styles shared by every design. The vendor rows reuse the category
+ * toggle markup (.checkMarkContainer) so each design's own switch styling applies,
+ * but the designs lay those rows out very differently (overlay: column-reverse at a
+ * fixed 34px, banner: column at 64px, nova: padded width:100% without border-box), so
+ * row layout is pinned here with #vendor-list specificity. Colours, radius and type
+ * are `:where()`-wrapped (zero specificity) and read CSS variables, so a design
+ * stylesheet can restyle them by setting:
+ *   --inta-vendor-border, --inta-vendor-card-bg, --inta-vendor-radius,
+ *   --inta-vendor-muted, --inta-vendor-muted-opacity, --inta-vendor-fg
+ */
+function intaInjectVendorListStyles() {
+    if (document.getElementById('inta-vendor-list-styles')) {
+        return;
+    }
+    let style = document.createElement('style');
+    style.id = 'inta-vendor-list-styles';
+    style.textContent = [
+        // Layout (must beat each design's .checkMarkContainer rules)
+        '#vendor-list [hidden]{display:none!important;}',
+        '#vendor-list,#vendor-list p,#vendor-list .inta-vendor-intro{text-align:left!important;}',
+        // overlay/banner/bannerV2 force `inta-consents-banner button{border-style:none!important;font-weight:normal!important}`
+        '#vendor-list .inta-vendor-bulk button,#vendor-list .inta-vendor-more{border-style:solid!important;font-weight:600!important;}',
+        '#vendor-list .inta-vendor-name{font-weight:600!important;}',
+        // overlay/banner/bannerV2 give the open list height:100% + its own scrollbar; inside an
+        // already-scrolling panel that's a ~200px nested scroll box — let the panel scroll instead.
+        '#vendor-list.vendor-container.--open{box-sizing:border-box;height:auto!important;max-height:none!important;overflow:visible!important;padding:4px 16px 16px;}',
+        '#vendor-list .vendor-item{box-sizing:border-box;margin:0 0 8px;padding:0;overflow:hidden;text-align:left;}',
+        '#vendor-list .vendor-item .checkMarkContainer{box-sizing:border-box!important;display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;gap:12px;width:100%!important;height:auto!important;min-height:0!important;margin:0!important;padding:12px 14px!important;border:0!important;text-align:left!important;cursor:pointer;}',
+        // bannerV2 sets `.intSettingsTitle{order:1}`, which puts the switch left of the name.
+        '#vendor-list .vendor-item .intSettingsTitle{order:0!important;flex:1 1 auto;min-width:0;margin:0!important;padding:0!important;text-align:left!important;}',
+        '#vendor-list .vendor-item .intCheckmarkSliderContainer{order:1!important;flex:0 0 auto;margin:0!important;}',
+        '#vendor-list .inta-vendor-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:0 0 10px;}',
+        '#vendor-list .inta-vendor-search{box-sizing:border-box;flex:1 1 200px;min-width:0;margin:0;}',
+        '#vendor-list .inta-vendor-bulk{display:flex;flex:1 1 auto;gap:8px;}',
+        '#vendor-list .inta-vendor-bulk button{flex:1 1 0;white-space:nowrap;}',
+        '#vendor-list .inta-vendor-more{display:block;box-sizing:border-box;width:100%;margin:4px 0 0;}',
+        '#vendor-list .inta-vendor-details{box-sizing:border-box;padding:10px 14px 14px;}',
+        '#vendor-list .inta-vendor-links{display:flex;flex-wrap:wrap;gap:4px 16px;}',
+        '#vendor-list .inta-vendor-links .intSettingsTitleLink{display:inline!important;padding:0!important;}',
+        '#vendor-list .inta-vendor-section ul{margin:4px 0 0;padding:0 0 0 18px;list-style:disc;}',
+        // Look (zero specificity: any design rule wins)
+        ':where(#vendor-list){--inta-vendor-border-default:rgba(128,128,128,.32);color:var(--inta-vendor-fg,inherit);}',
+        ':where(#vendor-list) > h3{margin:16px 0 6px;font-size:15px;font-weight:700;}',
+        ':where(#vendor-list) .inta-vendor-count{font-weight:400;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.75);}',
+        ':where(#vendor-list) .inta-vendor-intro{margin:0 0 12px;font-size:13px;line-height:1.5;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.8);}',
+        ':where(#vendor-list) .inta-vendor-search{padding:9px 12px;font:inherit;font-size:14px;color:inherit;background:var(--inta-vendor-card-bg,transparent);border:1px solid var(--inta-vendor-border,var(--inta-vendor-border-default));border-radius:var(--inta-vendor-radius,10px);outline-offset:1px;}',
+        ':where(#vendor-list) .inta-vendor-bulk button,:where(#vendor-list) .inta-vendor-more{padding:8px 12px;font:inherit;font-size:13px;font-weight:600;line-height:1.2;color:inherit;background:var(--inta-vendor-card-bg,transparent);border:1px solid var(--inta-vendor-border,var(--inta-vendor-border-default));border-radius:var(--inta-vendor-radius,10px);cursor:pointer;text-transform:none;letter-spacing:normal;box-shadow:none;}',
+        ':where(#vendor-list) .inta-vendor-bulk button:hover,:where(#vendor-list) .inta-vendor-more:hover{border-color:currentColor;}',
+        ':where(#vendor-list) .inta-vendor-status{margin:0 0 8px;font-size:12px;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.75);}',
+        ':where(#vendor-list) .inta-vendor-status:empty{display:none;}',
+        ':where(#vendor-list) .vendor-item{background:var(--inta-vendor-card-bg,transparent);border:1px solid var(--inta-vendor-border,var(--inta-vendor-border-default));border-radius:var(--inta-vendor-radius,10px);}',
+        ':where(#vendor-list) .vendor-item .checkMarkContainer + .checkMarkContainer,:where(#vendor-list) .inta-vendor-details{border-top:1px solid var(--inta-vendor-border,var(--inta-vendor-border-default));}',
+        ':where(#vendor-list) .vendor-item .intSettingsTitle{font-size:14px;font-weight:400;line-height:1.4;}',
+        ':where(#vendor-list) .inta-vendor-name{display:block;font-weight:600;word-break:break-word;}',
+        ':where(#vendor-list) .inta-vendor-details-toggle{display:inline-block;margin:2px 0 0;padding:0;background:none;border:0;font:inherit;font-size:12px;font-weight:600;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.8);text-decoration:underline;text-underline-offset:2px;cursor:pointer;}',
+        ':where(#vendor-list) .inta-vendor-details-toggle:hover{opacity:1;color:inherit;}',
+        ':where(#vendor-list) .inta-vendor-hint{display:block;font-size:12px;font-weight:400;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.75);}',
+        ':where(#vendor-list) .inta-vendor-details{font-size:12px;line-height:1.5;word-break:break-word;}',
+        ':where(#vendor-list) .inta-vendor-links .intSettingsTitleLink{font-size:12px;color:inherit;text-decoration:underline;}',
+        ':where(#vendor-list) .inta-vendor-section{margin-top:10px;}',
+        ':where(#vendor-list) .inta-vendor-section strong{display:block;font-size:12px;font-weight:700;}',
+        ':where(#vendor-list) .inta-vendor-section li{margin:0 0 2px;}',
+        ':where(#vendor-list) .inta-vendor-retention{color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.7);}'
+    ].join('');
+    (document.head || document.documentElement).appendChild(style);
+}
+
 function intaEnsureVendorListLoaded() {
     if (__intaVendorListLoaded) {
         return;
     }
     __intaVendorListLoaded = true;
-    getVendorsForUI().then(vendors => {
-        intaCollectVendorPassThroughUrls(vendors);
-        vendors.forEach(vendor => {
-            const vendorDiv = document.createElement('div');
-            vendorDiv.classList.add('vendor-item');
-            const hasLegit = Array.isArray(vendor.legitimateInterestPurposes) && vendor.legitimateInterestPurposes.length > 0;
-            vendorDiv.innerHTML = `
-                <label class="checkMarkContainer" style="height: auto; border-top: 1px solid #e0e0e0; align-items: flex-start;">
-                    <span class="intSettingsTitle">
-                        ${vendor.name}</br>
-                        ${(vendor.urls || []).map(url => {
-                            if(url.langId == intastellarCookieLanguage) {
-                                return `<a class="intSettingsTitleLink" style="display: block; padding: 0; text-align: left;" href="${url.privacy}" target="_blank">${url.privacy}</a>`;
-                            } else {
-                                return `<a class="intSettingsTitleLink" style="display: block; padding: 0; text-align: left;" href="${url.privacy}" target="_blank">${url.privacy}</a>`;
-                            }
-                        }).join('<br />')}
-                        ${intaDeviceStorageDisclosureBlock(vendor)}
-                    </span>
-                    <span class="intCheckmarkSliderContainer">
-                        <input onchange="updateSaveButtonText()" id="vendor${vendor.id}" value="${vendor.id}" class="intCookieSetting__checkbox" type="checkbox" ${intaIsCapterraTraffic() ? "checked" : ""}>
-                        <span class="checkmark round"></span>
-                    </span>
-                </label>
-                ${hasLegit ? `
-                        <label class="checkMarkContainer">
-                            <span class="intSettingsTitle">Legitimate Interest</span>
-                            <span class="intCheckmarkSliderContainer">
-                                <input onchange="updateSaveButtonText()" id="vendor${vendor.id}-legit" value="${vendor.id}" class="intCookieSetting__checkbox" type="checkbox" ${intaIsCapterraTraffic() ? "checked" : ""}>
-                                <span class="checkmark round"></span>
-                            </span>
-                        </label>
-                    ` : ``
-            }
-            `;
-            vendorListContainer.appendChild(vendorDiv);
-    });
-    let __intaTcStrForVendors = getTcStringFromCookie();
-    if (__intaTcStrForVendors) {
-        applyTcStringToVendorCheckboxes(__intaTcStrForVendors, vendors);
+    intaInjectVendorListStyles();
+    vendorListContainer.innerHTML = '<h3>' + intaVendorText('vendorListHeading', 'Vendors') + '</h3>'
+        + '<p class="inta-vendor-status">' + intaVendorText('vendorListLoading', 'Loading vendors…') + '</p>';
+    if (!vendorListContainer._intaVendorListeners) {
+        vendorListContainer._intaVendorListeners = true;
+        vendorListContainer.addEventListener('click', intaVendorListClick);
+        vendorListContainer.addEventListener('change', intaVendorListChange);
+        vendorListContainer.addEventListener('input', intaVendorListInput);
     }
-
-    // Vendor choices are encoded by saveINTCookieSettings → intaTcfUpdateConsent('save_settings').
-}).catch(function (err) {
-    console.error('[VendorList] getVendorsForUI failed:', err);
-    try {
-        intaCollectVendorPassThroughUrls([]);
-    } catch (eClear) { }
-});
+    getVendorsForUI().then(function (vendors) {
+        if (!vendors.length) {
+            throw new Error('GVL unavailable');
+        }
+        intaCollectVendorPassThroughUrls(vendors);
+        // Sort on the name without leading spaces/punctuation (some GVL names have them).
+        function sortKey(vendor) {
+            return String(vendor.name || '').replace(/^[^0-9A-Za-z\u00C0-\uFFFF]+/, '');
+        }
+        __intaVendorList = intaGvlActiveVendors(vendors).sort(function (a, b) {
+            return sortKey(a).localeCompare(sortKey(b), undefined, { sensitivity: 'base' });
+        });
+        intaVendorChoicesInit(__intaVendorList);
+        vendorListContainer.innerHTML = intaVendorListShellHtml(__intaVendorList.length);
+        intaFilterVendorList('');
+    }).catch(function (err) {
+        console.error('[VendorList] getVendorsForUI failed:', err);
+        __intaVendorListLoaded = false;
+        vendorListContainer.innerHTML = '<h3>' + intaVendorText('vendorListHeading', 'Vendors') + '</h3>'
+            + '<p class="inta-vendor-status">' + intaVendorText('vendorListError', 'The vendor list could not be loaded.') + '</p>';
+        try {
+            intaCollectVendorPassThroughUrls([]);
+        } catch (eClear) { }
+    });
 }
 
 function openVendorList() {
