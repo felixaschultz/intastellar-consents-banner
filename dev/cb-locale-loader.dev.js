@@ -179,7 +179,8 @@
             // inline handler AND the listener), toggling .view on then
             // immediately back off, so the panel never visibly opens.
             + '<button class="intLearnMoreBtn">' + intastellarShowHideDetailsText + '</button>'
-            + '<button class="openVendorList">' + intaVendorListButtonLabel() + '</button>'
+            // The IAB vendor list only exists for sites that opted in to TCF (settings.tcf).
+            + (intaTcfRequested() ? '<button class="openVendorList">' + intaVendorListButtonLabel() + '</button>' : '')
             // "nova" always shows attribution (no width gate) — the design is
             // free to use and must keep the "powered by" badge visible at all
             // times, on every viewport size. premium always showed it too (premium.js).

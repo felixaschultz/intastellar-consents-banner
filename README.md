@@ -38,12 +38,24 @@ You can implement the cookie banner by loading the following script into your we
       logo: "Link to your logo",
       rootDomain: "example.com",
       arrange: "ltr or rtl",
-      design: "banner | bannerV2 | overlay | premium"
+      design: "banner | bannerV2 | overlay | premium | nova",
+      tcf: false // true: IAB TCF v2.3 (vendor list, __tcfapi, TC string) — see below
     }
   }
 </script>
 <script src="https://consents.cdn.intastellarsolutions.com/uc.js"></script>
 ```
+
+### IAB Transparency & Consent Framework (TCF)
+
+Set `settings.tcf: true` on sites that work with IAB TCF vendors (ad tech, programmatic advertising). That shows the IAB vendor list in the banner and, once Intastellar Consents' IAB Europe CMP ID is in place, exposes `window.__tcfapi` and stores a TC string with every consent choice. Sites without `tcf` get neither.
+
+| Setting | Purpose |
+|---|---|
+| `tcf` | `true` (or `1`) opts the site in to TCF. |
+| `publisherCountryCode` | ISO 3166-1 alpha-2 country of the publisher (TC string `PublisherCC`). Defaults to the visitor's geo country. |
+| `gdprApplies` | Set to `false` to report `gdprApplies: false` to vendors. |
+| `cmpId` | **Testing only** — overrides the CMP ID (e.g. `999` for the IAB CMP Validator). |
 ## General Info
 
 With this project I wanted to build my own cookie banner witch is free to use. I was not always happy about all the cookie banners solutions I´ve found online, either the banner wasn´t all that good or you needed an account to get access to the banner for implementation.

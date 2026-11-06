@@ -914,34 +914,25 @@ window.platform = findScriptParameter("utm_source") === undefined ? "Manual" : f
 // window.IABTCF.TCModel and window.IABTCF.TCString must be available.
 
 
-/**
- * Single on/off switch for the whole TCF surface (window.__tcfapi, __tcfapiLocator,
- * tcString generation). Intastellar Consents is not currently an IAB Europe-registered
- * CMP, so there is no valid CmpId to issue — emitting a well-formed TC string anyway
- * would misrepresent TCF participation to vendors and compliance scanners alike.
- * Once registered, set window.INTA.settings.cmpId to the real registered ID; every
- * TCF code path below keys off this one flag and turns on automatically.
- */
-function intaTcfIsRegistered() {
-    return !!(window.INTA && window.INTA.settings && window.INTA.settings.cmpId > 0);
-}
+// TCF on/off: intaTcfEnabled() / intaTcfRequested() / intaTcfCmpId() live in the boot
+// bundle (gdpr.dev.js) so the synchronous __tcfapi stub can use them too.
 
 /**
  * Generates a valid TCF 2.x TC string using the minimal IAB encoder bundle.
  * TCF 2.3: includes the mandatory Disclosed Vendors segment (required for new/updated signals from Feb 28, 2026).
- * Returns null while Intastellar isn't IAB-registered (see intaTcfIsRegistered).
+ * Returns null while TCF is off (see intaTcfEnabled).
  * @param {Object} consentObj - {purposes: [bool,...], vendors: [bool,...], disclosedVendors?: [bool,...]}
  * @returns {string|null} Encoded TC string (core.disclosedVendors), or null if TCF is not enabled
  */
 function generateTcString(consentObj) {
-    if (!intaTcfIsRegistered()) {
+    if (!intaTcfEnabled()) {
         return null;
     }
     if (!window.IABTCF || !window.IABTCF.TCModel || !window.IABTCF.TCString) {
         throw new Error('IAB TCF encoder bundle not loaded.');
     }
     let model = new window.IABTCF.TCModel();
-    model.cmpId = window.INTA.settings.cmpId;
+    model.cmpId = intaTcfCmpId();
     model.cmpVersion = window.INTA.settings.cmpVersion || model.cmpVersion;
     model.created = consentObj.created || null;
     model.consentLanguage = consentObj.consentLanguage || model.consentLanguage;
@@ -1025,7 +1016,7 @@ function intaTcfWriteConsentCookie() {
  * @returns {string|null}
  */
 function intaTcfUpdateConsent(source) {
-    if (!intaTcfIsRegistered()) {
+    if (!intaTcfEnabled()) {
         return null;
     }
     let previous = intaTcfDecodeStored();
@@ -1940,7 +1931,7 @@ function intaInjectCmpCriticalStyles() {
 function intaHasStoredConsentCookie() {
     // With TCF on, a consent cookie saved before it was (no tcString) never disclosed the
     // vendors, so it can't back a TC string — ask again instead of treating it as consent.
-    if (intaTcfIsRegistered() && !getTcStringFromCookie()) {
+    if (intaTcfEnabled() && !getTcStringFromCookie()) {
         return false;
     }
     try {
@@ -2254,9 +2245,9 @@ if (typeof window.denyAllCookies === 'function') {
 
 
 // --- TCF 2.2 API stub with event listener registry and dynamic dispatch ---
-// Not exposed at all until intaTcfIsRegistered() is true — a page with no window.__tcfapi
+// Not exposed at all until intaTcfEnabled() is true — a page with no window.__tcfapi
 // correctly signals "no CMP here" rather than a fake one with an unregistered CmpId.
-if (intaTcfIsRegistered()) {
+if (intaTcfEnabled()) {
 (function () {
     // TCF event listener registry
     let tcfListeners = {};
@@ -2292,7 +2283,7 @@ if (intaTcfIsRegistered()) {
         return {
             tcString: tcString || '',
             tcfPolicyVersion: decoded ? decoded.tcfPolicyVersion : 5,
-            cmpId: settings.cmpId,
+            cmpId: intaTcfCmpId(),
             cmpVersion: settings.cmpVersion || 1,
             gdprApplies: settings.gdprApplies !== false,
             eventStatus: tcString ? (eventStatus || 'tcloaded') : 'cmpuishown',
@@ -2329,7 +2320,7 @@ if (intaTcfIsRegistered()) {
             displayStatus: displayStatus(),
             apiVersion: '2.2',
             cmpVersion: settings.cmpVersion || 1,
-            cmpId: settings.cmpId,
+            cmpId: intaTcfCmpId(),
             gvlVersion: intaGvlVersion() || new window.IABTCF.TCModel().vendorListVersion,
             tcfPolicyVersion: 5
         };
@@ -3005,6 +2996,9 @@ function intaEnsureVendorListLoaded() {
 }
 
 function openVendorList() {
+    if (!intaTcfRequested()) {
+        return;
+    }
     intaEnsureVendorListLoaded();
     // premium: the list sits inside the details popout, which is hidden until it's opened.
     let readMore = document.querySelector(".intReadMore");
@@ -4003,8 +3997,8 @@ function updateSaveButtonText() {
 onWindowLoad(function () {
 
     // TCF API locator frame (required for cross-frame communication).
-    // Only created once intaTcfIsRegistered() is true — see generateTcString().
-    if (intaTcfIsRegistered() && !window.frames['__tcfapiLocator']) {
+    // Normally already created by the boot stub; only when intaTcfEnabled().
+    if (intaTcfEnabled() && !window.frames['__tcfapiLocator']) {
         let tcfApiLocator = document.createElement('iframe');
         tcfApiLocator.style.display = 'none';
         tcfApiLocator.name = '__tcfapiLocator';
@@ -5683,7 +5677,7 @@ function learnMore(e) {
         // "Vendor list" button (hidden in nova.css) — load + reveal it the
         // same moment the categories panel opens instead of waiting for a
         // click that no longer has a button to fire it.
-        if (window.INTA.settings.design === "nova") {
+        if (window.INTA.settings.design === "nova" && intaTcfRequested()) {
             intaEnsureVendorListLoaded();
             vendorListContainer.classList.add("--open");
         }

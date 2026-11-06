@@ -368,14 +368,40 @@ window.INTA = window.INTA || {};
 window.INTA.observedCookieSource = 'unknown';
 
 /**
+ * Intastellar Consents' IAB Europe CMP ID. 0 until IAB registers the CMP — while it's 0
+ * the whole TCF surface stays off, since a TC string carrying an unregistered CmpId would
+ * misrepresent TCF participation to vendors and compliance scanners. `settings.cmpId`
+ * overrides it for testing only (e.g. 999 with the IAB CMP Validator).
+ */
+const INTA_TCF_CMP_ID = 0;
+
+function intaTcfCmpId() {
+    var settings = window.INTA && window.INTA.settings;
+    var override = settings ? parseInt(settings.cmpId, 10) : 0;
+    return override > 0 ? override : INTA_TCF_CMP_ID;
+}
+
+/** The site opted in to IAB TCF with `settings.tcf = true` (or 1). Gates the TCF UI (vendor list). */
+function intaTcfRequested() {
+    var settings = window.INTA && window.INTA.settings;
+    var flag = settings && settings.tcf;
+    return flag === true || flag === 1 || flag === "1" || flag === "true";
+}
+
+/** TCF is live — __tcfapi, TC strings, locator frame: the site opted in and a CMP ID exists. */
+function intaTcfEnabled() {
+    return intaTcfRequested() && intaTcfCmpId() > 0;
+}
+
+/**
  * TCF CMP API stub. Vendor tags often run before cb.js arrives, so __tcfapi has to exist
  * synchronously: calls are queued on __tcfapi.a (cb.js replaces the stub and drains it),
  * `ping` answers right away, and the __tcfapiLocator frame + postMessage handler let
- * vendors in iframes reach whichever __tcfapi is current. Off until a CMP ID is set.
+ * vendors in iframes reach whichever __tcfapi is current. Only when intaTcfEnabled().
  */
 (function intaInstallTcfStub() {
     var settings = window.INTA.settings;
-    if (!(settings && settings.cmpId > 0) || typeof window.__tcfapi === 'function') {
+    if (!intaTcfEnabled() || typeof window.__tcfapi === 'function') {
         return;
     }
     var queue = [];
@@ -388,7 +414,7 @@ window.INTA.observedCookieSource = 'unknown';
                     cmpStatus: 'stub',
                     displayStatus: 'hidden',
                     apiVersion: '2.2',
-                    cmpId: settings.cmpId,
+                    cmpId: intaTcfCmpId(),
                     cmpVersion: settings.cmpVersion || 1
                 });
             }
