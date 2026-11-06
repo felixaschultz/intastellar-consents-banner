@@ -187,6 +187,7 @@ let allScripts = window.allScripts = [
             "([\-\.]slideshare+)",
             "([\-\.]siteimproveanalytics+)",
             "([\-\.]hotjar+)",
+            "([\-\.]cloudflareinsights+)",
             "([\-\.]snapchat)",
             "([\-\.]contentsquare)",
             "([\-\.]6sc)",
@@ -651,6 +652,129 @@ window.addEventListener('message', (event) => {
 /* @uc-boot:start */
 window.INTA = window.INTA || {};
 window.INTA.observedCookieSource = 'unknown';
+
+/**
+ * Intastellar Consents' IAB Europe CMP ID. 0 until IAB registers the CMP — while it's 0
+ * the whole TCF surface stays off, since a TC string carrying an unregistered CmpId would
+ * misrepresent TCF participation to vendors and compliance scanners. `settings.cmpId`
+ * overrides it for testing only (e.g. 999 with the IAB CMP Validator).
+ */
+const INTA_TCF_CMP_ID = 0;
+
+function intaTcfCmpId() {
+    var settings = window.INTA && window.INTA.settings;
+    var override = settings ? parseInt(settings.cmpId, 10) : 0;
+    return override > 0 ? override : INTA_TCF_CMP_ID;
+}
+
+/** The site opted in to IAB TCF with `settings.tcf = true` (or 1). Gates the TCF UI (vendor list). */
+function intaTcfRequested() {
+    var settings = window.INTA && window.INTA.settings;
+    var flag = settings && settings.tcf;
+    return flag === true || flag === 1 || flag === "1" || flag === "true";
+}
+
+/** TCF is live — __tcfapi, TC strings, locator frame: the site opted in and a CMP ID exists. */
+function intaTcfEnabled() {
+    return intaTcfRequested() && intaTcfCmpId() > 0;
+}
+
+/**
+ * Intastellar Consents' CMP version, written into every TC string and reported by ping.
+ * It is the CMP's version, not a per-site setting: TCF policy requires it to go up
+ * whenever the CMP's UI changes (texts, layout, flow), so bump it in every release that
+ * touches the banner or the TCF screens.
+ */
+const INTA_TCF_CMP_VERSION = 1;
+
+// EU member states, the rest of the EEA (IS, LI, NO), plus the UK and Switzerland, whose
+// GDPR equivalents TCF vendors treat the same way.
+const INTA_TCF_GDPR_COUNTRIES = ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "IS", "LI", "NO", "GB", "CH"];
+
+/**
+ * gdprApplies for __tcfapi: `settings.gdprApplies` (true/false) wins; otherwise the
+ * visitor's country (geo lookup, or a server-injected settings.ccpa.country). While the
+ * country is unknown it stays true, so GDPR protections apply until we know otherwise.
+ */
+function intaTcfGdprApplies() {
+    var settings = window.INTA && window.INTA.settings;
+    if (settings && typeof settings.gdprApplies === "boolean") {
+        return settings.gdprApplies;
+    }
+    var country = (window._intaGeo && window._intaGeo.country)
+        || (settings && settings.ccpa && settings.ccpa.country);
+    if (!country) {
+        return true;
+    }
+    return INTA_TCF_GDPR_COUNTRIES.indexOf(String(country).toUpperCase()) !== -1;
+}
+
+/**
+ * TCF CMP API stub. Vendor tags often run before cb.js arrives, so __tcfapi has to exist
+ * synchronously: calls are queued on __tcfapi.a (cb.js replaces the stub and drains it),
+ * `ping` answers right away, and the __tcfapiLocator frame + postMessage handler let
+ * vendors in iframes reach whichever __tcfapi is current. Only when intaTcfEnabled().
+ */
+(function intaInstallTcfStub() {
+    var settings = window.INTA.settings;
+    if (!intaTcfEnabled() || typeof window.__tcfapi === 'function') {
+        return;
+    }
+    var queue = [];
+    function stub(command, version, callback, parameter) {
+        if (command === 'ping') {
+            if (typeof callback === 'function') {
+                callback({
+                    gdprApplies: intaTcfGdprApplies(),
+                    cmpLoaded: false,
+                    cmpStatus: 'stub',
+                    displayStatus: 'hidden',
+                    apiVersion: '2.2',
+                    cmpId: intaTcfCmpId(),
+                    cmpVersion: INTA_TCF_CMP_VERSION
+                });
+            }
+            return;
+        }
+        queue.push([command, version, callback, parameter]);
+    }
+    stub.a = queue;
+    window.__tcfapi = stub;
+
+    window.addEventListener('message', function (event) {
+        var json = event.data;
+        var isString = typeof json === 'string';
+        if (isString) {
+            try { json = JSON.parse(json); } catch (e) { return; }
+        }
+        var payload = json && json.__tcfapiCall;
+        if (!payload || typeof window.__tcfapi !== 'function') {
+            return;
+        }
+        window.__tcfapi(payload.command, payload.version, function (returnValue, success) {
+            var message = { __tcfapiReturn: { returnValue: returnValue, success: success, callId: payload.callId } };
+            if (event.source && typeof event.source.postMessage === 'function') {
+                event.source.postMessage(isString ? JSON.stringify(message) : message, '*');
+            }
+        }, payload.parameter);
+    }, false);
+
+    function addLocator() {
+        if (window.frames['__tcfapiLocator']) {
+            return;
+        }
+        if (!document.body) {
+            document.addEventListener('DOMContentLoaded', addLocator);
+            return;
+        }
+        var locator = document.createElement('iframe');
+        locator.style.display = 'none';
+        locator.name = '__tcfapiLocator';
+        locator.title = 'TCF API locator';
+        document.body.appendChild(locator);
+    }
+    addLocator();
+})();
 /* @uc-boot:end */
 // --- VWO Cookie Consent Integration (latest, per docs) ---
 function updateVwoConsent(consents) {
@@ -1525,8 +1649,22 @@ window.uetq.push('consent', 'default', {
 
 
 
+/* @uc-boot:start */
+// HubSpot: disableHubSpotCookieBanner + the first setHubSpotCookieConsent push must run
+// synchronously here, before HubSpot's own tracking script tag evaluates — same reason as
+// intaSetGtagConsentDefaults above. This previously lived in the async uc-core half, so on
+// a repeat visit HubSpot's script (often placed earlier on the page) ran and sent its first
+// tracking beacon with cc=0 before our consent push ever arrived.
 window.disableHubSpotCookieBanner = true;
 var _hsp = (window._hsp = window._hsp || []);
+if (intaCookieConsents) {
+    _hsp.push(['setHubSpotCookieConsent', {
+        analytics: intaCookieConsents.staticsticCookies === "checked",
+        advertisement: intaCookieConsents.advertisementCookies === "checked",
+        functional: intaCookieConsents.functionalCookies === "checked",
+    }]);
+}
+/* @uc-boot:end */
 
 function gtag() {
     dataLayer.push(arguments);
@@ -1869,7 +2007,7 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
     // Minimal TCModel
     function TCModel() {
         this.cmpId = 0; // REQUIRED: set to your IAB Europe-registered CMP ID before encoding (0 is not a valid registered ID)
-        this.cmpVersion = 1;
+        this.cmpVersion = INTA_TCF_CMP_VERSION;
         this.consentScreen = 0;
         // dev/gvl-local.json vendorListVersion as of its lastUpdated date. Keep in sync with
         // whatever GVL version consent was actually collected against; a live GVL loader
@@ -1881,6 +2019,25 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
         this.vendorConsents = [];
         this.vendorLegitimateInterests = [];
         this.disclosedVendors = []; // TCF 2.3: vendors disclosed to user in CMP
+        this.specialFeatureOptins = []; // index 0 = special feature 1 (precise geolocation), 1 = 2 (device scanning)
+        // Deciseconds since epoch. Leave null to stamp "today"; when updating an existing
+        // string, carry its `created` over so only LastUpdated moves.
+        this.created = null;
+        this.lastUpdated = null;
+        this.consentLanguage = "EN"; // ISO 639-1 language the CMP UI was shown in
+        this.publisherCountryCode = "AA"; // ISO 3166-1 alpha-2; "AA" = unknown
+    }
+
+    /** Today at 00:00:00 UTC in deciseconds — TCF recommends day precision for Created/LastUpdated. */
+    function tcfTodayDeciseconds() {
+        let day = 24 * 60 * 60 * 1000;
+        return Math.floor(Date.now() / day) * day / 100;
+    }
+
+    /** Two A-Z letters, or the fallback (the 6-bit-per-letter fields can't carry anything else). */
+    function tcfTwoLetterCode(value, fallback) {
+        let code = String(value || "").toUpperCase();
+        return /^[A-Z]{2}$/.test(code) ? code : fallback;
     }
 
     /** MaxVendorId(16) + IsRangeEncoding(1, always 0/bitfield here) + one bit per vendor 1..maxVendorId. */
@@ -1901,25 +2058,26 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
         return base64UrlEncode(bytes);
     }
 
-    // TCF 2.2+: Purposes 3-6 may never carry a legitimate-interest legal basis.
-    var PURPOSES_WITHOUT_LEGITIMATE_INTEREST = [3, 4, 5, 6];
+    // TCF 2.2+: Purpose 1 is consent-only, and purposes 3-6 may never carry a legitimate-interest legal basis.
+    var PURPOSES_WITHOUT_LEGITIMATE_INTEREST = [1, 3, 4, 5, 6];
 
     var TCString = {
         encode: function (tcModel) {
             let bits = "";
             bits += padBits(2, 6); // Version
-            let now = Math.floor(Date.now() / 100); // 0.1s increments
-            bits += padBits(now, 36); // Created
-            bits += padBits(now, 36); // LastUpdated
+            let today = tcfTodayDeciseconds();
+            bits += padBits(tcModel.created || today, 36); // Created
+            bits += padBits(tcModel.lastUpdated || today, 36); // LastUpdated
             bits += padBits(tcModel.cmpId || 0, 12);
             bits += padBits(tcModel.cmpVersion || 0, 12);
             bits += padBits(tcModel.consentScreen || 0, 6);
-            bits += strToBits("EN"); // ConsentLanguage
+            bits += strToBits(tcfTwoLetterCode(tcModel.consentLanguage, "EN")); // ConsentLanguage
             bits += padBits(tcModel.vendorListVersion || 0, 12);
             bits += padBits(5, 6); // TcfPolicyVersion: 5 = TCF v2.3 (GVL specification v3)
             bits += padBits(tcModel.isServiceSpecific === false ? 0 : 1, 1);
             bits += padBits(0, 1); // UseNonStandardStacks/Texts
-            bits += padBits(0, 12); // SpecialFeatureOptIns
+            // SpecialFeatureOptIns (12 bits)
+            for (let i = 0; i < 12; i++) bits += tcModel.specialFeatureOptins && tcModel.specialFeatureOptins[i] ? "1" : "0";
             // PurposeConsents (24 bits)
             for (let i = 0; i < 24; i++) bits += tcModel.purposeConsents && tcModel.purposeConsents[i] ? "1" : "0";
             // PurposesLITransparency (24 bits) — purposes 3-6 are forced to 0 regardless of input.
@@ -1929,7 +2087,7 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
                 bits += (isLi && PURPOSES_WITHOUT_LEGITIMATE_INTEREST.indexOf(purposeId) === -1) ? "1" : "0";
             }
             bits += padBits(0, 1); // PurposeOneTreatment
-            bits += strToBits("EN"); // PublisherCC
+            bits += strToBits(tcfTwoLetterCode(tcModel.publisherCountryCode, "AA")); // PublisherCC
 
             let maxVendorId = (tcModel.vendorConsents && tcModel.vendorConsents.length) || 0;
             bits += encodeVendorBitfieldSection(maxVendorId, tcModel.vendorConsents);
@@ -4265,11 +4423,8 @@ function intaExperimentChannelMatches(exp, expKey) {
 })();
 
 let intastellarCreateBanner = document.createElement("script");
+// Every design, premium included, renders from cb.js (premium.js was a stale fork of it).
 intastellarCreateBanner.src = "https://cdn.intastellar.eu/cb.js";
-
-if (window.INTA.settings && window.INTA.settings.design === "premium") {
-    intastellarCreateBanner.src = "https://cdn.intastellar.eu/premium.js";
-}
 
 if (intastellarDevMode) {
     intastellarCreateBanner.src = "../../dev/cb.dev.js";

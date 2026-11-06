@@ -17,6 +17,7 @@ let allScripts = window.allScripts = [
             "([\-\.]slideshare+)",
             "([\-\.]siteimproveanalytics+)",
             "([\-\.]hotjar+)",
+            "([\-\.]cloudflareinsights+)",
             "([\-\.]snapchat)",
             "([\-\.]contentsquare)",
             "([\-\.]6sc)",
@@ -365,6 +366,129 @@ function intaGuardScriptNode(node) {
 /* ── End synchronous script-injection guard ───────────────────────────── */
 window.INTA = window.INTA || {};
 window.INTA.observedCookieSource = 'unknown';
+
+/**
+ * Intastellar Consents' IAB Europe CMP ID. 0 until IAB registers the CMP — while it's 0
+ * the whole TCF surface stays off, since a TC string carrying an unregistered CmpId would
+ * misrepresent TCF participation to vendors and compliance scanners. `settings.cmpId`
+ * overrides it for testing only (e.g. 999 with the IAB CMP Validator).
+ */
+const INTA_TCF_CMP_ID = 0;
+
+function intaTcfCmpId() {
+    var settings = window.INTA && window.INTA.settings;
+    var override = settings ? parseInt(settings.cmpId, 10) : 0;
+    return override > 0 ? override : INTA_TCF_CMP_ID;
+}
+
+/** The site opted in to IAB TCF with `settings.tcf = true` (or 1). Gates the TCF UI (vendor list). */
+function intaTcfRequested() {
+    var settings = window.INTA && window.INTA.settings;
+    var flag = settings && settings.tcf;
+    return flag === true || flag === 1 || flag === "1" || flag === "true";
+}
+
+/** TCF is live — __tcfapi, TC strings, locator frame: the site opted in and a CMP ID exists. */
+function intaTcfEnabled() {
+    return intaTcfRequested() && intaTcfCmpId() > 0;
+}
+
+/**
+ * Intastellar Consents' CMP version, written into every TC string and reported by ping.
+ * It is the CMP's version, not a per-site setting: TCF policy requires it to go up
+ * whenever the CMP's UI changes (texts, layout, flow), so bump it in every release that
+ * touches the banner or the TCF screens.
+ */
+const INTA_TCF_CMP_VERSION = 1;
+
+// EU member states, the rest of the EEA (IS, LI, NO), plus the UK and Switzerland, whose
+// GDPR equivalents TCF vendors treat the same way.
+const INTA_TCF_GDPR_COUNTRIES = ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "IS", "LI", "NO", "GB", "CH"];
+
+/**
+ * gdprApplies for __tcfapi: `settings.gdprApplies` (true/false) wins; otherwise the
+ * visitor's country (geo lookup, or a server-injected settings.ccpa.country). While the
+ * country is unknown it stays true, so GDPR protections apply until we know otherwise.
+ */
+function intaTcfGdprApplies() {
+    var settings = window.INTA && window.INTA.settings;
+    if (settings && typeof settings.gdprApplies === "boolean") {
+        return settings.gdprApplies;
+    }
+    var country = (window._intaGeo && window._intaGeo.country)
+        || (settings && settings.ccpa && settings.ccpa.country);
+    if (!country) {
+        return true;
+    }
+    return INTA_TCF_GDPR_COUNTRIES.indexOf(String(country).toUpperCase()) !== -1;
+}
+
+/**
+ * TCF CMP API stub. Vendor tags often run before cb.js arrives, so __tcfapi has to exist
+ * synchronously: calls are queued on __tcfapi.a (cb.js replaces the stub and drains it),
+ * `ping` answers right away, and the __tcfapiLocator frame + postMessage handler let
+ * vendors in iframes reach whichever __tcfapi is current. Only when intaTcfEnabled().
+ */
+(function intaInstallTcfStub() {
+    var settings = window.INTA.settings;
+    if (!intaTcfEnabled() || typeof window.__tcfapi === 'function') {
+        return;
+    }
+    var queue = [];
+    function stub(command, version, callback, parameter) {
+        if (command === 'ping') {
+            if (typeof callback === 'function') {
+                callback({
+                    gdprApplies: intaTcfGdprApplies(),
+                    cmpLoaded: false,
+                    cmpStatus: 'stub',
+                    displayStatus: 'hidden',
+                    apiVersion: '2.2',
+                    cmpId: intaTcfCmpId(),
+                    cmpVersion: INTA_TCF_CMP_VERSION
+                });
+            }
+            return;
+        }
+        queue.push([command, version, callback, parameter]);
+    }
+    stub.a = queue;
+    window.__tcfapi = stub;
+
+    window.addEventListener('message', function (event) {
+        var json = event.data;
+        var isString = typeof json === 'string';
+        if (isString) {
+            try { json = JSON.parse(json); } catch (e) { return; }
+        }
+        var payload = json && json.__tcfapiCall;
+        if (!payload || typeof window.__tcfapi !== 'function') {
+            return;
+        }
+        window.__tcfapi(payload.command, payload.version, function (returnValue, success) {
+            var message = { __tcfapiReturn: { returnValue: returnValue, success: success, callId: payload.callId } };
+            if (event.source && typeof event.source.postMessage === 'function') {
+                event.source.postMessage(isString ? JSON.stringify(message) : message, '*');
+            }
+        }, payload.parameter);
+    }, false);
+
+    function addLocator() {
+        if (window.frames['__tcfapiLocator']) {
+            return;
+        }
+        if (!document.body) {
+            document.addEventListener('DOMContentLoaded', addLocator);
+            return;
+        }
+        var locator = document.createElement('iframe');
+        locator.style.display = 'none';
+        locator.name = '__tcfapiLocator';
+        locator.title = 'TCF API locator';
+        document.body.appendChild(locator);
+    }
+    addLocator();
+})();
 function detectCookieVendor(cookie) {
     if (typeof window.__intaDetectCookieVendor === 'function') {
         return window.__intaDetectCookieVendor(cookie);
@@ -701,6 +825,20 @@ intaSetGtagConsentDefaults();
         }
     });
 }());
+// HubSpot: disableHubSpotCookieBanner + the first setHubSpotCookieConsent push must run
+// synchronously here, before HubSpot's own tracking script tag evaluates — same reason as
+// intaSetGtagConsentDefaults above. This previously lived in the async uc-core half, so on
+// a repeat visit HubSpot's script (often placed earlier on the page) ran and sent its first
+// tracking beacon with cc=0 before our consent push ever arrived.
+window.disableHubSpotCookieBanner = true;
+var _hsp = (window._hsp = window._hsp || []);
+if (intaCookieConsents) {
+    _hsp.push(['setHubSpotCookieConsent', {
+        analytics: intaCookieConsents.staticsticCookies === "checked",
+        advertisement: intaCookieConsents.advertisementCookies === "checked",
+        functional: intaCookieConsents.functionalCookies === "checked",
+    }]);
+}
 function getConsentTypeForUrl(url) {
     if (!url) return 'marketing';
     for (let i = 0; i < window.allScripts.length; i++) {
@@ -1636,13 +1774,13 @@ function startObserving(observer) {
 }
 /* Generated by scripts/build-not-required-patterns.mjs — do not edit. */
 window.__intaNotRequiredPatternSources = {
-    "functional_only": "(_linkedin_partner_id|_linkedin_data_partner_ids|mailchimp|lntrk|twitter|instagram|trustpilot|chic_lite_data|openai|oaiq|bzrcdn\\.openai)|([-.]twitter+)|([-.]ads-twitter+)|([-.]casalemedia+)|(chimpstatic+)|([-.]trustpilot+)|([-.]mailchimp+)|([-.]linkedin+)|([-.]bing+)|([-.]licdn+)|([-.]amazon-adsystem+)|([-.]adfrom+)|([-.]demdex+)|([-.]criteo+)|([-.]clearbitjs+)|([-.]clearbitscripts+)|([-.]instagram+)|([-.]stickyadstv+)|([-.]mookie1+)|([-.]doubleclick+)|([-.]bidswitch+)|([-.]jnqsge+)|([-.]syuh+)|([-.]youtube+)|([-.]vimeo+)|([-.]ninthdecimal+)|([-.]casalemedia+)|([-.]adsymptotic+)|([-.]tremorhub+)|([-.]agkn+)|([-.]myvisualiq+)|([-.]exelator+)|([-.]openx+)|([-.]adsrvr+)|([-.]justpremium+)|([-.]ants+)|([-.]bluekai+)|([-.]revcontent+)|([-.]outbrain+)|([-.]adscale+)|([-.]pdst+)|([-.]yahoo+)|([-.]advertising+)|([-.]adnxs+)|([-.]scdn+)|([-.]spotify+)|([-.]facebook+)|([-.]pinterest+)|([-.]adform+)|([-.]adnxs+)|([-.]advertising+)|([-.]adtech+)|([-.]soundestlink+)|([-.]soundest+)|([-.]soundestvid+)|([-.]soundestform+)|([-.]tiktok+)|([-.]taboola+)|([-.]hubspot+)|([-.]openai+)|([a-z]+){2,5}(:[0-9]{1,5})?(\\\\.*)|(mixpanel)|([-.]googleoptimize+)|([-.]piwik+)|([-.]matomo+)|([-.]bing+)|([-.]slideshare+)|([-.]siteimproveanalytics+)|([-.]hotjar+)|([-.]snapchat)|([-.]contentsquare)|([-.]6sc)|([-.]nr-data)|([-.]2o7)|([-.]hackerone)|([-.]gstatic)|([-.]webtrends)|([-.]webtrendslive)|([-.]amplitude)|([-.]adobe)|([-.]mxpnl)|([-.]mixpanel)|([-.]gstatics+)|([-.]adobedtm)|([-.]adobedc)|([-.]qualtrics+)|([-.]pardot+)|([-.]poultons+)|([-.]chartbeat+)|([-.]consensu+)|([-.]clarity+)|([-.]clarity-cdn+)|([-.]vwo+)|([-.]ip-only+)|([-.]ggpht+)|([-.]clearbitjs+)|([-.]clearbitscripts+)|([-.]optimizely+)|(?:cdn\\.segment|api\\.segment|[\\-\\.]segment\\.(?:com|io))|([-.]quantserve+)[a-z]{2,5}(:[0-9]{1,5})?(\\\\.*)",
-    "marketing_only": "(maps.google.com+)|(www.google.com/maps/+)|([-.]googleapis+)|([-.]gstatics+)|([-.]cludo+)|([-.]qbrick+)|([-.]klarna+)|([-.]paypal+)|([-.]usersnap+)|([-.]zoom+)|([-.]cdnjs+)|([-.]jsdelivr+)|([-.]disqus+)([a-z]+){2,5}(:[0-9]{1,5})?(\\\\.*)|(mixpanel)|([-.]googleoptimize+)|([-.]piwik+)|([-.]matomo+)|([-.]bing+)|([-.]slideshare+)|([-.]siteimproveanalytics+)|([-.]hotjar+)|([-.]snapchat)|([-.]contentsquare)|([-.]6sc)|([-.]nr-data)|([-.]2o7)|([-.]hackerone)|([-.]gstatic)|([-.]webtrends)|([-.]webtrendslive)|([-.]amplitude)|([-.]adobe)|([-.]mxpnl)|([-.]mixpanel)|([-.]gstatics+)|([-.]adobedtm)|([-.]adobedc)|([-.]qualtrics+)|([-.]pardot+)|([-.]poultons+)|([-.]chartbeat+)|([-.]consensu+)|([-.]clarity+)|([-.]clarity-cdn+)|([-.]vwo+)|([-.]ip-only+)|([-.]ggpht+)|([-.]clearbitjs+)|([-.]clearbitscripts+)|([-.]optimizely+)|(?:cdn\\.segment|api\\.segment|[\\-\\.]segment\\.(?:com|io))|([-.]quantserve+)[a-z]{2,5}(:[0-9]{1,5})?(\\\\.*)",
+    "functional_only": "(_linkedin_partner_id|_linkedin_data_partner_ids|mailchimp|lntrk|twitter|instagram|trustpilot|chic_lite_data|openai|oaiq|bzrcdn\\.openai)|([-.]twitter+)|([-.]ads-twitter+)|([-.]casalemedia+)|(chimpstatic+)|([-.]trustpilot+)|([-.]mailchimp+)|([-.]linkedin+)|([-.]bing+)|([-.]licdn+)|([-.]amazon-adsystem+)|([-.]adfrom+)|([-.]demdex+)|([-.]criteo+)|([-.]clearbitjs+)|([-.]clearbitscripts+)|([-.]instagram+)|([-.]stickyadstv+)|([-.]mookie1+)|([-.]doubleclick+)|([-.]bidswitch+)|([-.]jnqsge+)|([-.]syuh+)|([-.]youtube+)|([-.]vimeo+)|([-.]ninthdecimal+)|([-.]casalemedia+)|([-.]adsymptotic+)|([-.]tremorhub+)|([-.]agkn+)|([-.]myvisualiq+)|([-.]exelator+)|([-.]openx+)|([-.]adsrvr+)|([-.]justpremium+)|([-.]ants+)|([-.]bluekai+)|([-.]revcontent+)|([-.]outbrain+)|([-.]adscale+)|([-.]pdst+)|([-.]yahoo+)|([-.]advertising+)|([-.]adnxs+)|([-.]scdn+)|([-.]spotify+)|([-.]facebook+)|([-.]pinterest+)|([-.]adform+)|([-.]adnxs+)|([-.]advertising+)|([-.]adtech+)|([-.]soundestlink+)|([-.]soundest+)|([-.]soundestvid+)|([-.]soundestform+)|([-.]tiktok+)|([-.]taboola+)|([-.]hubspot+)|([-.]openai+)|([a-z]+){2,5}(:[0-9]{1,5})?(\\\\.*)|(mixpanel)|([-.]googleoptimize+)|([-.]piwik+)|([-.]matomo+)|([-.]bing+)|([-.]slideshare+)|([-.]siteimproveanalytics+)|([-.]hotjar+)|([-.]cloudflareinsights+)|([-.]snapchat)|([-.]contentsquare)|([-.]6sc)|([-.]nr-data)|([-.]2o7)|([-.]hackerone)|([-.]gstatic)|([-.]webtrends)|([-.]webtrendslive)|([-.]amplitude)|([-.]adobe)|([-.]mxpnl)|([-.]mixpanel)|([-.]gstatics+)|([-.]adobedtm)|([-.]adobedc)|([-.]qualtrics+)|([-.]pardot+)|([-.]poultons+)|([-.]chartbeat+)|([-.]consensu+)|([-.]clarity+)|([-.]clarity-cdn+)|([-.]vwo+)|([-.]ip-only+)|([-.]ggpht+)|([-.]clearbitjs+)|([-.]clearbitscripts+)|([-.]optimizely+)|(?:cdn\\.segment|api\\.segment|[\\-\\.]segment\\.(?:com|io))|([-.]quantserve+)[a-z]{2,5}(:[0-9]{1,5})?(\\\\.*)",
+    "marketing_only": "(maps.google.com+)|(www.google.com/maps/+)|([-.]googleapis+)|([-.]gstatics+)|([-.]cludo+)|([-.]qbrick+)|([-.]klarna+)|([-.]paypal+)|([-.]usersnap+)|([-.]zoom+)|([-.]cdnjs+)|([-.]jsdelivr+)|([-.]disqus+)([a-z]+){2,5}(:[0-9]{1,5})?(\\\\.*)|(mixpanel)|([-.]googleoptimize+)|([-.]piwik+)|([-.]matomo+)|([-.]bing+)|([-.]slideshare+)|([-.]siteimproveanalytics+)|([-.]hotjar+)|([-.]cloudflareinsights+)|([-.]snapchat)|([-.]contentsquare)|([-.]6sc)|([-.]nr-data)|([-.]2o7)|([-.]hackerone)|([-.]gstatic)|([-.]webtrends)|([-.]webtrendslive)|([-.]amplitude)|([-.]adobe)|([-.]mxpnl)|([-.]mixpanel)|([-.]gstatics+)|([-.]adobedtm)|([-.]adobedc)|([-.]qualtrics+)|([-.]pardot+)|([-.]poultons+)|([-.]chartbeat+)|([-.]consensu+)|([-.]clarity+)|([-.]clarity-cdn+)|([-.]vwo+)|([-.]ip-only+)|([-.]ggpht+)|([-.]clearbitjs+)|([-.]clearbitscripts+)|([-.]optimizely+)|(?:cdn\\.segment|api\\.segment|[\\-\\.]segment\\.(?:com|io))|([-.]quantserve+)[a-z]{2,5}(:[0-9]{1,5})?(\\\\.*)",
     "stats_only": "(_linkedin_partner_id|_linkedin_data_partner_ids|mailchimp|lntrk|twitter|instagram|trustpilot|chic_lite_data|openai|oaiq|bzrcdn\\.openai)|([-.]twitter+)|([-.]ads-twitter+)|([-.]casalemedia+)|(chimpstatic+)|([-.]trustpilot+)|([-.]mailchimp+)|([-.]linkedin+)|([-.]bing+)|([-.]licdn+)|([-.]amazon-adsystem+)|([-.]adfrom+)|([-.]demdex+)|([-.]criteo+)|([-.]clearbitjs+)|([-.]clearbitscripts+)|([-.]instagram+)|([-.]stickyadstv+)|([-.]mookie1+)|([-.]doubleclick+)|([-.]bidswitch+)|([-.]jnqsge+)|([-.]syuh+)|([-.]youtube+)|([-.]vimeo+)|([-.]ninthdecimal+)|([-.]casalemedia+)|([-.]adsymptotic+)|([-.]tremorhub+)|([-.]agkn+)|([-.]myvisualiq+)|([-.]exelator+)|([-.]openx+)|([-.]adsrvr+)|([-.]justpremium+)|([-.]ants+)|([-.]bluekai+)|([-.]revcontent+)|([-.]outbrain+)|([-.]adscale+)|([-.]pdst+)|([-.]yahoo+)|([-.]advertising+)|([-.]adnxs+)|([-.]scdn+)|([-.]spotify+)|([-.]facebook+)|([-.]pinterest+)|([-.]adform+)|([-.]adnxs+)|([-.]advertising+)|([-.]adtech+)|([-.]soundestlink+)|([-.]soundest+)|([-.]soundestvid+)|([-.]soundestform+)|([-.]tiktok+)|([-.]taboola+)|([-.]hubspot+)|([-.]openai+)|([a-z]+){2,5}(:[0-9]{1,5})?(\\\\.*)|(maps.google.com+)|(www.google.com/maps/+)|([-.]googleapis+)|([-.]gstatics+)|([-.]cludo+)|([-.]qbrick+)|([-.]klarna+)|([-.]paypal+)|([-.]usersnap+)|([-.]zoom+)|([-.]cdnjs+)|([-.]jsdelivr+)|([-.]disqus+)([a-z]+){2,5}(:[0-9]{1,5})?(\\\\.*)",
     "functional_stats": "(_linkedin_partner_id|_linkedin_data_partner_ids|mailchimp|lntrk|twitter|instagram|trustpilot|chic_lite_data|openai|oaiq|bzrcdn\\.openai)|([-.]twitter+)|([-.]ads-twitter+)|([-.]casalemedia+)|(chimpstatic+)|([-.]trustpilot+)|([-.]mailchimp+)|([-.]linkedin+)|([-.]bing+)|([-.]licdn+)|([-.]amazon-adsystem+)|([-.]adfrom+)|([-.]demdex+)|([-.]criteo+)|([-.]clearbitjs+)|([-.]clearbitscripts+)|([-.]instagram+)|([-.]stickyadstv+)|([-.]mookie1+)|([-.]doubleclick+)|([-.]bidswitch+)|([-.]jnqsge+)|([-.]syuh+)|([-.]youtube+)|([-.]vimeo+)|([-.]ninthdecimal+)|([-.]casalemedia+)|([-.]adsymptotic+)|([-.]tremorhub+)|([-.]agkn+)|([-.]myvisualiq+)|([-.]exelator+)|([-.]openx+)|([-.]adsrvr+)|([-.]justpremium+)|([-.]ants+)|([-.]bluekai+)|([-.]revcontent+)|([-.]outbrain+)|([-.]adscale+)|([-.]pdst+)|([-.]yahoo+)|([-.]advertising+)|([-.]adnxs+)|([-.]scdn+)|([-.]spotify+)|([-.]facebook+)|([-.]pinterest+)|([-.]adform+)|([-.]adnxs+)|([-.]advertising+)|([-.]adtech+)|([-.]soundestlink+)|([-.]soundest+)|([-.]soundestvid+)|([-.]soundestform+)|([-.]tiktok+)|([-.]taboola+)|([-.]hubspot+)|([-.]openai+)|([a-z]+){2,5}(:[0-9]{1,5})?(\\\\.*)",
-    "functional_marketing": "(mixpanel)|([-.]googleoptimize+)|([-.]piwik+)|([-.]matomo+)|([-.]bing+)|([-.]slideshare+)|([-.]siteimproveanalytics+)|([-.]hotjar+)|([-.]snapchat)|([-.]contentsquare)|([-.]6sc)|([-.]nr-data)|([-.]2o7)|([-.]hackerone)|([-.]gstatic)|([-.]webtrends)|([-.]webtrendslive)|([-.]amplitude)|([-.]adobe)|([-.]mxpnl)|([-.]mixpanel)|([-.]gstatics+)|([-.]adobedtm)|([-.]adobedc)|([-.]qualtrics+)|([-.]pardot+)|([-.]poultons+)|([-.]chartbeat+)|([-.]consensu+)|([-.]clarity+)|([-.]clarity-cdn+)|([-.]vwo+)|([-.]ip-only+)|([-.]ggpht+)|([-.]clearbitjs+)|([-.]clearbitscripts+)|([-.]optimizely+)|(?:cdn\\.segment|api\\.segment|[\\-\\.]segment\\.(?:com|io))|([-.]quantserve+)[a-z]{2,5}(:[0-9]{1,5})?(\\\\.*)",
+    "functional_marketing": "(mixpanel)|([-.]googleoptimize+)|([-.]piwik+)|([-.]matomo+)|([-.]bing+)|([-.]slideshare+)|([-.]siteimproveanalytics+)|([-.]hotjar+)|([-.]cloudflareinsights+)|([-.]snapchat)|([-.]contentsquare)|([-.]6sc)|([-.]nr-data)|([-.]2o7)|([-.]hackerone)|([-.]gstatic)|([-.]webtrends)|([-.]webtrendslive)|([-.]amplitude)|([-.]adobe)|([-.]mxpnl)|([-.]mixpanel)|([-.]gstatics+)|([-.]adobedtm)|([-.]adobedc)|([-.]qualtrics+)|([-.]pardot+)|([-.]poultons+)|([-.]chartbeat+)|([-.]consensu+)|([-.]clarity+)|([-.]clarity-cdn+)|([-.]vwo+)|([-.]ip-only+)|([-.]ggpht+)|([-.]clearbitjs+)|([-.]clearbitscripts+)|([-.]optimizely+)|(?:cdn\\.segment|api\\.segment|[\\-\\.]segment\\.(?:com|io))|([-.]quantserve+)[a-z]{2,5}(:[0-9]{1,5})?(\\\\.*)",
     "marketing_stats": "(maps.google.com+)|(www.google.com/maps/+)|([-.]googleapis+)|([-.]gstatics+)|([-.]cludo+)|([-.]qbrick+)|([-.]klarna+)|([-.]paypal+)|([-.]usersnap+)|([-.]zoom+)|([-.]cdnjs+)|([-.]jsdelivr+)|([-.]disqus+)([a-z]+){2,5}(:[0-9]{1,5})?(\\\\.*)",
-    "default": "(mixpanel)|([-.]googleoptimize+)|([-.]piwik+)|([-.]matomo+)|([-.]bing+)|([-.]slideshare+)|([-.]siteimproveanalytics+)|([-.]hotjar+)|([-.]snapchat)|([-.]contentsquare)|([-.]6sc)|([-.]nr-data)|([-.]2o7)|([-.]hackerone)|([-.]gstatic)|([-.]webtrends)|([-.]webtrendslive)|([-.]amplitude)|([-.]adobe)|([-.]mxpnl)|([-.]mixpanel)|([-.]gstatics+)|([-.]adobedtm)|([-.]adobedc)|([-.]qualtrics+)|([-.]pardot+)|([-.]poultons+)|([-.]chartbeat+)|([-.]consensu+)|([-.]clarity+)|([-.]clarity-cdn+)|([-.]vwo+)|([-.]ip-only+)|([-.]ggpht+)|([-.]clearbitjs+)|([-.]clearbitscripts+)|([-.]optimizely+)|(?:cdn\\.segment|api\\.segment|[\\-\\.]segment\\.(?:com|io))|([-.]quantserve+)[a-z]{2,5}(:[0-9]{1,5})?(\\\\.*)|(_linkedin_partner_id|_linkedin_data_partner_ids|mailchimp|lntrk|twitter|instagram|trustpilot|chic_lite_data|openai|oaiq|bzrcdn\\.openai)|([-.]twitter+)|([-.]ads-twitter+)|([-.]casalemedia+)|(chimpstatic+)|([-.]trustpilot+)|([-.]mailchimp+)|([-.]linkedin+)|([-.]bing+)|([-.]licdn+)|([-.]amazon-adsystem+)|([-.]adfrom+)|([-.]demdex+)|([-.]criteo+)|([-.]clearbitjs+)|([-.]clearbitscripts+)|([-.]instagram+)|([-.]stickyadstv+)|([-.]mookie1+)|([-.]doubleclick+)|([-.]bidswitch+)|([-.]jnqsge+)|([-.]syuh+)|([-.]youtube+)|([-.]vimeo+)|([-.]ninthdecimal+)|([-.]casalemedia+)|([-.]adsymptotic+)|([-.]tremorhub+)|([-.]agkn+)|([-.]myvisualiq+)|([-.]exelator+)|([-.]openx+)|([-.]adsrvr+)|([-.]justpremium+)|([-.]ants+)|([-.]bluekai+)|([-.]revcontent+)|([-.]outbrain+)|([-.]adscale+)|([-.]pdst+)|([-.]yahoo+)|([-.]advertising+)|([-.]adnxs+)|([-.]scdn+)|([-.]spotify+)|([-.]facebook+)|([-.]pinterest+)|([-.]adform+)|([-.]adnxs+)|([-.]advertising+)|([-.]adtech+)|([-.]soundestlink+)|([-.]soundest+)|([-.]soundestvid+)|([-.]soundestform+)|([-.]tiktok+)|([-.]taboola+)|([-.]hubspot+)|([-.]openai+)|([a-z]+){2,5}(:[0-9]{1,5})?(\\\\.*)|(maps.google.com+)|(www.google.com/maps/+)|([-.]googleapis+)|([-.]gstatics+)|([-.]cludo+)|([-.]qbrick+)|([-.]klarna+)|([-.]paypal+)|([-.]usersnap+)|([-.]zoom+)|([-.]cdnjs+)|([-.]jsdelivr+)|([-.]disqus+)([a-z]+){2,5}(:[0-9]{1,5})?(\\\\.*)",
+    "default": "(mixpanel)|([-.]googleoptimize+)|([-.]piwik+)|([-.]matomo+)|([-.]bing+)|([-.]slideshare+)|([-.]siteimproveanalytics+)|([-.]hotjar+)|([-.]cloudflareinsights+)|([-.]snapchat)|([-.]contentsquare)|([-.]6sc)|([-.]nr-data)|([-.]2o7)|([-.]hackerone)|([-.]gstatic)|([-.]webtrends)|([-.]webtrendslive)|([-.]amplitude)|([-.]adobe)|([-.]mxpnl)|([-.]mixpanel)|([-.]gstatics+)|([-.]adobedtm)|([-.]adobedc)|([-.]qualtrics+)|([-.]pardot+)|([-.]poultons+)|([-.]chartbeat+)|([-.]consensu+)|([-.]clarity+)|([-.]clarity-cdn+)|([-.]vwo+)|([-.]ip-only+)|([-.]ggpht+)|([-.]clearbitjs+)|([-.]clearbitscripts+)|([-.]optimizely+)|(?:cdn\\.segment|api\\.segment|[\\-\\.]segment\\.(?:com|io))|([-.]quantserve+)[a-z]{2,5}(:[0-9]{1,5})?(\\\\.*)|(_linkedin_partner_id|_linkedin_data_partner_ids|mailchimp|lntrk|twitter|instagram|trustpilot|chic_lite_data|openai|oaiq|bzrcdn\\.openai)|([-.]twitter+)|([-.]ads-twitter+)|([-.]casalemedia+)|(chimpstatic+)|([-.]trustpilot+)|([-.]mailchimp+)|([-.]linkedin+)|([-.]bing+)|([-.]licdn+)|([-.]amazon-adsystem+)|([-.]adfrom+)|([-.]demdex+)|([-.]criteo+)|([-.]clearbitjs+)|([-.]clearbitscripts+)|([-.]instagram+)|([-.]stickyadstv+)|([-.]mookie1+)|([-.]doubleclick+)|([-.]bidswitch+)|([-.]jnqsge+)|([-.]syuh+)|([-.]youtube+)|([-.]vimeo+)|([-.]ninthdecimal+)|([-.]casalemedia+)|([-.]adsymptotic+)|([-.]tremorhub+)|([-.]agkn+)|([-.]myvisualiq+)|([-.]exelator+)|([-.]openx+)|([-.]adsrvr+)|([-.]justpremium+)|([-.]ants+)|([-.]bluekai+)|([-.]revcontent+)|([-.]outbrain+)|([-.]adscale+)|([-.]pdst+)|([-.]yahoo+)|([-.]advertising+)|([-.]adnxs+)|([-.]scdn+)|([-.]spotify+)|([-.]facebook+)|([-.]pinterest+)|([-.]adform+)|([-.]adnxs+)|([-.]advertising+)|([-.]adtech+)|([-.]soundestlink+)|([-.]soundest+)|([-.]soundestvid+)|([-.]soundestform+)|([-.]tiktok+)|([-.]taboola+)|([-.]hubspot+)|([-.]openai+)|([a-z]+){2,5}(:[0-9]{1,5})?(\\\\.*)|(maps.google.com+)|(www.google.com/maps/+)|([-.]googleapis+)|([-.]gstatics+)|([-.]cludo+)|([-.]qbrick+)|([-.]klarna+)|([-.]paypal+)|([-.]usersnap+)|([-.]zoom+)|([-.]cdnjs+)|([-.]jsdelivr+)|([-.]disqus+)([a-z]+){2,5}(:[0-9]{1,5})?(\\\\.*)",
     "all_granted": "^$"
 };
 
