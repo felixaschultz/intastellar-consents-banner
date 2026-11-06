@@ -863,58 +863,37 @@ intastellarconsents .intastellarCCPAContainer {
     display: block;
 }
 
-.vendor-container > h3 {
+/* Row/toolbar layout is shared by every design (cb.dev.js's
+   intaInjectVendorListStyles()); nova only maps the vendor-list tokens onto
+   its panel palette and keeps its own section heading. The panel already
+   has side padding, so the list doesn't add its own. */
+#vendor-list,
+#inta-tcf-purposes,
+.inta-tcf-tabs {
+    --inta-vendor-border: var(--inta-nova-panel-border);
+    --inta-vendor-muted: var(--inta-nova-panel-muted);
+    --inta-vendor-muted-opacity: 1;
+    --inta-vendor-fg: var(--inta-nova-panel-fg);
+    --inta-vendor-radius: 12px;
+}
+
+#vendor-list.vendor-container.--open,
+#inta-tcf-purposes {
+    padding: 0;
+}
+
+.inta-tcf-tabs {
+    margin: 14px 0;
+}
+
+.vendor-container > h3,
+#inta-tcf-purposes > h3 {
     margin: 20px 0 10px;
     font-size: 13px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--inta-nova-panel-muted);
-}
-
-.vendor-item {
-    border: 1px solid var(--inta-nova-panel-border);
-    border-radius: 12px;
-    margin-bottom: 8px;
-    overflow: hidden;
-}
-
-.vendor-item:last-child {
-    margin-bottom: 0;
-}
-
-/* Inline style="...border-top:1px solid #e0e0e0..." ships on the first
-   .checkMarkContainer in each vendor-item (meant for a flat list, not a
-   bordered card) — an !important beats the inline style directly. */
-.vendor-item .checkMarkContainer {
-    padding: 12px 14px !important;
-    border-top: none !important;
-}
-
-/* The optional "Legitimate Interest" row is a second, plain
-   .checkMarkContainer right after the main one — give it its own divider
-   since it has no inline border of its own. */
-.vendor-item .checkMarkContainer + .checkMarkContainer {
-    border-top: 1px solid var(--inta-nova-panel-border) !important;
-}
-
-.vendor-item .intSettingsTitle {
-    display: block;
-    line-height: 1.5;
-}
-
-/* The provider's privacy-policy URL and the device-storage disclosure link
-   are nested inside the same .intSettingsTitle as the (bold) vendor name —
-   de-emphasize them relative to it instead of letting them inherit the same
-   bold weight/size. */
-.vendor-item .intSettingsTitleLink {
-    font-size: 12px;
-    font-weight: 400;
-    color: var(--inta-nova-panel-muted) !important;
-}
-
-.vendor-item .inta-gvl-device-storage {
-    margin-top: 6px !important;
 }
 
 .vendor-item .inta-device-storage-toggle {

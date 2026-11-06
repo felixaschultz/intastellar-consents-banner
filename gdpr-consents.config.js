@@ -38,9 +38,10 @@ window.INTA = {
         text: false,
         language: "auto",
         design: "nova",
+        tcf: true,
         // Overrides nova's default navy card background to match a brand
         // color instead — try removing this line to see the default.
-        novaBackgroundColor: "#58004a",
+        novaBackgroundColor: "#fff",
         requiredCookies: [
             {
                 cookie: "region",
