@@ -1105,7 +1105,7 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
     // Minimal TCModel
     function TCModel() {
         this.cmpId = 0; // REQUIRED: set to your IAB Europe-registered CMP ID before encoding (0 is not a valid registered ID)
-        this.cmpVersion = 1;
+        this.cmpVersion = INTA_TCF_CMP_VERSION;
         this.consentScreen = 0;
         // dev/gvl-local.json vendorListVersion as of its lastUpdated date. Keep in sync with
         // whatever GVL version consent was actually collected against; a live GVL loader

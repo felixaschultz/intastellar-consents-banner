@@ -54,8 +54,12 @@ Set `settings.tcf: true` on sites that work with IAB TCF vendors (ad tech, progr
 |---|---|
 | `tcf` | `true` (or `1`) opts the site in to TCF. |
 | `publisherCountryCode` | ISO 3166-1 alpha-2 country of the publisher (TC string `PublisherCC`). Defaults to the visitor's geo country. |
-| `gdprApplies` | Set to `false` to report `gdprApplies: false` to vendors. |
+| `gdprApplies` | `true`/`false` overrides what is reported to vendors. By default it follows the visitor's country (EU/EEA, UK and Switzerland → `true`) and stays `true` while the country is unknown. |
 | `cmpId` | **Testing only** — overrides the CMP ID (e.g. `999` for the IAB CMP Validator). |
+
+TCF sites never get pre-ticked choices, and visitors are asked again once their TC string is 390 days old (vendors may treat strings older than 13 months as invalid).
+
+**Releasing:** bump `INTA_TCF_CMP_VERSION` in `dev/gdpr.dev.js` with every release that changes the banner's UI or texts — TCF policy requires the CMP version to change with the UI.
 ## General Info
 
 With this project I wanted to build my own cookie banner witch is free to use. I was not always happy about all the cookie banners solutions I´ve found online, either the banner wasn´t all that good or you needed an account to get access to the banner for implementation.

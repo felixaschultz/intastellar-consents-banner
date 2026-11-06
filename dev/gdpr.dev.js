@@ -680,6 +680,36 @@ function intaTcfEnabled() {
 }
 
 /**
+ * Intastellar Consents' CMP version, written into every TC string and reported by ping.
+ * It is the CMP's version, not a per-site setting: TCF policy requires it to go up
+ * whenever the CMP's UI changes (texts, layout, flow), so bump it in every release that
+ * touches the banner or the TCF screens.
+ */
+const INTA_TCF_CMP_VERSION = 1;
+
+// EU member states, the rest of the EEA (IS, LI, NO), plus the UK and Switzerland, whose
+// GDPR equivalents TCF vendors treat the same way.
+const INTA_TCF_GDPR_COUNTRIES = ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "IS", "LI", "NO", "GB", "CH"];
+
+/**
+ * gdprApplies for __tcfapi: `settings.gdprApplies` (true/false) wins; otherwise the
+ * visitor's country (geo lookup, or a server-injected settings.ccpa.country). While the
+ * country is unknown it stays true, so GDPR protections apply until we know otherwise.
+ */
+function intaTcfGdprApplies() {
+    var settings = window.INTA && window.INTA.settings;
+    if (settings && typeof settings.gdprApplies === "boolean") {
+        return settings.gdprApplies;
+    }
+    var country = (window._intaGeo && window._intaGeo.country)
+        || (settings && settings.ccpa && settings.ccpa.country);
+    if (!country) {
+        return true;
+    }
+    return INTA_TCF_GDPR_COUNTRIES.indexOf(String(country).toUpperCase()) !== -1;
+}
+
+/**
  * TCF CMP API stub. Vendor tags often run before cb.js arrives, so __tcfapi has to exist
  * synchronously: calls are queued on __tcfapi.a (cb.js replaces the stub and drains it),
  * `ping` answers right away, and the __tcfapiLocator frame + postMessage handler let
@@ -695,13 +725,13 @@ function intaTcfEnabled() {
         if (command === 'ping') {
             if (typeof callback === 'function') {
                 callback({
-                    gdprApplies: settings.gdprApplies !== false,
+                    gdprApplies: intaTcfGdprApplies(),
                     cmpLoaded: false,
                     cmpStatus: 'stub',
                     displayStatus: 'hidden',
                     apiVersion: '2.2',
                     cmpId: intaTcfCmpId(),
-                    cmpVersion: settings.cmpVersion || 1
+                    cmpVersion: INTA_TCF_CMP_VERSION
                 });
             }
             return;
@@ -1977,7 +2007,7 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
     // Minimal TCModel
     function TCModel() {
         this.cmpId = 0; // REQUIRED: set to your IAB Europe-registered CMP ID before encoding (0 is not a valid registered ID)
-        this.cmpVersion = 1;
+        this.cmpVersion = INTA_TCF_CMP_VERSION;
         this.consentScreen = 0;
         // dev/gvl-local.json vendorListVersion as of its lastUpdated date. Keep in sync with
         // whatever GVL version consent was actually collected against; a live GVL loader

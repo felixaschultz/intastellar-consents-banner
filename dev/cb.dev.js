@@ -661,7 +661,8 @@ function intaIsCapterraTraffic() {
 
 /** Returns `"checked"` for optional consent checkboxes when Capterra traffic or stored consent is on. */
 function intaConsentCheckboxAttr(consentField) {
-    if (intaIsCapterraTraffic()) {
+    // TCF forbids pre-ticked choices, and on TCF sites categories seed the TCF purposes.
+    if (intaIsCapterraTraffic() && !intaTcfRequested()) {
         return "checked";
     }
     if (typeof getCookie !== "function" || typeof decodeIntaConsentsObject !== "function") {
@@ -936,7 +937,7 @@ function generateTcString(consentObj) {
     }
     let model = new window.IABTCF.TCModel();
     model.cmpId = intaTcfCmpId();
-    model.cmpVersion = window.INTA.settings.cmpVersion || model.cmpVersion;
+    model.cmpVersion = INTA_TCF_CMP_VERSION;
     model.created = consentObj.created || null;
     model.consentLanguage = consentObj.consentLanguage || model.consentLanguage;
     model.publisherCountryCode = consentObj.publisherCountryCode || model.publisherCountryCode;
@@ -1002,6 +1003,20 @@ function intaTcfDecodeStored() {
     } catch (e) {
         return null;
     }
+}
+
+/**
+ * Vendors may treat TC strings older than 13 months as invalid, so the banner asks again
+ * a little before that (390 days since LastUpdated).
+ */
+const INTA_TCF_MAX_AGE_DAYS = 390;
+
+function intaTcfStoredStringExpired() {
+    let decoded = intaTcfDecodeStored();
+    if (!decoded || !decoded.lastUpdated) {
+        return false;
+    }
+    return (Date.now() - decoded.lastUpdated * 100) / 86400000 > INTA_TCF_MAX_AGE_DAYS;
 }
 
 function intaTcfWriteConsentCookie() {
@@ -1945,7 +1960,8 @@ function intaInjectCmpCriticalStyles() {
 function intaHasStoredConsentCookie() {
     // With TCF on, a consent cookie saved before it was (no tcString) never disclosed the
     // vendors, so it can't back a TC string — ask again instead of treating it as consent.
-    if (intaTcfEnabled() && !getTcStringFromCookie()) {
+    // Same once the stored TC string is about to expire (13 months).
+    if (intaTcfEnabled() && (!getTcStringFromCookie() || intaTcfStoredStringExpired())) {
         return false;
     }
     try {
@@ -2290,6 +2306,10 @@ if (intaTcfEnabled()) {
     // No stored string yet means the user hasn't decided, so the UI is (about to be) shown.
     function buildTCData(eventStatus, listenerIdOverride) {
         let tcString = intaConsentsObjectVariable.tcString || getTcStringFromCookie();
+        // An expiring string is being asked for again — don't keep handing it out meanwhile.
+        if (tcString && intaTcfStoredStringExpired()) {
+            tcString = null;
+        }
         let decoded = null;
         if (tcString) {
             try { decoded = window.IABTCF.TCString.decode(tcString); } catch (e) { decoded = null; }
@@ -2298,8 +2318,8 @@ if (intaTcfEnabled()) {
             tcString: tcString || '',
             tcfPolicyVersion: decoded ? decoded.tcfPolicyVersion : 5,
             cmpId: intaTcfCmpId(),
-            cmpVersion: settings.cmpVersion || 1,
-            gdprApplies: settings.gdprApplies !== false,
+            cmpVersion: INTA_TCF_CMP_VERSION,
+            gdprApplies: intaTcfGdprApplies(),
             eventStatus: tcString ? (eventStatus || 'tcloaded') : 'cmpuishown',
             cmpStatus: 'loaded',
             listenerId: listenerIdOverride || undefined,
@@ -2328,12 +2348,12 @@ if (intaTcfEnabled()) {
 
     function buildPingReturn() {
         return {
-            gdprApplies: settings.gdprApplies !== false,
+            gdprApplies: intaTcfGdprApplies(),
             cmpLoaded: true,
             cmpStatus: 'loaded',
             displayStatus: displayStatus(),
             apiVersion: '2.2',
-            cmpVersion: settings.cmpVersion || 1,
+            cmpVersion: INTA_TCF_CMP_VERSION,
             cmpId: intaTcfCmpId(),
             gvlVersion: intaGvlVersion() || new window.IABTCF.TCModel().vendorListVersion,
             tcfPolicyVersion: 5
@@ -2568,7 +2588,8 @@ function intaVendorChoicesInit(vendors) {
         return;
     }
     let previous = intaTcfDecodeStored();
-    let defaultConsent = intaIsCapterraTraffic();
+    // The vendor list only exists on TCF sites, and TCF forbids pre-ticked consent.
+    let defaultConsent = false;
     vendors.forEach(function (vendor) {
         let id = parseInt(vendor.id, 10);
         let known = previous && id <= previous.maxVendorId;
