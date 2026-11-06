@@ -2786,7 +2786,9 @@ function intaVendorRowHtml(vendor) {
     let id = parseInt(vendor.id, 10);
     let name = intaEscapeHtmlAttr(String(vendor.name || '').trim());
     let hasLegit = intaGvlVendorHasLegit(vendor);
-    return '<label class="checkMarkContainer">'
+    // `for` matters: without it a <label> controls its first labelable descendant, which
+    // here is the "Show details" <button>, so clicking the switch would open the details.
+    return '<label class="checkMarkContainer" for="vendor' + id + '">'
         + '<span class="intSettingsTitle">'
         + '<span class="inta-vendor-name">' + name + '</span>'
         + '<button type="button" class="inta-vendor-details-toggle" aria-expanded="false" aria-controls="inta-vendor-details-' + id + '">' + intaVendorText('vendorShowDetails', 'Show details') + '</button>'
@@ -2797,7 +2799,7 @@ function intaVendorRowHtml(vendor) {
         + '</span>'
         + '</label>'
         + (hasLegit
-            ? '<label class="checkMarkContainer">'
+            ? '<label class="checkMarkContainer" for="vendor' + id + '-legit">'
             + '<span class="intSettingsTitle">' + intaVendorText('vendorLegitimateInterest', 'Legitimate interest')
             + '<span class="inta-vendor-hint">' + intaVendorText('vendorLegitimateInterestHint', 'Switch off to object') + '</span></span>'
             + '<span class="intCheckmarkSliderContainer">'
@@ -3343,7 +3345,9 @@ function intaTcfItemRowHtml(kind, id, control) {
     let name = intaEscapeHtmlAttr(intaTcfName(kind, id));
     let detailsId = "inta-tcf-details-" + kind + "-" + id;
     return '<div class="vendor-item inta-tcf-item" data-inta-tcf-kind="' + kind + '" data-inta-tcf-id="' + id + '">'
-        + '<label class="checkMarkContainer">'
+        // `for` targets the switch (see intaVendorRowHtml); rows without one fall back to the
+        // "Show details" button, so clicking an info-only row opens its details.
+        + '<label class="checkMarkContainer"' + (control.inputId ? ' for="' + control.inputId + '"' : '') + '>'
         + '<span class="intSettingsTitle">'
         + '<span class="inta-vendor-name">' + name + '</span>'
         + '<button type="button" class="inta-vendor-details-toggle" aria-expanded="false" aria-controls="' + detailsId + '">' + intaTcfText("vendorShowDetails", "Show details") + '</button>'
@@ -3365,10 +3369,11 @@ function intaTcfPurposeListHtml() {
         let name = intaTcfName("purposes", id);
         let hasLegInt = INTA_TCF_LI_PURPOSE_IDS.indexOf(id) !== -1 && (!gvlCache || intaTcfVendorCounts("purposes", id).legInt > 0);
         html.push(intaTcfItemRowHtml("purposes", id, {
+            inputId: "inta-purpose-" + id,
             switchHtml: intaTcfSwitchHtml("inta-purpose-" + id, "inta-purpose-consent", intaPurposeChoices.consents[id],
                 intaGetTextOverride("vendorConsentFor", "Consent for") + " " + name, 'data-inta-purpose-id="' + id + '"'),
             extraRow: hasLegInt
-                ? '<label class="checkMarkContainer"><span class="intSettingsTitle">' + intaTcfText("vendorLegitimateInterest", "Legitimate interest")
+                ? '<label class="checkMarkContainer" for="inta-purpose-' + id + '-legit"><span class="intSettingsTitle">' + intaTcfText("vendorLegitimateInterest", "Legitimate interest")
                 + '<span class="inta-vendor-hint">' + intaTcfText("vendorLegitimateInterestHint", "Switch off to object") + '</span></span>'
                 + intaTcfSwitchHtml("inta-purpose-" + id + "-legit", "intCookieSetting__checkbox-legit inta-purpose-legit", intaPurposeChoices.legitimateInterests[id],
                     intaGetTextOverride("vendorLegitimateInterest", "Legitimate interest") + ": " + name, 'data-inta-purpose-id="' + id + '"')
@@ -3385,6 +3390,7 @@ function intaTcfPurposeListHtml() {
         html.push('<div class="inta-vendor-rows">');
         specialFeatures.forEach(function (id) {
             html.push(intaTcfItemRowHtml("specialFeatures", id, {
+                inputId: "inta-special-feature-" + id,
                 switchHtml: intaTcfSwitchHtml("inta-special-feature-" + id, "inta-special-feature", intaPurposeChoices.specialFeatures[id],
                     intaGetTextOverride("tcfOptInFor", "Opt in to") + " " + intaTcfName("specialFeatures", id), 'data-inta-special-feature-id="' + id + '"')
             }));
