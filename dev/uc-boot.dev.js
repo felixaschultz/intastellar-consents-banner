@@ -366,6 +366,73 @@ function intaGuardScriptNode(node) {
 /* ── End synchronous script-injection guard ───────────────────────────── */
 window.INTA = window.INTA || {};
 window.INTA.observedCookieSource = 'unknown';
+
+/**
+ * TCF CMP API stub. Vendor tags often run before cb.js arrives, so __tcfapi has to exist
+ * synchronously: calls are queued on __tcfapi.a (cb.js replaces the stub and drains it),
+ * `ping` answers right away, and the __tcfapiLocator frame + postMessage handler let
+ * vendors in iframes reach whichever __tcfapi is current. Off until a CMP ID is set.
+ */
+(function intaInstallTcfStub() {
+    var settings = window.INTA.settings;
+    if (!(settings && settings.cmpId > 0) || typeof window.__tcfapi === 'function') {
+        return;
+    }
+    var queue = [];
+    function stub(command, version, callback, parameter) {
+        if (command === 'ping') {
+            if (typeof callback === 'function') {
+                callback({
+                    gdprApplies: settings.gdprApplies !== false,
+                    cmpLoaded: false,
+                    cmpStatus: 'stub',
+                    displayStatus: 'hidden',
+                    apiVersion: '2.2',
+                    cmpId: settings.cmpId,
+                    cmpVersion: settings.cmpVersion || 1
+                });
+            }
+            return;
+        }
+        queue.push([command, version, callback, parameter]);
+    }
+    stub.a = queue;
+    window.__tcfapi = stub;
+
+    window.addEventListener('message', function (event) {
+        var json = event.data;
+        var isString = typeof json === 'string';
+        if (isString) {
+            try { json = JSON.parse(json); } catch (e) { return; }
+        }
+        var payload = json && json.__tcfapiCall;
+        if (!payload || typeof window.__tcfapi !== 'function') {
+            return;
+        }
+        window.__tcfapi(payload.command, payload.version, function (returnValue, success) {
+            var message = { __tcfapiReturn: { returnValue: returnValue, success: success, callId: payload.callId } };
+            if (event.source && typeof event.source.postMessage === 'function') {
+                event.source.postMessage(isString ? JSON.stringify(message) : message, '*');
+            }
+        }, payload.parameter);
+    }, false);
+
+    function addLocator() {
+        if (window.frames['__tcfapiLocator']) {
+            return;
+        }
+        if (!document.body) {
+            document.addEventListener('DOMContentLoaded', addLocator);
+            return;
+        }
+        var locator = document.createElement('iframe');
+        locator.style.display = 'none';
+        locator.name = '__tcfapiLocator';
+        locator.title = 'TCF API locator';
+        document.body.appendChild(locator);
+    }
+    addLocator();
+})();
 function detectCookieVendor(cookie) {
     if (typeof window.__intaDetectCookieVendor === 'function') {
         return window.__intaDetectCookieVendor(cookie);
