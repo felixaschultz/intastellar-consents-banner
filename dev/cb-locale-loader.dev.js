@@ -182,8 +182,8 @@
             + '<button class="openVendorList">' + intaVendorListButtonLabel() + '</button>'
             // "nova" always shows attribution (no width gate) — the design is
             // free to use and must keep the "powered by" badge visible at all
-            // times, on every viewport size.
-            + ((window.INTA.settings.design == "bannerV2" && window.innerWidth > 768) || window.INTA.settings.design == "nova" ? generatePoweredBy() : "")
+            // times, on every viewport size. premium always showed it too (premium.js).
+            + ((window.INTA.settings.design == "bannerV2" && window.innerWidth > 768) || window.INTA.settings.design == "nova" || window.INTA.settings.design == "premium" ? generatePoweredBy() : "")
             + "</section>";
         /* Wired via addEventListener rather than an onclick="" attribute: many production sites run a
            Content-Security-Policy without 'unsafe-inline', which silently drops inline event handlers

@@ -2007,6 +2007,7 @@ function intaApplyCmpVisibilityFromCookie() {
     var readMore = document.querySelector('.intReadMore');
     if (readMore && hasConsent) {
         readMore.classList.remove('view');
+        intaSyncPremiumDetailsPanel();
         // learnMore() also flips this button's label between show/hide
         // based on the class it's toggling — reset it to match, so it
         // doesn't say "Hide details" right after reopening a banner whose
@@ -3005,7 +3006,18 @@ function intaEnsureVendorListLoaded() {
 
 function openVendorList() {
     intaEnsureVendorListLoaded();
+    // premium: the list sits inside the details popout, which is hidden until it's opened.
+    let readMore = document.querySelector(".intReadMore");
+    let isPremium = window.INTA.settings.design === "premium";
+    if (isPremium && readMore && !readMore.classList.contains("view")) {
+        learnMore(document.querySelector(".intLearnMoreBtn"));
+    }
     vendorListContainer.classList.toggle('--open');
+    if (isPremium && vendorListContainer.classList.contains('--open')) {
+        setTimeout(function () {
+            vendorListContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 0);
+    }
 }
 
 
@@ -3035,7 +3047,7 @@ const arrange = window?.INTA?.settings === undefined || window?.INTA?.settings.a
 const intastellarLogoContrastColor = (window.INTA.settings.design === "nova")
     ? (window.INTA.settings.novaBackgroundColor || "#2b2a42")
     : window.INTA.settings.color;
-const intastellarLogo = darkLightCheck(intastellarLogoContrastColor) === "light" ? intastellarLogoDark : intastellarLogoLight;
+const intastellarLogo = (window.INTA.settings.design === "premium" || darkLightCheck(intastellarLogoContrastColor) === "light") ? intastellarLogoDark : intastellarLogoLight;
 
 function intaGetDocumentHead() {
     return (typeof intHead !== "undefined" && intHead)
@@ -3126,7 +3138,7 @@ function generatePoweredBy() {
         // novaBackgroundColor. Same fix as the module-load computation: for
         // nova, contrast against the card surface, not the brand color.
         let intastellarLogo = intastellarLogoLight;
-        if (window.INTA.settings.design == "bannerV2") {
+        if (window.INTA.settings.design == "bannerV2" || window.INTA.settings.design == "premium") {
             intastellarLogo = intastellarLogoDark;
         } else if (window.INTA.settings.design == "nova") {
             let contrastColor = window.INTA.settings.novaBackgroundColor || "#2b2a42";
@@ -3436,9 +3448,11 @@ function intaCbApplyMainBannerDomAndInitialize() {
     let intCookieIconSmallClass = cookieLogo == intCookieIcon ? " intastellarIcon" : "";
     let CompanyLogoName = cookieLogo == intCookieIcon ? "Cookie Icon" : `${document.domain} logo`;
 
+    // nova and premium always render the badge in the button row (cb-locale-loader.dev.js),
+    // so a second one up here on narrow screens would duplicate it.
     moreintHeader.innerHTML = `
     ${(window.INTA.settings.design != "premium" && typeof window?.INTA?.settings.logo != "undefined") ? '<img onerror="this.onerror=null; this.style.display:none;" class="intSettingsCompanyLogo" src="' + window?.INTA?.settings.logo + '" alt="' + CompanyLogoName + '" title="' + CompanyLogoName + '">' : ``}
-    ${(window.INTA.settings.design == "overlay" || window.INTA.settings.design == undefined || window.innerWidth < 900) ? `<section class="intSettingsPoweredBy">${poweredBy}</section>` : ""}
+    ${(window.INTA.settings.design != "nova" && window.INTA.settings.design != "premium" && (window.INTA.settings.design == "overlay" || window.INTA.settings.design == undefined || window.innerWidth < 900)) ? `<section class="intSettingsPoweredBy">${poweredBy}</section>` : ""}
     `;
 
     cookieSettingsContent.innerHTML = '<intHeader class="intastellarCookie-settings__intHeader"><img onerror="this.onerror=null; this.style.display:none;" src="' + window?.INTA?.settings.logo + '" alt="' + CompanyLogoName + '" title="' + CompanyLogoName + '" style="width: 100%;float: left; max-width: 50px;max-height: 50px;object-fit:contain;"><h2>Cookie</h2><button class="intastellarCookie-settings__close" style="background: ' + cookieColor + ';" aria-label="Close cookie banner"></button></intHeader>'
@@ -5630,6 +5644,22 @@ function intaRenderFallbackCookieLists() {
 }
 
 /* - - - Helper function to learn more - - - */
+/**
+ * premium renders the categories panel as its own popout card, and premium.css only
+ * shows it while the footer carries "view" (premium.js used to toggle the footer
+ * instead of .intReadMore). Mirror .intReadMore's state onto it.
+ */
+function intaSyncPremiumDetailsPanel() {
+    if (!window.INTA || !window.INTA.settings || window.INTA.settings.design !== "premium") {
+        return;
+    }
+    let footer = document.querySelector(".intastellarCookieConstents__content-footer");
+    let readMore = document.querySelector(".intReadMore");
+    if (footer) {
+        footer.classList.toggle("view", !!(readMore && readMore.classList.contains("view")));
+    }
+}
+
 function learnMore(e) {
     /* if(document.querySelector(".intastellar_privacyPolicy").style.height === "100%") {
         document.querySelector(".intastellar_privacyPolicy").height = "0";
@@ -5644,6 +5674,7 @@ function learnMore(e) {
 
 
     document.querySelector(".intReadMore").classList.toggle("view");
+    intaSyncPremiumDetailsPanel();
     document.querySelector(".intastellarCookieConstents__content").style.scrollPaddingTop = paddingTop;
 
     if (document.querySelector(".intReadMore").classList.contains("view")) {

@@ -6,9 +6,9 @@
  * Corner side is driven by `window.INTA.settings.arrange`:
  *   arrange: "ltr" -> floats bottom-left  (".../*--otherSide" modifier present)
  *   arrange: "rtl" (default) -> floats bottom-right
- * (see dev/styles/premium.js, which adds the --otherSide modifier for "ltr")
+ * (cb.dev.js adds the --otherSide modifier for "ltr")
  *
- * Brand color (window.INTA.settings.color) is applied gently by premium.js via an
+ * Brand color (window.INTA.settings.color) is applied gently by cb.dev.js via an
  * inline <style> tag (tinted button backgrounds, a thin top-border accent) — this
  * file only owns layout, size, background/text theme, and chrome (shadow, radius).
  */
@@ -161,6 +161,72 @@ button.intastellarCookie-settings__privacyLink {
 .intastellarCookieConstents--otherSide .intastellarCookieConstents__content-footer.view {
     right: auto;
     left: var(--inta-premium-gap);
+}
+
+/* Both cards are anchored to the same side, and the compact card is usually taller than
+   the space left above it, so a top-anchored popout covers its buttons. Wide viewports:
+   sit beside the card instead (bottom-aligned with it). 800px = two cards + three gaps. */
+@media (min-width: 800px) {
+    .intastellarCookieConstents__content-footer.view {
+        top: auto;
+        bottom: var(--inta-premium-gap);
+        right: calc(var(--inta-premium-gap) * 2 + var(--inta-premium-width));
+    }
+
+    .intastellarCookieConstents--otherSide .intastellarCookieConstents__content-footer.view {
+        right: auto;
+        left: calc(var(--inta-premium-gap) * 2 + var(--inta-premium-width));
+    }
+}
+
+/* Narrow viewports: no room beside the card, so the popout takes the full height over it
+   and the card's own "Hide details" button (learnMore(), the only open/close control in
+   the shared markup) is lifted to the popout's top-right corner as its close button —
+   the 44px top padding above leaves room for it. */
+@media (max-width: 799px) {
+    .intastellarCookieConstents__content-footer.view {
+        bottom: var(--inta-premium-gap);
+    }
+
+    .intastellarCookieConstents:has(.intReadMore.view) .intLearnMoreBtn {
+        position: fixed;
+        z-index: 2147483002;
+        top: calc(var(--inta-premium-gap) + 8px);
+        right: calc(var(--inta-premium-gap) + 8px);
+        left: auto;
+        width: 32px;
+        height: 32px;
+        margin: 0;
+        padding: 0;
+        border-radius: 50%;
+        background: var(--inta-premium-border);
+        color: var(--inta-premium-fg);
+        font-size: 0;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* The popout is at most --inta-premium-width wide on this side of the screen. */
+    .intastellarCookieConstents--otherSide:has(.intReadMore.view) .intLearnMoreBtn {
+        right: auto;
+        left: calc(var(--inta-premium-gap) + min(100vw - var(--inta-premium-gap) * 2, 360px) - 40px);
+    }
+
+    .intastellarCookieConstents:has(.intReadMore.view) .intLearnMoreBtn::before {
+        content: "\2715";
+        font-size: 14px;
+        line-height: 1;
+    }
+}
+
+/* ≤480px the popout spans the full width (--inta-premium-width: none below). */
+@media (max-width: 480px) {
+    .intastellarCookieConstents--otherSide:has(.intReadMore.view) .intLearnMoreBtn {
+        left: auto;
+        right: calc(var(--inta-premium-gap) + 8px);
+    }
 }
 
 /* Each category (Necessary/Functional/Analytics/Marketing) is its own accordion row:

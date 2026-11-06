@@ -3194,11 +3194,8 @@ function intaExperimentChannelMatches(exp, expKey) {
 })();
 
 let intastellarCreateBanner = document.createElement("script");
+// Every design, premium included, renders from cb.js (premium.js was a stale fork of it).
 intastellarCreateBanner.src = "https://cdn.intastellar.eu/cb.js";
-
-if (window.INTA.settings && window.INTA.settings.design === "premium") {
-    intastellarCreateBanner.src = "https://cdn.intastellar.eu/premium.js";
-}
 
 if (intastellarDevMode) {
     intastellarCreateBanner.src = "../../dev/cb.dev.js";
