@@ -1896,6 +1896,24 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
         this.vendorConsents = [];
         this.vendorLegitimateInterests = [];
         this.disclosedVendors = []; // TCF 2.3: vendors disclosed to user in CMP
+        // Deciseconds since epoch. Leave null to stamp "today"; when updating an existing
+        // string, carry its `created` over so only LastUpdated moves.
+        this.created = null;
+        this.lastUpdated = null;
+        this.consentLanguage = "EN"; // ISO 639-1 language the CMP UI was shown in
+        this.publisherCountryCode = "AA"; // ISO 3166-1 alpha-2; "AA" = unknown
+    }
+
+    /** Today at 00:00:00 UTC in deciseconds — TCF recommends day precision for Created/LastUpdated. */
+    function tcfTodayDeciseconds() {
+        let day = 24 * 60 * 60 * 1000;
+        return Math.floor(Date.now() / day) * day / 100;
+    }
+
+    /** Two A-Z letters, or the fallback (the 6-bit-per-letter fields can't carry anything else). */
+    function tcfTwoLetterCode(value, fallback) {
+        let code = String(value || "").toUpperCase();
+        return /^[A-Z]{2}$/.test(code) ? code : fallback;
     }
 
     /** MaxVendorId(16) + IsRangeEncoding(1, always 0/bitfield here) + one bit per vendor 1..maxVendorId. */
@@ -1916,20 +1934,20 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
         return base64UrlEncode(bytes);
     }
 
-    // TCF 2.2+: Purposes 3-6 may never carry a legitimate-interest legal basis.
-    var PURPOSES_WITHOUT_LEGITIMATE_INTEREST = [3, 4, 5, 6];
+    // TCF 2.2+: Purpose 1 is consent-only, and purposes 3-6 may never carry a legitimate-interest legal basis.
+    var PURPOSES_WITHOUT_LEGITIMATE_INTEREST = [1, 3, 4, 5, 6];
 
     var TCString = {
         encode: function (tcModel) {
             let bits = "";
             bits += padBits(2, 6); // Version
-            let now = Math.floor(Date.now() / 100); // 0.1s increments
-            bits += padBits(now, 36); // Created
-            bits += padBits(now, 36); // LastUpdated
+            let today = tcfTodayDeciseconds();
+            bits += padBits(tcModel.created || today, 36); // Created
+            bits += padBits(tcModel.lastUpdated || today, 36); // LastUpdated
             bits += padBits(tcModel.cmpId || 0, 12);
             bits += padBits(tcModel.cmpVersion || 0, 12);
             bits += padBits(tcModel.consentScreen || 0, 6);
-            bits += strToBits("EN"); // ConsentLanguage
+            bits += strToBits(tcfTwoLetterCode(tcModel.consentLanguage, "EN")); // ConsentLanguage
             bits += padBits(tcModel.vendorListVersion || 0, 12);
             bits += padBits(5, 6); // TcfPolicyVersion: 5 = TCF v2.3 (GVL specification v3)
             bits += padBits(tcModel.isServiceSpecific === false ? 0 : 1, 1);
@@ -1944,7 +1962,7 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
                 bits += (isLi && PURPOSES_WITHOUT_LEGITIMATE_INTEREST.indexOf(purposeId) === -1) ? "1" : "0";
             }
             bits += padBits(0, 1); // PurposeOneTreatment
-            bits += strToBits("EN"); // PublisherCC
+            bits += strToBits(tcfTwoLetterCode(tcModel.publisherCountryCode, "AA")); // PublisherCC
 
             let maxVendorId = (tcModel.vendorConsents && tcModel.vendorConsents.length) || 0;
             bits += encodeVendorBitfieldSection(maxVendorId, tcModel.vendorConsents);

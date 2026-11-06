@@ -916,6 +916,9 @@ function generateTcString(consentObj) {
     let model = new window.IABTCF.TCModel();
     model.cmpId = window.INTA.settings.cmpId;
     model.cmpVersion = window.INTA.settings.cmpVersion || model.cmpVersion;
+    model.created = consentObj.created || null;
+    model.consentLanguage = consentObj.consentLanguage || model.consentLanguage;
+    model.publisherCountryCode = consentObj.publisherCountryCode || model.publisherCountryCode;
     // Set purposes and vendors as boolean arrays (first 24)
     model.purposeConsents = (consentObj.purposes || []).slice(0, 24);
     model.vendorConsents = (consentObj.vendors || []).slice(0);
@@ -931,14 +934,130 @@ function generateTcString(consentObj) {
     return window.IABTCF.TCString.encode(model);
 }
 
-// --- Example usage ---
-// Suppose you have a consent object from your UI:
-const exampleConsent = {
-    /* Default declined purposes and vendors */
-    purposes: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-    vendors: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+/**
+ * Intastellar category → TCF purpose IDs. Purpose 1 (store and/or access information
+ * on a device) is granted whenever any category is, since each of them needs storage.
+ */
+const INTA_TCF_CATEGORY_PURPOSES = {
+    advertisementCookies: [2, 3, 4, 7],
+    staticsticCookies: [8, 9, 10],
+    functionalCookies: [5, 6, 11]
 };
-const tcString = generateTcString(exampleConsent);
+
+function intaTcfPurposesFromCategories(consents) {
+    let purposes = Array(24).fill(false);
+    let anyGranted = false;
+    Object.keys(INTA_TCF_CATEGORY_PURPOSES).forEach(function (category) {
+        let value = consents && consents[category];
+        if (value === "checked" || value === true) {
+            anyGranted = true;
+            INTA_TCF_CATEGORY_PURPOSES[category].forEach(function (id) { purposes[id - 1] = true; });
+        }
+    });
+    purposes[0] = anyGranted;
+    return purposes;
+}
+
+/** Explicit `INTA.settings.publisherCountryCode` wins; otherwise the geo lookup; "AA" (unknown) until it resolves. */
+function intaTcfPublisherCountryCode() {
+    let settings = window.INTA && window.INTA.settings;
+    if (settings && settings.publisherCountryCode) return settings.publisherCountryCode;
+    return (window._intaGeo && window._intaGeo.country) || "AA";
+}
+
+function intaTcfConsentLanguage() {
+    let slug = typeof intaResolveCmpLocaleSlug === "function" ? intaResolveCmpLocaleSlug() : intastellarCookieLanguage;
+    return String(slug || "en").slice(0, 2);
+}
+
+function intaTcfDecodeStored() {
+    let stored = intaConsentsObjectVariable.tcString || getTcStringFromCookie();
+    if (!stored || !window.IABTCF || !window.IABTCF.TCString) return null;
+    try {
+        return window.IABTCF.TCString.decode(stored);
+    } catch (e) {
+        return null;
+    }
+}
+
+function intaTcfWriteConsentCookie() {
+    document.cookie = int_hideCookieBannerName + "=__inta1." + encodeIntaConsentsObject(JSON.stringify(intaConsentsObjectVariable), randomIntFromInterval(20, 34)) + "; expires=" + cookieLifeTime +
+        "; path=/; " +
+        intCookieDomain +
+        "";
+}
+
+/**
+ * Rebuilds the TC string from the current consent state and stores it on
+ * intaConsentsObjectVariable.tcString — call it right before the consent cookie is written.
+ * source: 'accept_all' (every disclosed vendor granted) | 'decline_all' (none) |
+ * 'save_settings' (vendor checkboxes when rendered, else the previously stored choice).
+ * Created is carried over from the stored string so only LastUpdated moves.
+ * @returns {string|null}
+ */
+function intaTcfUpdateConsent(source) {
+    if (!intaTcfIsRegistered()) {
+        return null;
+    }
+    let previous = intaTcfDecodeStored();
+    let gvlVendors = Object.values(gvlCache || {});
+    let gvlById = {};
+    gvlVendors.forEach(function (vendor) {
+        let id = parseInt(vendor.id, 10);
+        if (id > 0) gvlById[id] = vendor;
+    });
+    let maxVendorId = Math.max.apply(null, [0, previous ? previous.maxVendorId : 0].concat(Object.keys(gvlById).map(Number)));
+
+    let vendors = [];
+    let vendorLegitimateInterests = [];
+    let disclosedVendors = [];
+    for (let id = 1; id <= maxVendorId; id++) {
+        let gvlVendor = gvlById[id];
+        let hasLegit = !!(gvlVendor && Array.isArray(gvlVendor.legitimateInterestPurposes) && gvlVendor.legitimateInterestPurposes.length);
+        let cb = document.getElementById('vendor' + id);
+        let legitCb = document.getElementById('vendor' + id + '-legit');
+        let consent, legit;
+        if (source === 'accept_all') {
+            consent = !!gvlVendor;
+            legit = hasLegit;
+        } else if (source === 'decline_all') {
+            consent = false;
+            legit = false;
+        } else {
+            consent = cb ? cb.checked : !!(previous && previous.vendors[id - 1]);
+            legit = legitCb ? legitCb.checked : !!(previous && previous.vendorsLI[id - 1]);
+        }
+        // Keep an already-rendered vendor list in step with accept/decline-all.
+        if (cb) cb.checked = consent;
+        if (legitCb) legitCb.checked = legit;
+        vendors.push(consent);
+        vendorLegitimateInterests.push(legit);
+        disclosedVendors.push(!!gvlVendor || consent || legit);
+    }
+
+    let tcString = generateTcString({
+        purposes: intaTcfPurposesFromCategories(intaConsentsObjectVariable.consents),
+        vendors: vendors,
+        disclosedVendors: disclosedVendors,
+        vendorLegitimateInterests: vendorLegitimateInterests,
+        created: previous ? previous.created : null,
+        consentLanguage: intaTcfConsentLanguage(),
+        publisherCountryCode: intaTcfPublisherCountryCode()
+    });
+    intaConsentsObjectVariable.tcString = tcString;
+    window._latestTcString = tcString;
+
+    // Accept/decline-all before the GVL arrived would disclose no vendors — re-encode once it's in.
+    if (!gvlCache && source !== 'save_settings') {
+        fetchGVL().then(function (gvl) {
+            if (!gvl) return;
+            intaTcfUpdateConsent(source);
+            intaTcfWriteConsentCookie();
+            dispatchTCFConsentChangedIfAvailable(true);
+        });
+    }
+    return tcString;
+}
 
 // --- Patch: Wire consent save/deny to TCF update ---
 // Find the save/deny consent logic and call __tcfapiDispatchConsentChanged after consent changes
@@ -2088,34 +2207,14 @@ if (intaTcfIsRegistered()) {
     let lastUserActionAt = 0;  // timestamp when useractioncomplete was last dispatched
     const USER_ACTION_WINDOW_MS = 30000;  // getTCData returns useractioncomplete for this long after dispatch
 
-    function getCurrentConsentForTCF() {
-        try {
-            let consentCookie = typeof getCookie === 'function' ? getCookie(int_hideCookieBannerName) : null;
-            if (consentCookie && consentCookie.indexOf('__inta') > -1) {
-                let consentsObj = JSON.parse(decodeIntaConsentsObject(consentCookie.split('.')[2]));
-                let purposes = [
-                    true, // 1: Always necessary
-                    !!consentsObj.consents?.functionalCookies, // 2: functional
-                    !!consentsObj.consents?.staticsticCookies, // 3: statistic
-                    !!consentsObj.consents?.advertisementCookies // 4: marketing
-                ];
-                while (purposes.length < 24) purposes.push(false);
-                let vendors = Array(24).fill(true);
-                return { purposes, vendors };
-            }
-        } catch (e) { }
-        return {
-            purposes: [true, false, false, false].concat(Array(20).fill(false)),
-            vendors: Array(24).fill(true)
-        };
-    }
-
+    // Serve the string saved with the user's last choice (see intaTcfUpdateConsent) — never
+    // re-encode here, or every call would mint new timestamps and drop the stored vendor choices.
+    // No stored string yet means the user hasn't decided, so the UI is (about to be) shown.
     function buildTCData(eventStatus, listenerIdOverride) {
-        let consentObj = getCurrentConsentForTCF();
-        let tcString = generateTcString(consentObj);
+        let tcString = intaConsentsObjectVariable.tcString || getTcStringFromCookie();
         return {
-            tcString: tcString,
-            eventStatus: eventStatus || 'tcloaded',
+            tcString: tcString || '',
+            eventStatus: tcString ? (eventStatus || 'tcloaded') : 'cmpuishown',
             cmpStatus: 'loaded',
             gdprApplies: true,
             listenerId: listenerIdOverride || null
@@ -2164,6 +2263,13 @@ if (intaTcfIsRegistered()) {
     window.__tcfapiDispatchConsentChanged = function (eventStatus) {
         dispatchTCFEvent(eventStatus);
     };
+
+    // Accept/decline-all encode against the GVL's vendors, so have it ready before the first click.
+    if (typeof requestIdleCallback === 'function') {
+        requestIdleCallback(fetchGVL, { timeout: 3000 });
+    } else {
+        setTimeout(fetchGVL, 1000);
+    }
 })();
 }
 
@@ -2331,8 +2437,8 @@ function applyTcStringToVendorCheckboxes(tcString, vendors) {
             let cb = document.getElementById('vendor' + vendor.id);
             let legitCb = document.getElementById('vendor' + vendor.id + '-legit');
             if (cb) cb.checked = !!decoded.vendors[idx];
-            if (legitCb && decoded.vendorLegitimateInterests && decoded.vendorLegitimateInterests[idx] !== undefined) {
-                legitCb.checked = !!decoded.vendorLegitimateInterests[idx];
+            if (legitCb && decoded.vendorsLI && decoded.vendorsLI[idx] !== undefined) {
+                legitCb.checked = !!decoded.vendorsLI[idx];
             }
         });
     } catch (e) {
@@ -2405,57 +2511,7 @@ function intaEnsureVendorListLoaded() {
         applyTcStringToVendorCheckboxes(__intaTcStrForVendors, vendors);
     }
 
-    document.querySelectorAll('.intastellarCookie-settings__btn.--save').forEach(function (saveBtn) {
-        if (saveBtn._vendorSaveListenerAttached) return;
-        saveBtn._vendorSaveListenerAttached = true;
-        saveBtn.addEventListener('click', function handleVendorSave() {
-            // Build consent and disclosed arrays by GVL vendor ID (required for TCF 2.3)
-            let maxVendorId = vendors.length ? Math.max.apply(null, vendors.map(function (v) { return parseInt(v.id, 10) || 0; })) : 0;
-            let vendorConsentsById = [];
-            let disclosedVendorsById = [];
-            for (let i = 0; i < maxVendorId; i++) {
-                vendorConsentsById[i] = false;
-                disclosedVendorsById[i] = false;
-            }
-            vendors.forEach(function (vendor) {
-                let id = parseInt(vendor.id, 10);
-                if (id > 0) {
-                    disclosedVendorsById[id - 1] = true;
-                    let cb = document.getElementById('vendor' + vendor.id);
-                    vendorConsentsById[id - 1] = !!(cb && cb.checked);
-                }
-            });
-            let vendorLegitInterests = [];
-            vendors.forEach(function (vendor) {
-                let id = parseInt(vendor.id, 10);
-                if (id > 0) {
-                    let legitCb = document.getElementById('vendor' + vendor.id + '-legit');
-                    while (vendorLegitInterests.length < id) vendorLegitInterests.push(false);
-                    vendorLegitInterests[id - 1] = !!(legitCb && legitCb.checked);
-                }
-            });
-            let purposes = Array(24).fill(true);
-            let userConsent = {
-                purposes: purposes,
-                vendors: vendorConsentsById,
-                disclosedVendors: disclosedVendorsById,
-                vendorLegitimateInterests: vendorLegitInterests.length ? vendorLegitInterests : undefined
-            };
-            const tcString = generateTcString(userConsent);
-            intaConsentsObjectVariable.tcString = tcString;
-            intaConsentsObjectVariable.consents = {
-                staticsticCookies: document.querySelector('#statics')?.checked ? 'checked' : false,
-                functionalCookies: document.querySelector('#functional')?.checked ? 'checked' : false,
-                advertisementCookies: document.querySelector('#marketing')?.checked ? 'checked' : false,
-                
-            };
-            intaConsentsObjectVariable.time = new Date().getTime();
-            window.intaCookieConsents = intaConsentsObjectVariable.consents;
-            document.cookie = int_hideCookieBannerName + "=__inta1." + encodeIntaConsentsObject(JSON.stringify(intaConsentsObjectVariable), randomIntFromInterval(20, 34)) + "; expires=" + cookieLifeTime + "; path=/; " + intCookieDomain + "";
-            window._latestTcString = tcString;
-            dispatchTCFConsentChangedIfAvailable(true);
-        });
-    });
+    // Vendor choices are encoded by saveINTCookieSettings → intaTcfUpdateConsent('save_settings').
 }).catch(function (err) {
     console.error('[VendorList] getVendorsForUI failed:', err);
     try {
@@ -3155,6 +3211,7 @@ function IntaAcceptAll() {
     window.intaCookieConsents = intaConsentsObjectVariable.consents;
     intaConsentsObjectVariable.time = new Date().getTime()
     let cV = 1;
+    intaTcfUpdateConsent('accept_all');
     document.cookie =
         int_hideCookieBannerName + "=__inta1." + encodeIntaConsentsObject(JSON.stringify(intaConsentsObjectVariable), randomIntFromInterval(20, 34)) + "; expires=" + cookieLifeTime +
         "; path=/; " +
@@ -3253,6 +3310,7 @@ function IntaSaveNeccessary() {
     window.intaCookieConsents = intaConsentsObjectVariable.consents;
     intaConsentsObjectVariable.time = new Date().getTime()
     let cV = 1;
+    intaTcfUpdateConsent('decline_all');
     document.cookie =
         int_hideCookieBannerName + "=__inta1." + encodeIntaConsentsObject(JSON.stringify(intaConsentsObjectVariable), randomIntFromInterval(20, 34)) + "; expires=" + cookieLifeTime +
         "; path=/; " +
@@ -3588,6 +3646,7 @@ onWindowLoad(function () {
                 window.intaCookieConsents = intaConsentsObjectVariable.consents;
                 intaConsentsObjectVariable.time = new Date().getTime();
                 intaConsentsObjectVariable.time_to_decision = new Date().getTime() - window._intaBannerShownAt;
+                intaTcfUpdateConsent('accept_all');
                 document.cookie =
                     int_hideCookieBannerName + "=__inta1." + encodeIntaConsentsObject(JSON.stringify(intaConsentsObjectVariable), randomIntFromInterval(20, 34)) + "; expires=" + cookieLifeTime +
                     "; path=/; " +
@@ -3683,6 +3742,7 @@ onWindowLoad(function () {
 
                 intaConsentsObjectVariable.time = new Date().getTime()
                 intaConsentsObjectVariable.time_to_decision = new Date().getTime() - window._intaBannerShownAt;
+                intaTcfUpdateConsent('accept_all');
                 document.cookie =
                     int_hideCookieBannerName + "=__inta1." + encodeIntaConsentsObject(JSON.stringify(intaConsentsObjectVariable), randomIntFromInterval(20, 34)) + "; expires=" + cookieLifeTime +
                     "; path=/; " +
@@ -3776,6 +3836,7 @@ onWindowLoad(function () {
                 intaConsentsObjectVariable.time = new Date().getTime()
                 let cV = 1;
                 intaConsentsObjectVariable.time_to_decision = new Date().getTime() - window._intaBannerShownAt;
+                intaTcfUpdateConsent('decline_all');
                 document.cookie =
                     int_hideCookieBannerName + "=__inta1." + encodeIntaConsentsObject(JSON.stringify(intaConsentsObjectVariable), randomIntFromInterval(20, 34)) + "; expires=" + cookieLifeTime +
                     "; path=/; " +
@@ -5598,6 +5659,7 @@ function saveINTCookieSettings(consent, type = null) {
     });
     intaConsentsObjectVariable.time = new Date().getTime()
 
+    intaTcfUpdateConsent('save_settings');
     document.cookie = int_hideCookieBannerName + "=__inta1." + encodeIntaConsentsObject(JSON.stringify(intaConsentsObjectVariable), randomIntFromInterval(20, 34)) + "; expires=" + cookieLifeTime +
         "; path=/; " +
         intCookieDomain +
