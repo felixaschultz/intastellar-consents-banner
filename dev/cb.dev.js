@@ -2029,6 +2029,7 @@ function intaApplyCmpVisibilityFromCookie() {
     if (readMore && hasConsent) {
         readMore.classList.remove('view');
         intaSyncPremiumDetailsPanel();
+        intaTcfSyncTabs();
         // learnMore() also flips this button's label between show/hide
         // based on the class it's toggling — reset it to match, so it
         // doesn't say "Hide details" right after reopening a banner whose
@@ -3004,6 +3005,12 @@ function intaInjectVendorListStyles() {
         '#inta-tcf-purposes .inta-vendor-rows{margin:0 0 6px;}',
         ':where(#inta-tcf-purposes) .inta-tcf-description{margin:0 0 6px;}',
         ':where(#inta-tcf-purposes) .inta-tcf-vendor-count{margin:8px 0 0;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.75);}',
+        // Details panel tabs (Cookies | Ads settings)
+        '.inta-tcf-tab-hidden,.inta-tcf-tabs[hidden]{display:none!important;}',
+        '.inta-tcf-tabs{display:flex;gap:4px;box-sizing:border-box;margin:12px 16px;padding:4px;border:1px solid var(--inta-vendor-border,rgba(128,128,128,.32));border-radius:var(--inta-vendor-radius,10px);}',
+        '.inta-tcf-tabs .inta-tcf-tab{flex:1 1 0;margin:0;padding:8px 10px;border:0!important;border-radius:calc(var(--inta-vendor-radius,10px) - 3px);background:transparent;color:inherit;font:inherit;font-size:13px;font-weight:600!important;line-height:1.2;text-transform:none;letter-spacing:normal;box-shadow:none;cursor:pointer;opacity:.75;}',
+        '.inta-tcf-tabs .inta-tcf-tab[aria-selected="true"]{background:var(--inta-vendor-tab-active,rgba(128,128,128,.18));opacity:1;}',
+        '.inta-tcf-tabs .inta-tcf-tab:focus-visible{outline:2px solid currentColor;outline-offset:1px;}',
         // First-layer TCF notice (inside each design's first-layer text)
         '.inta-tcf-notice{margin-top:8px;font-size:.92em;}',
         '.inta-tcf-notice p{margin:0 0 8px!important;}',
@@ -3244,7 +3251,7 @@ function intaTcfFirstLayerNoticeHtml() {
         : intaGetTextOverride("tcfNoticeVendorList", "See our partners");
     return '<p>' + intaEscapeHtmlAttr(intro) + '</p>'
         + '<p class="inta-tcf-notice-list" role="list">' + items + '</p>'
-        + '<p>' + intaTcfText("tcfNoticeChoices", "Some partners rely on legitimate interest instead of consent — you can object to that, and choose per purpose and per partner, under “Show details”. You can change or withdraw your choices at any time via the privacy settings icon; they apply to this website only.")
+        + '<p>' + intaTcfText("tcfNoticeChoices", "Some partners rely on legitimate interest instead of consent — you can object to that, and choose per purpose and per partner, under “Show details” › “Ads settings”. You can change or withdraw your choices at any time via the privacy settings icon; they apply to this website only.")
         + ' <button type="button" class="inta-tcf-notice-vendors">' + intaEscapeHtmlAttr(vendorsLabel) + '</button></p>';
 }
 
@@ -3288,8 +3295,40 @@ function intaScrollIntoViewSettled(el) {
     (function tick() {
         if (stopped || Date.now() > until) return;
         el.scrollIntoView({ block: "start" });
+        intaUncoverScrollTarget(el);
         requestAnimationFrame(tick);
     })();
+}
+
+/**
+ * overlay/banner/bannerV2 pin their buttons or category toggles to the top of the
+ * scrolling panel, so scrollIntoView() parks `el` underneath them. If something else
+ * covers el's top edge, scroll its panel back by the height of whatever covers it.
+ */
+function intaUncoverScrollTarget(el) {
+    let panel = null;
+    for (let node = el.parentElement; node && !panel; node = node.parentElement) {
+        let overflowY = getComputedStyle(node).overflowY;
+        if ((overflowY === "auto" || overflowY === "scroll") && node.scrollHeight > node.clientHeight) {
+            panel = node;
+        }
+    }
+    if (!panel) {
+        return;
+    }
+    // Several pinned elements can be stacked (e.g. buttons, then "Show details").
+    for (let i = 0; i < 5; i++) {
+        let rect = el.getBoundingClientRect();
+        let hit = document.elementFromPoint(rect.left + Math.min(20, rect.width / 2), Math.max(0, rect.top) + 2);
+        if (!hit || el.contains(hit)) {
+            return;
+        }
+        let before = panel.scrollTop;
+        panel.scrollTop -= Math.max(0, hit.getBoundingClientRect().bottom - rect.top) + 8;
+        if (panel.scrollTop === before) {
+            return;
+        }
+    }
 }
 
 /** Open the second layer at the vendor list (from the first layer's "See our partners"). */
@@ -3298,8 +3337,7 @@ function intaTcfShowVendorList() {
     if (readMore && !readMore.classList.contains("view")) {
         learnMore(document.querySelector(".intLearnMoreBtn"));
     }
-    intaEnsureVendorListLoaded();
-    vendorListContainer.classList.add("--open");
+    intaTcfSelectTab("ads");
     intaScrollIntoViewSettled(vendorListContainer);
 }
 
@@ -3478,21 +3516,84 @@ function intaEnsurePurposeListRendered() {
     }
 }
 
+/* ── Details panel tabs: "Cookies" (category cookie lists) | "Ads settings" (TCF) ── */
+
+let __intaTcfTab = "cookies";
+let intaTcfTabs = document.createElement("div");
+intaTcfTabs.className = "inta-tcf-tabs";
+intaTcfTabs.setAttribute("role", "tablist");
+intaTcfTabs.hidden = true;
+
+function intaTcfTabsHtml() {
+    return ["cookies", "ads"].map(function (tab) {
+        let label = tab === "ads"
+            ? intaTcfText("tcfTabAds", "Ads settings")
+            : intaTcfText("tcfTabCookies", "Cookies");
+        let selected = tab === __intaTcfTab;
+        return '<button type="button" role="tab" class="inta-tcf-tab" data-inta-tcf-tab="' + tab + '" aria-selected="' + selected + '" tabindex="' + (selected ? "0" : "-1") + '">' + label + '</button>';
+    }).join("");
+}
+
+intaTcfTabs.addEventListener("click", function (ev) {
+    let btn = ev.target && ev.target.closest && ev.target.closest("[data-inta-tcf-tab]");
+    if (btn) intaTcfSelectTab(btn.getAttribute("data-inta-tcf-tab"));
+});
+// Arrow keys move between tabs (WAI-ARIA tabs pattern).
+intaTcfTabs.addEventListener("keydown", function (ev) {
+    if (ev.key !== "ArrowLeft" && ev.key !== "ArrowRight") return;
+    ev.preventDefault();
+    intaTcfSelectTab(__intaTcfTab === "ads" ? "cookies" : "ads");
+    let active = intaTcfTabs.querySelector('[aria-selected="true"]');
+    if (active) active.focus();
+});
+
+/**
+ * Show one tab's content: "cookies" keeps .intReadMore, "ads" shows the purposes screen
+ * and the vendor list. .intReadMore keeps its "view" class either way, since the designs
+ * key the open panel off it; the hidden tab is only display:none'd.
+ */
+function intaTcfSelectTab(tab) {
+    __intaTcfTab = tab === "ads" ? "ads" : "cookies";
+    let readMore = document.querySelector(".intReadMore");
+    if (readMore) readMore.classList.toggle("inta-tcf-tab-hidden", __intaTcfTab === "ads");
+    purposeListContainer.classList.toggle("inta-tcf-tab-hidden", __intaTcfTab !== "ads");
+    vendorListContainer.classList.toggle("inta-tcf-tab-hidden", __intaTcfTab !== "ads");
+    if (__intaTcfTab === "ads") {
+        intaEnsurePurposeListRendered();
+        intaEnsureVendorListLoaded();
+        vendorListContainer.classList.add("--open");
+    }
+    intaTcfTabs.querySelectorAll("[data-inta-tcf-tab]").forEach(function (btn) {
+        let selected = btn.getAttribute("data-inta-tcf-tab") === __intaTcfTab;
+        btn.setAttribute("aria-selected", selected ? "true" : "false");
+        btn.setAttribute("tabindex", selected ? "0" : "-1");
+    });
+}
+
+/** Show the tab bar (above .intReadMore) while the details panel is open on a TCF site. */
+function intaTcfSyncTabs() {
+    let readMore = document.querySelector(".intReadMore");
+    if (!intaTcfRequested() || !readMore) {
+        intaTcfTabs.hidden = true;
+        return;
+    }
+    intaInjectVendorListStyles();
+    // The locale loader can rebuild .intReadMore, so (re)attach the bar right in front of it.
+    if (intaTcfTabs.nextElementSibling !== readMore) {
+        intaTcfTabs.innerHTML = intaTcfTabsHtml();
+        readMore.parentNode.insertBefore(intaTcfTabs, readMore);
+    }
+    let open = readMore.classList.contains("view");
+    intaTcfTabs.hidden = !open;
+    if (open) intaTcfSelectTab(__intaTcfTab);
+}
+
+/** "Vendor list" button: opens the details panel on the Ads settings tab at the vendor list. */
 function openVendorList() {
     if (!intaTcfRequested()) {
         return;
     }
-    intaEnsureVendorListLoaded();
-    // premium: the list sits inside the details popout, which is hidden until it's opened.
-    let readMore = document.querySelector(".intReadMore");
-    let isPremium = window.INTA.settings.design === "premium";
-    if (isPremium && readMore && !readMore.classList.contains("view")) {
-        learnMore(document.querySelector(".intLearnMoreBtn"));
-    }
-    vendorListContainer.classList.toggle('--open');
-    if (isPremium && vendorListContainer.classList.contains('--open')) {
-        intaScrollIntoViewSettled(vendorListContainer);
-    }
+    intaTcfShowVendorList();
 }
 
 
@@ -6152,19 +6253,13 @@ function learnMore(e) {
 
     document.querySelector(".intReadMore").classList.toggle("view");
     intaSyncPremiumDetailsPanel();
+    // TCF sites: purposes + vendors live on the "Ads settings" tab (nova has no separate
+    // "Vendor list" button, so this is also how its vendor list is reached).
+    intaTcfSyncTabs();
     document.querySelector(".intastellarCookieConstents__content").style.scrollPaddingTop = paddingTop;
 
     if (document.querySelector(".intReadMore").classList.contains("view")) {
         intaFetchCookieBannerData();
-        intaEnsurePurposeListRendered();
-        // "nova" shows the vendor list inline, always, with no separate
-        // "Vendor list" button (hidden in nova.css) — load + reveal it the
-        // same moment the categories panel opens instead of waiting for a
-        // click that no longer has a button to fire it.
-        if (window.INTA.settings.design === "nova" && intaTcfRequested()) {
-            intaEnsureVendorListLoaded();
-            vendorListContainer.classList.add("--open");
-        }
         if (intastellarCookieLanguage == "da-DK" || intastellarCookieLanguage == "da" || intastellarCookieLanguage == "dk") {
             e.innerHTML = "Skjul detaljer";
         } else if (intastellarCookieLanguage != null && intastellarCookieLanguage === "en" || intastellarCookieLanguage === "en-GB" || intastellarCookieLanguage === "en-US") {

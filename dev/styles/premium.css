@@ -1198,7 +1198,8 @@ button.intastellarCookie-settings__privacyLink {
    intaInjectVendorListStyles()); premium only maps its tokens. 0.09 border
    alpha is too faint for card outlines, so the list uses a stronger mix. */
 #vendor-list,
-#inta-tcf-purposes {
+#inta-tcf-purposes,
+.inta-tcf-tabs {
     --inta-vendor-border: color-mix(in srgb, var(--inta-premium-fg) 14%, transparent);
     --inta-vendor-muted: var(--inta-premium-fg-muted);
     --inta-vendor-muted-opacity: 1;
@@ -1209,4 +1210,8 @@ button.intastellarCookie-settings__privacyLink {
 #vendor-list.vendor-container.--open,
 #inta-tcf-purposes {
     padding: 0;
+}
+
+.inta-tcf-tabs {
+    margin: 14px 0;
 }

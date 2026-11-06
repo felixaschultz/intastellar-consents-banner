@@ -868,7 +868,8 @@ intastellarconsents .intastellarCCPAContainer {
    its panel palette and keeps its own section heading. The panel already
    has side padding, so the list doesn't add its own. */
 #vendor-list,
-#inta-tcf-purposes {
+#inta-tcf-purposes,
+.inta-tcf-tabs {
     --inta-vendor-border: var(--inta-nova-panel-border);
     --inta-vendor-muted: var(--inta-nova-panel-muted);
     --inta-vendor-muted-opacity: 1;
@@ -879,6 +880,10 @@ intastellarconsents .intastellarCCPAContainer {
 #vendor-list.vendor-container.--open,
 #inta-tcf-purposes {
     padding: 0;
+}
+
+.inta-tcf-tabs {
+    margin: 14px 0;
 }
 
 .vendor-container > h3,
