@@ -31,7 +31,10 @@ async function fetchGVL() {
 
     // Fetch GVL from server if not in cache or expired
     try {
-        const response = await fetch(GVL_URL);
+        // Official IAB translations of purpose/feature texts come from the API (?lang=xx);
+        // it falls back to English when it has none.
+        let lang = typeof intaTcfConsentLanguage === "function" ? intaTcfConsentLanguage().toLowerCase() : "en";
+        const response = await fetch(lang && lang !== "en" ? GVL_URL + "?lang=" + encodeURIComponent(lang) : GVL_URL);
         if (!response.ok) {
             throw new Error(`Failed to fetch GVL: ${response.statusText}`);
         }
@@ -941,6 +944,7 @@ function generateTcString(consentObj) {
     // Set purposes and vendors as boolean arrays (first 24)
     model.purposeConsents = (consentObj.purposes || []).slice(0, 24);
     model.purposeLegitimateInterests = (consentObj.purposeLegitimateInterests || []).slice(0, 24);
+    model.specialFeatureOptins = (consentObj.specialFeatureOptins || []).slice(0, 12);
     model.vendorConsents = (consentObj.vendors || []).slice(0);
     // TCF 2.3: vendors disclosed to the user in the CMP (default: same as vendors we collect consent for)
     model.disclosedVendors = Array.isArray(consentObj.disclosedVendors)
@@ -1061,14 +1065,24 @@ function intaTcfUpdateConsent(source) {
         disclosedVendors.push(!!gvlVendor || consent || legit);
     }
 
-    let purposes = intaTcfPurposesFromCategories(intaConsentsObjectVariable.consents);
+    // Purposes / purpose LI / special features come from the purposes screen's state
+    // (linked to the category toggles, see intaPurposeLinkCategories).
+    intaPurposeChoicesInit();
+    if (source === 'accept_all' || source === 'decline_all') {
+        intaPurposeSetAll(source === 'accept_all');
+    }
+    let purposes = [];
+    let purposeLegitimateInterests = [];
+    for (let id = 1; id <= 24; id++) {
+        purposes.push(!!intaPurposeChoices.consents[id]);
+        purposeLegitimateInterests.push(!!intaPurposeChoices.legitimateInterests[id]);
+    }
     let tcString;
     try {
         tcString = generateTcString({
             purposes: purposes,
-            // The UI has no per-purpose objection, so declining a category objects to
-            // legitimate interest for its purposes too (the encoder drops 1 and 3-6).
-            purposeLegitimateInterests: purposes,
+            purposeLegitimateInterests: purposeLegitimateInterests,
+            specialFeatureOptins: INTA_TCF_SPECIAL_FEATURE_IDS.map(function (id) { return !!intaPurposeChoices.specialFeatures[id]; }),
             vendors: vendors,
             disclosedVendors: disclosedVendors,
             vendorLegitimateInterests: vendorLegitimateInterests,
@@ -2652,7 +2666,17 @@ const INTA_TCF_DEFAULT_NAMES = {
         9: "Precise location data",
         10: "Users’ profiles",
         11: "Privacy choices"
+    },
+    stacks: {
+        1: "Precise geolocation data, and identification through device scanning",
+        42: "Personalised advertising and content, advertising and content measurement, audience research and services development"
     }
+};
+
+/** The two standard stacks (GVL v3), for grouping the first layer when the GVL has no stacks. */
+const INTA_TCF_DEFAULT_STACKS = {
+    1: { id: 1, purposes: [], specialFeatures: [1, 2] },
+    42: { id: 42, purposes: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11], specialFeatures: [] }
 };
 
 /** textOverrides key prefix per GVL section, e.g. `tcfPurpose3` — lets a site translate the names. */
@@ -2661,7 +2685,8 @@ const INTA_TCF_NAME_OVERRIDE_PREFIX = {
     specialPurposes: "tcfSpecialPurpose",
     features: "tcfFeature",
     specialFeatures: "tcfSpecialFeature",
-    dataCategories: "tcfDataCategory"
+    dataCategories: "tcfDataCategory",
+    stacks: "tcfStack"
 };
 
 /** Human-readable name for a GVL purpose/feature/data category: site override → loaded GVL → built-in table. */
@@ -2906,51 +2931,63 @@ function intaInjectVendorListStyles() {
     style.id = 'inta-vendor-list-styles';
     style.textContent = [
         // Layout (must beat each design's .checkMarkContainer rules)
-        '#vendor-list [hidden]{display:none!important;}',
-        '#vendor-list,#vendor-list p,#vendor-list .inta-vendor-intro{text-align:left!important;}',
+        ':is(#vendor-list,#inta-tcf-purposes) [hidden]{display:none!important;}',
+        ':is(#vendor-list,#inta-tcf-purposes),:is(#vendor-list,#inta-tcf-purposes) p,:is(#vendor-list,#inta-tcf-purposes) .inta-vendor-intro{text-align:left!important;}',
         // overlay/banner/bannerV2 force `inta-consents-banner button{border-style:none!important;font-weight:normal!important}`
-        '#vendor-list .inta-vendor-bulk button,#vendor-list .inta-vendor-more{border-style:solid!important;font-weight:600!important;}',
-        '#vendor-list .inta-vendor-name{font-weight:600!important;}',
+        ':is(#vendor-list,#inta-tcf-purposes) .inta-vendor-bulk button,:is(#vendor-list,#inta-tcf-purposes) .inta-vendor-more{border-style:solid!important;font-weight:600!important;}',
+        ':is(#vendor-list,#inta-tcf-purposes) .inta-vendor-name{font-weight:600!important;}',
         // overlay/banner/bannerV2 give the open list height:100% + its own scrollbar; inside an
         // already-scrolling panel that's a ~200px nested scroll box — let the panel scroll instead.
-        '#vendor-list.vendor-container.--open{box-sizing:border-box;height:auto!important;max-height:none!important;overflow:visible!important;padding:4px 16px 16px;}',
-        '#vendor-list .vendor-item{box-sizing:border-box;margin:0 0 8px;padding:0;overflow:hidden;text-align:left;}',
-        '#vendor-list .vendor-item .checkMarkContainer{box-sizing:border-box!important;display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;gap:12px;width:100%!important;height:auto!important;min-height:0!important;margin:0!important;padding:12px 14px!important;border:0!important;text-align:left!important;cursor:pointer;}',
+        ':is(#vendor-list,#inta-tcf-purposes).vendor-container.--open{box-sizing:border-box;height:auto!important;max-height:none!important;overflow:visible!important;padding:4px 16px 16px;}',
+        ':is(#vendor-list,#inta-tcf-purposes) .vendor-item{box-sizing:border-box;margin:0 0 8px;padding:0;overflow:hidden;text-align:left;}',
+        ':is(#vendor-list,#inta-tcf-purposes) .vendor-item .checkMarkContainer{box-sizing:border-box!important;display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;gap:12px;width:100%!important;height:auto!important;min-height:0!important;margin:0!important;padding:12px 14px!important;border:0!important;text-align:left!important;cursor:pointer;}',
         // bannerV2 sets `.intSettingsTitle{order:1}`, which puts the switch left of the name.
-        '#vendor-list .vendor-item .intSettingsTitle{order:0!important;flex:1 1 auto;min-width:0;margin:0!important;padding:0!important;text-align:left!important;}',
-        '#vendor-list .vendor-item .intCheckmarkSliderContainer{order:1!important;flex:0 0 auto;margin:0!important;}',
-        '#vendor-list .inta-vendor-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:0 0 10px;}',
-        '#vendor-list .inta-vendor-search{box-sizing:border-box;flex:1 1 200px;min-width:0;margin:0;}',
-        '#vendor-list .inta-vendor-bulk{display:flex;flex:1 1 auto;gap:8px;}',
-        '#vendor-list .inta-vendor-bulk button{flex:1 1 0;white-space:nowrap;}',
-        '#vendor-list .inta-vendor-more{display:block;box-sizing:border-box;width:100%;margin:4px 0 0;}',
-        '#vendor-list .inta-vendor-details{box-sizing:border-box;padding:10px 14px 14px;}',
-        '#vendor-list .inta-vendor-links{display:flex;flex-wrap:wrap;gap:4px 16px;}',
-        '#vendor-list .inta-vendor-links .intSettingsTitleLink{display:inline!important;padding:0!important;}',
-        '#vendor-list .inta-vendor-section ul{margin:4px 0 0;padding:0 0 0 18px;list-style:disc;}',
+        ':is(#vendor-list,#inta-tcf-purposes) .vendor-item .intSettingsTitle{order:0!important;flex:1 1 auto;min-width:0;margin:0!important;padding:0!important;text-align:left!important;white-space:normal!important;overflow-wrap:anywhere;}',
+        ':is(#vendor-list,#inta-tcf-purposes) .vendor-item .intCheckmarkSliderContainer{order:1!important;flex:0 0 auto;margin:0!important;}',
+        ':is(#vendor-list,#inta-tcf-purposes) .inta-vendor-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:0 0 10px;}',
+        ':is(#vendor-list,#inta-tcf-purposes) .inta-vendor-search{box-sizing:border-box;flex:1 1 200px;min-width:0;margin:0;}',
+        ':is(#vendor-list,#inta-tcf-purposes) .inta-vendor-bulk{display:flex;flex:1 1 auto;gap:8px;}',
+        ':is(#vendor-list,#inta-tcf-purposes) .inta-vendor-bulk button{flex:1 1 0;white-space:nowrap;}',
+        ':is(#vendor-list,#inta-tcf-purposes) .inta-vendor-more{display:block;box-sizing:border-box;width:100%;margin:4px 0 0;}',
+        ':is(#vendor-list,#inta-tcf-purposes) .inta-vendor-details{box-sizing:border-box;padding:10px 14px 14px;}',
+        ':is(#vendor-list,#inta-tcf-purposes) .inta-vendor-links{display:flex;flex-wrap:wrap;gap:4px 16px;}',
+        ':is(#vendor-list,#inta-tcf-purposes) .inta-vendor-links .intSettingsTitleLink{display:inline!important;padding:0!important;}',
+        ':is(#vendor-list,#inta-tcf-purposes) .inta-vendor-section ul{margin:4px 0 0;padding:0 0 0 18px;list-style:disc;}',
         // Look (zero specificity: any design rule wins)
-        ':where(#vendor-list){--inta-vendor-border-default:rgba(128,128,128,.32);color:var(--inta-vendor-fg,inherit);}',
-        ':where(#vendor-list) > h3{margin:16px 0 6px;font-size:15px;font-weight:700;}',
-        ':where(#vendor-list) .inta-vendor-count{font-weight:400;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.75);}',
-        ':where(#vendor-list) .inta-vendor-intro{margin:0 0 12px;font-size:13px;line-height:1.5;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.8);}',
-        ':where(#vendor-list) .inta-vendor-search{padding:9px 12px;font:inherit;font-size:14px;color:inherit;background:var(--inta-vendor-card-bg,transparent);border:1px solid var(--inta-vendor-border,var(--inta-vendor-border-default));border-radius:var(--inta-vendor-radius,10px);outline-offset:1px;}',
-        ':where(#vendor-list) .inta-vendor-bulk button,:where(#vendor-list) .inta-vendor-more{padding:8px 12px;font:inherit;font-size:13px;font-weight:600;line-height:1.2;color:inherit;background:var(--inta-vendor-card-bg,transparent);border:1px solid var(--inta-vendor-border,var(--inta-vendor-border-default));border-radius:var(--inta-vendor-radius,10px);cursor:pointer;text-transform:none;letter-spacing:normal;box-shadow:none;}',
-        ':where(#vendor-list) .inta-vendor-bulk button:hover,:where(#vendor-list) .inta-vendor-more:hover{border-color:currentColor;}',
-        ':where(#vendor-list) .inta-vendor-status{margin:0 0 8px;font-size:12px;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.75);}',
-        ':where(#vendor-list) .inta-vendor-status:empty{display:none;}',
-        ':where(#vendor-list) .vendor-item{background:var(--inta-vendor-card-bg,transparent);border:1px solid var(--inta-vendor-border,var(--inta-vendor-border-default));border-radius:var(--inta-vendor-radius,10px);}',
-        ':where(#vendor-list) .vendor-item .checkMarkContainer + .checkMarkContainer,:where(#vendor-list) .inta-vendor-details{border-top:1px solid var(--inta-vendor-border,var(--inta-vendor-border-default));}',
-        ':where(#vendor-list) .vendor-item .intSettingsTitle{font-size:14px;font-weight:400;line-height:1.4;}',
-        ':where(#vendor-list) .inta-vendor-name{display:block;font-weight:600;word-break:break-word;}',
-        ':where(#vendor-list) .inta-vendor-details-toggle{display:inline-block;margin:2px 0 0;padding:0;background:none;border:0;font:inherit;font-size:12px;font-weight:600;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.8);text-decoration:underline;text-underline-offset:2px;cursor:pointer;}',
-        ':where(#vendor-list) .inta-vendor-details-toggle:hover{opacity:1;color:inherit;}',
-        ':where(#vendor-list) .inta-vendor-hint{display:block;font-size:12px;font-weight:400;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.75);}',
-        ':where(#vendor-list) .inta-vendor-details{font-size:12px;line-height:1.5;word-break:break-word;}',
-        ':where(#vendor-list) .inta-vendor-links .intSettingsTitleLink{font-size:12px;color:inherit;text-decoration:underline;}',
-        ':where(#vendor-list) .inta-vendor-section{margin-top:10px;}',
-        ':where(#vendor-list) .inta-vendor-section strong{display:block;font-size:12px;font-weight:700;}',
-        ':where(#vendor-list) .inta-vendor-section li{margin:0 0 2px;}',
-        ':where(#vendor-list) .inta-vendor-retention{color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.7);}'
+        ':where(#vendor-list,#inta-tcf-purposes){--inta-vendor-border-default:rgba(128,128,128,.32);color:var(--inta-vendor-fg,inherit);}',
+        ':where(#vendor-list,#inta-tcf-purposes) > h3{margin:16px 0 6px;font-size:15px;font-weight:700;}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-count{font-weight:400;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.75);}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-intro{margin:0 0 12px;font-size:13px;line-height:1.5;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.8);}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-search{padding:9px 12px;font:inherit;font-size:14px;color:inherit;background:var(--inta-vendor-card-bg,transparent);border:1px solid var(--inta-vendor-border,var(--inta-vendor-border-default));border-radius:var(--inta-vendor-radius,10px);outline-offset:1px;}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-bulk button,:where(#vendor-list,#inta-tcf-purposes) .inta-vendor-more{padding:8px 12px;font:inherit;font-size:13px;font-weight:600;line-height:1.2;color:inherit;background:var(--inta-vendor-card-bg,transparent);border:1px solid var(--inta-vendor-border,var(--inta-vendor-border-default));border-radius:var(--inta-vendor-radius,10px);cursor:pointer;text-transform:none;letter-spacing:normal;box-shadow:none;}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-bulk button:hover,:where(#vendor-list,#inta-tcf-purposes) .inta-vendor-more:hover{border-color:currentColor;}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-status{margin:0 0 8px;font-size:12px;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.75);}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-status:empty{display:none;}',
+        ':where(#vendor-list,#inta-tcf-purposes) .vendor-item{background:var(--inta-vendor-card-bg,transparent);border:1px solid var(--inta-vendor-border,var(--inta-vendor-border-default));border-radius:var(--inta-vendor-radius,10px);}',
+        ':where(#vendor-list,#inta-tcf-purposes) .vendor-item .checkMarkContainer + .checkMarkContainer,:where(#vendor-list,#inta-tcf-purposes) .inta-vendor-details{border-top:1px solid var(--inta-vendor-border,var(--inta-vendor-border-default));}',
+        ':where(#vendor-list,#inta-tcf-purposes) .vendor-item .intSettingsTitle{font-size:14px;font-weight:400;line-height:1.4;}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-name{display:block;font-weight:600;word-break:break-word;}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-details-toggle{display:inline-block;margin:2px 0 0;padding:0;background:none;border:0;font:inherit;font-size:12px;font-weight:600;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.8);text-decoration:underline;text-underline-offset:2px;cursor:pointer;}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-details-toggle:hover{opacity:1;color:inherit;}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-hint{display:block;font-size:12px;font-weight:400;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.75);}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-details{font-size:12px;line-height:1.5;word-break:break-word;}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-links .intSettingsTitleLink{font-size:12px;color:inherit;text-decoration:underline;}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-section{margin-top:10px;}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-section strong{display:block;font-size:12px;font-weight:700;}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-section li{margin:0 0 2px;}',
+        ':where(#vendor-list,#inta-tcf-purposes) .inta-vendor-retention{color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.7);}',
+        // Purposes screen (second layer)
+        '#inta-tcf-purposes{box-sizing:border-box;padding:4px 16px 0;}',
+        '#inta-tcf-purposes .inta-vendor-rows{margin:0 0 6px;}',
+        ':where(#inta-tcf-purposes) .inta-tcf-description{margin:0 0 6px;}',
+        ':where(#inta-tcf-purposes) .inta-tcf-vendor-count{margin:8px 0 0;color:var(--inta-vendor-muted,inherit);opacity:var(--inta-vendor-muted-opacity,.75);}',
+        // First-layer TCF notice (inside each design's first-layer text)
+        '.inta-tcf-notice{margin-top:8px;font-size:.92em;}',
+        '.inta-tcf-notice p{margin:0 0 8px!important;}',
+        '.inta-tcf-notice .inta-tcf-notice-list{text-align:left!important;}',
+        '.inta-tcf-notice .inta-tcf-notice-item{display:block;position:relative;padding-left:16px;margin:0 0 3px;}',
+        '.inta-tcf-notice .inta-tcf-notice-item::before{content:"\\2022";position:absolute;left:3px;}',
+        '.inta-tcf-notice .inta-tcf-notice-vendors{display:inline!important;width:auto!important;margin:0!important;padding:0!important;background:none!important;border:0!important;font:inherit!important;color:inherit!important;text-decoration:underline!important;cursor:pointer;}'
     ].join('');
     (document.head || document.documentElement).appendChild(style);
 }
@@ -2995,6 +3032,425 @@ function intaEnsureVendorListLoaded() {
     });
 }
 
+/* ── IAB TCF purposes: choice state, first-layer notice and per-purpose screen ── */
+
+const INTA_TCF_PURPOSE_IDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+// TCF 2.2+: only these purposes may rely on legitimate interest (1 and 3-6 are consent-only).
+const INTA_TCF_LI_PURPOSE_IDS = [2, 7, 8, 9, 10, 11];
+const INTA_TCF_SPECIAL_FEATURE_IDS = [1, 2];
+const INTA_TCF_CATEGORY_CHECKBOX_IDS = {
+    functional: "functionalCookies",
+    statics: "staticsticCookies",
+    marketing: "advertisementCookies"
+};
+
+/**
+ * Per-purpose choices: the source of truth for TC-string purposes, purpose legitimate
+ * interest and special-feature opt-ins. Seeded from the stored TC string, or for a visitor
+ * without one from the category toggles; legitimate interest starts "not objected".
+ */
+let intaPurposeChoices = { ready: false, consents: {}, legitimateInterests: {}, specialFeatures: {} };
+
+/** Current category choices: the rendered toggles when present, else the saved consent object. */
+function intaTcfCurrentCategoryConsents() {
+    let consents = {};
+    let saved = (intaConsentsObjectVariable && intaConsentsObjectVariable.consents) || {};
+    Object.keys(INTA_TCF_CATEGORY_CHECKBOX_IDS).forEach(function (checkboxId) {
+        let key = INTA_TCF_CATEGORY_CHECKBOX_IDS[checkboxId];
+        let cb = document.getElementById(checkboxId);
+        consents[key] = cb ? cb.checked : (saved[key] === "checked" || saved[key] === true);
+    });
+    return consents;
+}
+
+function intaPurposeChoicesInit() {
+    if (intaPurposeChoices.ready) {
+        return;
+    }
+    let previous = intaTcfDecodeStored();
+    let fromCategories = previous ? null : intaTcfPurposesFromCategories(intaTcfCurrentCategoryConsents());
+    INTA_TCF_PURPOSE_IDS.forEach(function (id) {
+        intaPurposeChoices.consents[id] = previous ? !!previous.purposes[id - 1] : !!fromCategories[id - 1];
+        if (INTA_TCF_LI_PURPOSE_IDS.indexOf(id) !== -1) {
+            intaPurposeChoices.legitimateInterests[id] = previous ? !!previous.purposeLegitInterests[id - 1] : true;
+        }
+    });
+    INTA_TCF_SPECIAL_FEATURE_IDS.forEach(function (id) {
+        intaPurposeChoices.specialFeatures[id] = !!(previous && previous.specialFeatureOptIns.charAt(id - 1) === "1");
+    });
+    intaPurposeChoices.ready = true;
+}
+
+/** Accept all / reject all: every purpose, legitimate interest and special feature on or off. */
+function intaPurposeSetAll(granted) {
+    intaPurposeChoicesInit();
+    INTA_TCF_PURPOSE_IDS.forEach(function (id) {
+        intaPurposeChoices.consents[id] = granted;
+        if (INTA_TCF_LI_PURPOSE_IDS.indexOf(id) !== -1) intaPurposeChoices.legitimateInterests[id] = granted;
+    });
+    INTA_TCF_SPECIAL_FEATURE_IDS.forEach(function (id) { intaPurposeChoices.specialFeatures[id] = granted; });
+    intaPurposeSyncCheckboxes();
+}
+
+/** Mirror the purpose state onto whatever purpose toggles are rendered. */
+function intaPurposeSyncCheckboxes() {
+    INTA_TCF_PURPOSE_IDS.forEach(function (id) {
+        let cb = document.getElementById("inta-purpose-" + id);
+        let legitCb = document.getElementById("inta-purpose-" + id + "-legit");
+        if (cb) cb.checked = !!intaPurposeChoices.consents[id];
+        if (legitCb) legitCb.checked = !!intaPurposeChoices.legitimateInterests[id];
+    });
+    INTA_TCF_SPECIAL_FEATURE_IDS.forEach(function (id) {
+        let cb = document.getElementById("inta-special-feature-" + id);
+        if (cb) cb.checked = !!intaPurposeChoices.specialFeatures[id];
+    });
+}
+
+/**
+ * Category toggle → its mapped purposes (INTA_TCF_CATEGORY_PURPOSES), and purpose 1 follows
+ * "any category on". Purposes can still be changed on their own afterwards on the purposes screen.
+ */
+function intaPurposeLinkCategories(ev) {
+    let target = ev.target;
+    if (!target || !INTA_TCF_CATEGORY_CHECKBOX_IDS[target.id] || !intaTcfRequested()) {
+        return;
+    }
+    intaPurposeChoicesInit();
+    let category = INTA_TCF_CATEGORY_CHECKBOX_IDS[target.id];
+    (INTA_TCF_CATEGORY_PURPOSES[category] || []).forEach(function (id) {
+        intaPurposeChoices.consents[id] = target.checked;
+    });
+    let current = intaTcfCurrentCategoryConsents();
+    intaPurposeChoices.consents[1] = Object.keys(current).some(function (key) { return current[key]; });
+    intaPurposeSyncCheckboxes();
+}
+document.addEventListener("change", intaPurposeLinkCategories);
+
+function intaTcfText(key, fallback) {
+    return intaEscapeHtmlAttr(intaGetTextOverride(key, fallback));
+}
+
+/** IDs present in the loaded GVL section, or the standard ones when it isn't loaded. */
+function intaTcfSectionIds(kind) {
+    let section = gvlCache && gvlCache[kind];
+    let ids = section ? Object.keys(section).map(Number).filter(function (id) { return id > 0; }) : Object.keys(INTA_TCF_DEFAULT_NAMES[kind] || {}).map(Number);
+    return ids.sort(function (a, b) { return a - b; });
+}
+
+/** How many active vendors use a purpose/feature, per legal basis — {consent, legInt, total}. */
+function intaTcfVendorCounts(kind, id) {
+    let counts = { consent: 0, legInt: 0, total: 0 };
+    intaGvlActiveVendors(Object.values(intaGvlVendorsMap())).forEach(function (vendor) {
+        let byConsent = kind === "purposes" && (vendor.purposes || []).indexOf(id) !== -1;
+        let byLegInt = kind === "purposes" && (vendor.legIntPurposes || []).indexOf(id) !== -1;
+        let uses = kind === "purposes" ? (byConsent || byLegInt) : (vendor[kind] || []).indexOf(id) !== -1;
+        if (byConsent) counts.consent++;
+        if (byLegInt) counts.legInt++;
+        if (uses) counts.total++;
+    });
+    return counts;
+}
+
+/* ── First layer ─────────────────────────────────────────────────────────── */
+
+/**
+ * First-layer items: purpose 1 on its own, then IAB stacks covering the rest. Picks the
+ * largest stacks whose purposes/special features are all used by the vendors and not yet
+ * covered (a stack may only stand in for items that are actually used); whatever no
+ * stack fits is listed individually. Returns [{kind, id}].
+ */
+function intaTcfFirstLayerItems() {
+    let vendors = gvlCache ? intaGvlActiveVendors(Object.values(intaGvlVendorsMap())) : [];
+    function used(kind, id) {
+        if (!vendors.length) return true;
+        return vendors.some(function (v) {
+            return kind === "purposes"
+                ? (v.purposes || []).indexOf(id) !== -1 || (v.legIntPurposes || []).indexOf(id) !== -1
+                : (v.specialFeatures || []).indexOf(id) !== -1;
+        });
+    }
+    let remaining = {
+        purposes: intaTcfSectionIds("purposes").filter(function (id) { return id !== 1 && used("purposes", id); }),
+        specialFeatures: intaTcfSectionIds("specialFeatures").filter(function (id) { return used("specialFeatures", id); })
+    };
+    function size(stack) {
+        return (stack.purposes || []).length + (stack.specialFeatures || []).length;
+    }
+    let stacks = Object.values((gvlCache && gvlCache.stacks) || INTA_TCF_DEFAULT_STACKS).slice().sort(function (a, b) {
+        return size(b) - size(a);
+    });
+    let items = intaTcfSectionIds("purposes").indexOf(1) !== -1 ? [{ kind: "purposes", id: 1 }] : [];
+    stacks.forEach(function (stack) {
+        let p = stack.purposes || [];
+        let sf = stack.specialFeatures || [];
+        let fits = size(stack) > 0
+            && p.every(function (id) { return remaining.purposes.indexOf(id) !== -1; })
+            && sf.every(function (id) { return remaining.specialFeatures.indexOf(id) !== -1; });
+        if (!fits) return;
+        items.push({ kind: "stacks", id: stack.id });
+        remaining.purposes = remaining.purposes.filter(function (id) { return p.indexOf(id) === -1; });
+        remaining.specialFeatures = remaining.specialFeatures.filter(function (id) { return sf.indexOf(id) === -1; });
+    });
+    remaining.purposes.forEach(function (id) { items.push({ kind: "purposes", id: id }); });
+    remaining.specialFeatures.forEach(function (id) { items.push({ kind: "specialFeatures", id: id }); });
+    return items;
+}
+
+/**
+ * TCF first-layer disclosure, appended to every design's first-layer text
+ * (.intastellarCookieConstents__content-main): the number of vendors with a link to the
+ * vendor list, the purposes and special features (grouped into IAB stacks), legitimate
+ * interest + the right to object, how to withdraw, and that choices apply to this site
+ * only. All text is overridable via textOverrides (tcfNotice*, tcfStack<id>, ...).
+ */
+function intaTcfFirstLayerNoticeHtml() {
+    let vendorCount = gvlCache ? intaGvlActiveVendors(Object.values(intaGvlVendorsMap())).length : 0;
+    let partners = vendorCount
+        ? intaGetTextOverride("tcfNoticePartnersCount", "we and our {count} partners").replace("{count}", vendorCount)
+        : intaGetTextOverride("tcfNoticePartners", "we and our partners");
+    let intro = intaGetTextOverride("tcfNoticeIntro", "With your consent, {partners} store and/or access information on a device, such as cookies, and process personal data, such as unique identifiers and standard information sent by a device, for:")
+        .replace("{partners}", partners);
+    intro = intro.charAt(0).toUpperCase() + intro.slice(1);
+    // Items sit in a <p> (ARIA list roles keep the list semantics) so they pick up each
+    // design's own paragraph type — nova's first-layer text is weight 100, for example.
+    let items = intaTcfFirstLayerItems().map(function (item) {
+        return '<span class="inta-tcf-notice-item" role="listitem">' + intaEscapeHtmlAttr(intaTcfName(item.kind, item.id)) + '</span>';
+    }).join("");
+    let vendorsLabel = vendorCount
+        ? intaGetTextOverride("tcfNoticeVendorListCount", "See our {count} partners").replace("{count}", vendorCount)
+        : intaGetTextOverride("tcfNoticeVendorList", "See our partners");
+    return '<p>' + intaEscapeHtmlAttr(intro) + '</p>'
+        + '<p class="inta-tcf-notice-list" role="list">' + items + '</p>'
+        + '<p>' + intaTcfText("tcfNoticeChoices", "Some partners rely on legitimate interest instead of consent — you can object to that, and choose per purpose and per partner, under “Show details”. You can change or withdraw your choices at any time via the privacy settings icon; they apply to this website only.")
+        + ' <button type="button" class="inta-tcf-notice-vendors">' + intaEscapeHtmlAttr(vendorsLabel) + '</button></p>';
+}
+
+function intaTcfRenderFirstLayerNotice() {
+    if (!intaTcfRequested() || typeof moreContentText === "undefined" || !moreContentText) {
+        return;
+    }
+    intaInjectVendorListStyles();
+    let notice = moreContentText.querySelector(".inta-tcf-notice");
+    if (!notice) {
+        notice = document.createElement("div");
+        notice.className = "inta-tcf-notice";
+        notice.addEventListener("click", function (ev) {
+            if (ev.target && ev.target.closest && ev.target.closest(".inta-tcf-notice-vendors")) {
+                intaTcfShowVendorList();
+            }
+        });
+        moreContentText.appendChild(notice);
+    }
+    notice.innerHTML = intaTcfFirstLayerNoticeHtml();
+    // The vendor count, and translated names, need the GVL.
+    if (!gvlCache) {
+        fetchGVL().then(function (gvl) {
+            if (gvl) intaTcfRenderFirstLayerNotice();
+        });
+    }
+}
+
+/**
+ * Scroll `el` to the top of its panel and keep it there for a moment: the details panel
+ * keeps growing above it right after opening (cookie lists, purposes), which makes a
+ * single smooth scroll stop short. Gives up as soon as the visitor scrolls themselves.
+ */
+function intaScrollIntoViewSettled(el) {
+    let until = Date.now() + 1500;
+    let stopped = false;
+    function stop() { stopped = true; }
+    window.addEventListener("wheel", stop, { once: true, passive: true });
+    window.addEventListener("touchstart", stop, { once: true, passive: true });
+    window.addEventListener("keydown", stop, { once: true });
+    (function tick() {
+        if (stopped || Date.now() > until) return;
+        el.scrollIntoView({ block: "start" });
+        requestAnimationFrame(tick);
+    })();
+}
+
+/** Open the second layer at the vendor list (from the first layer's "See our partners"). */
+function intaTcfShowVendorList() {
+    let readMore = document.querySelector(".intReadMore");
+    if (readMore && !readMore.classList.contains("view")) {
+        learnMore(document.querySelector(".intLearnMoreBtn"));
+    }
+    intaEnsureVendorListLoaded();
+    vendorListContainer.classList.add("--open");
+    intaScrollIntoViewSettled(vendorListContainer);
+}
+
+/* ── Second layer: purposes, special features, special purposes, features ── */
+
+let purposeListContainer = document.createElement("div");
+purposeListContainer.id = "inta-tcf-purposes";
+purposeListContainer.hidden = true;
+let __intaPurposeListRendered = false;
+
+function intaTcfSwitchHtml(inputId, inputClass, checked, ariaLabel, dataAttr) {
+    return '<span class="intCheckmarkSliderContainer">'
+        + '<input id="' + inputId + '" ' + dataAttr + ' class="intCookieSetting__checkbox ' + inputClass + '" type="checkbox" aria-label="' + intaEscapeHtmlAttr(ariaLabel) + '"' + (checked ? " checked" : "") + '>'
+        + '<span class="checkmark round"></span>'
+        + '</span>';
+}
+
+/** Description, illustrations and vendor counts — the "Show details" panel of a purpose/feature row. */
+function intaTcfItemDetailsHtml(kind, id) {
+    let entry = gvlCache && gvlCache[kind] && gvlCache[kind][id];
+    let parts = [];
+    if (entry && entry.description) {
+        parts.push('<p class="inta-tcf-description">' + intaEscapeHtmlAttr(entry.description) + '</p>');
+    }
+    let illustrations = entry && Array.isArray(entry.illustrations) ? entry.illustrations : [];
+    if (illustrations.length) {
+        parts.push('<div class="inta-vendor-section"><strong>' + intaTcfText("tcfIllustrations", "Examples") + '</strong><ul>'
+            + illustrations.map(function (text) { return '<li>' + intaEscapeHtmlAttr(text) + '</li>'; }).join("")
+            + '</ul></div>');
+    }
+    if (gvlCache) {
+        let counts = intaTcfVendorCounts(kind, id);
+        let line = kind === "purposes"
+            ? intaGetTextOverride("tcfVendorCountPurpose", "{consent} partners ask for your consent, {legInt} rely on legitimate interest.")
+                .replace("{consent}", counts.consent).replace("{legInt}", counts.legInt)
+            : intaGetTextOverride("tcfVendorCount", "Used by {count} partners.").replace("{count}", counts.total);
+        parts.push('<p class="inta-tcf-vendor-count">' + intaEscapeHtmlAttr(line) + '</p>');
+    }
+    return parts.join("");
+}
+
+function intaTcfItemRowHtml(kind, id, control) {
+    let name = intaEscapeHtmlAttr(intaTcfName(kind, id));
+    let detailsId = "inta-tcf-details-" + kind + "-" + id;
+    return '<div class="vendor-item inta-tcf-item" data-inta-tcf-kind="' + kind + '" data-inta-tcf-id="' + id + '">'
+        + '<label class="checkMarkContainer">'
+        + '<span class="intSettingsTitle">'
+        + '<span class="inta-vendor-name">' + name + '</span>'
+        + '<button type="button" class="inta-vendor-details-toggle" aria-expanded="false" aria-controls="' + detailsId + '">' + intaTcfText("vendorShowDetails", "Show details") + '</button>'
+        + (control.note ? '<span class="inta-vendor-hint">' + control.note + '</span>' : '')
+        + '</span>'
+        + (control.switchHtml || '')
+        + '</label>'
+        + (control.extraRow || '')
+        + '<div class="inta-vendor-details" id="' + detailsId + '" hidden>' + intaTcfItemDetailsHtml(kind, id) + '</div>'
+        + '</div>';
+}
+
+function intaTcfPurposeListHtml() {
+    let html = [];
+    html.push('<h3>' + intaTcfText("tcfPurposesHeading", "Purposes") + '</h3>');
+    html.push('<p class="inta-vendor-intro">' + intaTcfText("tcfPurposesIntro", "Choose per purpose whether our partners may process your data with your consent. Where partners rely on legitimate interest instead, you can object by switching it off.") + '</p>');
+    html.push('<div class="inta-vendor-rows">');
+    intaTcfSectionIds("purposes").forEach(function (id) {
+        let name = intaTcfName("purposes", id);
+        let hasLegInt = INTA_TCF_LI_PURPOSE_IDS.indexOf(id) !== -1 && (!gvlCache || intaTcfVendorCounts("purposes", id).legInt > 0);
+        html.push(intaTcfItemRowHtml("purposes", id, {
+            switchHtml: intaTcfSwitchHtml("inta-purpose-" + id, "inta-purpose-consent", intaPurposeChoices.consents[id],
+                intaGetTextOverride("vendorConsentFor", "Consent for") + " " + name, 'data-inta-purpose-id="' + id + '"'),
+            extraRow: hasLegInt
+                ? '<label class="checkMarkContainer"><span class="intSettingsTitle">' + intaTcfText("vendorLegitimateInterest", "Legitimate interest")
+                + '<span class="inta-vendor-hint">' + intaTcfText("vendorLegitimateInterestHint", "Switch off to object") + '</span></span>'
+                + intaTcfSwitchHtml("inta-purpose-" + id + "-legit", "intCookieSetting__checkbox-legit inta-purpose-legit", intaPurposeChoices.legitimateInterests[id],
+                    intaGetTextOverride("vendorLegitimateInterest", "Legitimate interest") + ": " + name, 'data-inta-purpose-id="' + id + '"')
+                + '</label>'
+                : ''
+        }));
+    });
+    html.push('</div>');
+
+    let specialFeatures = intaTcfSectionIds("specialFeatures");
+    if (specialFeatures.length) {
+        html.push('<h3>' + intaTcfText("tcfSpecialFeaturesHeading", "Special features") + '</h3>');
+        html.push('<p class="inta-vendor-intro">' + intaTcfText("tcfSpecialFeaturesIntro", "These need your explicit opt-in.") + '</p>');
+        html.push('<div class="inta-vendor-rows">');
+        specialFeatures.forEach(function (id) {
+            html.push(intaTcfItemRowHtml("specialFeatures", id, {
+                switchHtml: intaTcfSwitchHtml("inta-special-feature-" + id, "inta-special-feature", intaPurposeChoices.specialFeatures[id],
+                    intaGetTextOverride("tcfOptInFor", "Opt in to") + " " + intaTcfName("specialFeatures", id), 'data-inta-special-feature-id="' + id + '"')
+            }));
+        });
+        html.push('</div>');
+    }
+
+    [["specialPurposes", "tcfSpecialPurposesHeading", "Special purposes", "tcfSpecialPurposesIntro", "Our partners may process your data for these purposes without asking, as they are needed to keep the service secure and working. You can't switch them off."],
+     ["features", "tcfFeaturesHeading", "Features", "tcfFeaturesIntro", "Our partners may combine or link data in these ways to carry out the purposes above. They don't need a separate choice."]
+    ].forEach(function (section) {
+        let ids = intaTcfSectionIds(section[0]);
+        if (!ids.length) return;
+        html.push('<h3>' + intaTcfText(section[1], section[2]) + '</h3>');
+        html.push('<p class="inta-vendor-intro">' + intaTcfText(section[3], section[4]) + '</p>');
+        html.push('<div class="inta-vendor-rows">');
+        ids.forEach(function (id) {
+            html.push(intaTcfItemRowHtml(section[0], id, { note: section[0] === "specialPurposes" ? intaTcfText("tcfAlwaysActive", "Always active") : "" }));
+        });
+        html.push('</div>');
+    });
+    return html.join("");
+}
+
+function intaPurposeListClick(ev) {
+    let toggle = ev.target && ev.target.closest && ev.target.closest(".inta-vendor-details-toggle");
+    if (!toggle) {
+        return;
+    }
+    // The toggle sits inside the row's <label>; don't let the click flip its switch.
+    ev.preventDefault();
+    let item = toggle.closest(".inta-tcf-item");
+    let panel = item && item.querySelector(".inta-vendor-details");
+    if (!panel) return;
+    let open = panel.hidden;
+    panel.hidden = !open;
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    toggle.textContent = open
+        ? intaGetTextOverride("vendorHideDetails", "Hide details")
+        : intaGetTextOverride("vendorShowDetails", "Show details");
+}
+
+function intaPurposeListChange(ev) {
+    let input = ev.target;
+    if (!input || !input.getAttribute) {
+        return;
+    }
+    let purposeId = parseInt(input.getAttribute("data-inta-purpose-id"), 10);
+    let featureId = parseInt(input.getAttribute("data-inta-special-feature-id"), 10);
+    if (purposeId > 0 && input.classList.contains("inta-purpose-consent")) {
+        intaPurposeChoices.consents[purposeId] = input.checked;
+    } else if (purposeId > 0 && input.classList.contains("inta-purpose-legit")) {
+        intaPurposeChoices.legitimateInterests[purposeId] = input.checked;
+    } else if (featureId > 0) {
+        intaPurposeChoices.specialFeatures[featureId] = input.checked;
+    } else {
+        return;
+    }
+    updateSaveButtonText();
+}
+
+/** Render the purposes screen into the details panel (TCF sites only); re-renders once the GVL arrives. */
+function intaEnsurePurposeListRendered() {
+    if (!intaTcfRequested()) {
+        return;
+    }
+    intaInjectVendorListStyles();
+    intaPurposeChoicesInit();
+    if (!purposeListContainer._intaListeners) {
+        purposeListContainer._intaListeners = true;
+        purposeListContainer.addEventListener("click", intaPurposeListClick);
+        purposeListContainer.addEventListener("change", intaPurposeListChange);
+    }
+    if (__intaPurposeListRendered && gvlCache) {
+        return;
+    }
+    purposeListContainer.innerHTML = intaTcfPurposeListHtml();
+    purposeListContainer.hidden = false;
+    __intaPurposeListRendered = true;
+    if (!gvlCache) {
+        fetchGVL().then(function (gvl) {
+            if (gvl) {
+                purposeListContainer.innerHTML = intaTcfPurposeListHtml();
+            }
+        });
+    }
+}
+
 function openVendorList() {
     if (!intaTcfRequested()) {
         return;
@@ -3008,9 +3464,7 @@ function openVendorList() {
     }
     vendorListContainer.classList.toggle('--open');
     if (isPremium && vendorListContainer.classList.contains('--open')) {
-        setTimeout(function () {
-            vendorListContainer.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 0);
+        intaScrollIntoViewSettled(vendorListContainer);
     }
 }
 
@@ -3156,6 +3610,7 @@ if (window.intaCmpUiState) {
 }
 
 moreContentText.innerHTML = settingsMessage;
+moreFooter.appendChild(purposeListContainer);
 moreFooter.appendChild(vendorListContainer);
 
 let ccpa = window?.INTA?.settings === undefined || window?.INTA?.settings.ccpa === undefined ? false : window?.INTA?.settings.ccpa;
@@ -3438,6 +3893,7 @@ function intaCbApplyMainBannerDomAndInitialize() {
     moreContentText.innerHTML = (window.INTA.settings.design === "nova")
         ? message
         : intaGetTextOverride("bannerMessageHtml", intaCbSettingsMessageBaseHtml);
+    intaTcfRenderFirstLayerNotice();
 
     let intCookieIconSmallClass = cookieLogo == intCookieIcon ? " intastellarIcon" : "";
     let CompanyLogoName = cookieLogo == intCookieIcon ? "Cookie Icon" : `${document.domain} logo`;
@@ -5673,6 +6129,7 @@ function learnMore(e) {
 
     if (document.querySelector(".intReadMore").classList.contains("view")) {
         intaFetchCookieBannerData();
+        intaEnsurePurposeListRendered();
         // "nova" shows the vendor list inline, always, with no separate
         // "Vendor list" button (hidden in nova.css) — load + reveal it the
         // same moment the categories panel opens instead of waiting for a

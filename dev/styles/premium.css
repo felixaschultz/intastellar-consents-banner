@@ -1197,7 +1197,8 @@ button.intastellarCookie-settings__privacyLink {
 /* IAB TCF vendor list — layout is shared by every design (cb.dev.js's
    intaInjectVendorListStyles()); premium only maps its tokens. 0.09 border
    alpha is too faint for card outlines, so the list uses a stronger mix. */
-#vendor-list {
+#vendor-list,
+#inta-tcf-purposes {
     --inta-vendor-border: color-mix(in srgb, var(--inta-premium-fg) 14%, transparent);
     --inta-vendor-muted: var(--inta-premium-fg-muted);
     --inta-vendor-muted-opacity: 1;
@@ -1205,6 +1206,7 @@ button.intastellarCookie-settings__privacyLink {
     --inta-vendor-radius: 12px;
 }
 
-#vendor-list.vendor-container.--open {
+#vendor-list.vendor-container.--open,
+#inta-tcf-purposes {
     padding: 0;
 }

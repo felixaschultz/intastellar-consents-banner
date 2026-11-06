@@ -1989,6 +1989,7 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
         this.vendorConsents = [];
         this.vendorLegitimateInterests = [];
         this.disclosedVendors = []; // TCF 2.3: vendors disclosed to user in CMP
+        this.specialFeatureOptins = []; // index 0 = special feature 1 (precise geolocation), 1 = 2 (device scanning)
         // Deciseconds since epoch. Leave null to stamp "today"; when updating an existing
         // string, carry its `created` over so only LastUpdated moves.
         this.created = null;
@@ -2045,7 +2046,8 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
             bits += padBits(5, 6); // TcfPolicyVersion: 5 = TCF v2.3 (GVL specification v3)
             bits += padBits(tcModel.isServiceSpecific === false ? 0 : 1, 1);
             bits += padBits(0, 1); // UseNonStandardStacks/Texts
-            bits += padBits(0, 12); // SpecialFeatureOptIns
+            // SpecialFeatureOptIns (12 bits)
+            for (let i = 0; i < 12; i++) bits += tcModel.specialFeatureOptins && tcModel.specialFeatureOptins[i] ? "1" : "0";
             // PurposeConsents (24 bits)
             for (let i = 0; i < 24; i++) bits += tcModel.purposeConsents && tcModel.purposeConsents[i] ? "1" : "0";
             // PurposesLITransparency (24 bits) — purposes 3-6 are forced to 0 regardless of input.

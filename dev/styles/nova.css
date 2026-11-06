@@ -867,7 +867,8 @@ intastellarconsents .intastellarCCPAContainer {
    intaInjectVendorListStyles()); nova only maps the vendor-list tokens onto
    its panel palette and keeps its own section heading. The panel already
    has side padding, so the list doesn't add its own. */
-#vendor-list {
+#vendor-list,
+#inta-tcf-purposes {
     --inta-vendor-border: var(--inta-nova-panel-border);
     --inta-vendor-muted: var(--inta-nova-panel-muted);
     --inta-vendor-muted-opacity: 1;
@@ -875,11 +876,13 @@ intastellarconsents .intastellarCCPAContainer {
     --inta-vendor-radius: 12px;
 }
 
-#vendor-list.vendor-container.--open {
+#vendor-list.vendor-container.--open,
+#inta-tcf-purposes {
     padding: 0;
 }
 
-.vendor-container > h3 {
+.vendor-container > h3,
+#inta-tcf-purposes > h3 {
     margin: 20px 0 10px;
     font-size: 13px;
     font-weight: 700;
