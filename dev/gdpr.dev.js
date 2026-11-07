@@ -429,11 +429,11 @@ function intaBuildCategoryOverview(category) {
     }).filter(v => v.cookies.length > 0);
     const vendorRows = vendorsWithCookies.map(v => {
         const vendorCookieRows = v.cookies.map(c => `
-            <article class="intaCookieList-cookie">
+            <div class="intaCookieList-cookie">
                 <h4 class="intaCookieList-CookieName">${c.name}</h4>
                 ${c.description ? `<p class="intaCookieList-description">${c.description}</p>` : ''}
                 <p>${c.domain} · ${intaFormatCookieExpiry(c)}</p>
-            </article>`).join('');
+            </div>`).join('');
         return `
         <section class="intaCookieListOverview-grid">
             <section class="intaCookieList-left">
@@ -455,11 +455,11 @@ function intaBuildCategoryOverview(category) {
                 <p class="intaCookieListOverview-vendor">${window.INTA?.settings?.company || ''}</p>
             </section>
             <section>${unattributed.map(c => `
-                <article class="intaCookieList-cookie">
+                <div class="intaCookieList-cookie">
                     <h4 class="intaCookieList-CookieName">${c.name}</h4>
                     ${c.description ? `<p class="intaCookieList-description">${c.description}</p>` : ''}
                     <p>${c.domain} · ${intaFormatCookieExpiry(c)}</p>
-                </article>`).join('')}
+                </div>`).join('')}
             </section>
         </section>` : '';
     const count = typeof data.count === 'number' ? data.count : cookies.length;
@@ -3361,7 +3361,7 @@ inta_statisticCookieList.push({
     domains: [
         "hotjar.com"
     ],
-    vendor_privacy: "https://help.hotjar.com/hc/en-us/articles/115011789248-Hotjar-Cookies"
+    vendor_privacy: "https://help.hotjar.com/hc/en-us/divs/115011789248-Hotjar-Cookies"
 });
 
 /* - - - List of Marketing cookies - - - */

@@ -557,7 +557,7 @@ inta-consents-banner button {
     bottom: 17px;
 }
 
-.intastellarCookieConstents__content article:not(.intCookieSetting__form):not(.intReadMore):not(.intaCookieListOverview) {
+.intastellarCookieConstents__content div:not(.intCookieSetting__form):not(.intReadMore):not(.intaCookieListOverview) {
     display: grid;
     grid-template-columns: minmax(310px, 1fr) minmax(100px, 245px);
 }
@@ -1543,7 +1543,7 @@ input:focus+.checkmark {
         padding: 10px;
     }
 
-    .intastellarCookieConstents__content article:not(.intCookieSetting__form):not(.intReadMore):not(.intaCookieListOverview) {
+    .intastellarCookieConstents__content div:not(.intCookieSetting__form):not(.intReadMore):not(.intaCookieListOverview) {
         display: block;
     }
 

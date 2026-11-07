@@ -10,11 +10,11 @@ const moreContentText = document.createElement("section");
 const moreSettingsContent = document.createElement("section");
 const moreFooter = document.createElement("div");
 
-const intastellarCookieConstents__Container = document.createElement("article");
+const intastellarCookieConstents__Container = document.createElement("div");
 const intastellarCookieButtons = document.createElement("section");
 const testSection = document.createElement("section");
 
-const cookieSettings = document.createElement("article");
+const cookieSettings = document.createElement("div");
 const cookieSettingsContent = document.createElement("section");
 
 intastellarConsentsBanner.setAttribute("class", "intastellarCookieConstents");

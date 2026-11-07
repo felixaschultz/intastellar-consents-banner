@@ -319,7 +319,7 @@ if (window.INTA.settings.arrange == "rtl") {
 
 moreContentText.setAttribute("class", "intastellarCookieConstents__content-main");;
 
-const intastellarCookieConstents__Container = document.createElement("article");
+const intastellarCookieConstents__Container = document.createElement("div");
 const intastellarCookieButtons = document.createElement("section");
 
 const testSection = document.createElement("section");
@@ -331,7 +331,7 @@ moreSettingsContent.appendChild(intastellarCookieConstents__Container);
 intastellarCookieConstents__Container.appendChild(testSection);
 intastellarCookieConstents__Container.appendChild(intastellarCookieButtons);
 
-const cookieSettings = document.createElement("article");
+const cookieSettings = document.createElement("div");
 const cookieSettingsContent = document.createElement("section");
 
 bannerContent.setAttribute("class", "intastellarCookie-settingsContainer");
@@ -729,7 +729,7 @@ if (intastellarCookieLanguage != null) {
     </section>`;
         moreFooter.innerHTML =
             `
-         <article class="intCookieSetting__form">
+         <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.danish.necessary.title}</span>
@@ -766,53 +766,53 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                 </section>
-            </article>
+            </div>
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.necessary.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                     ${listAllCookies(inta_functionalCookieList)
             }
-                </article>  
+                </div>  
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.statisic.description}</p> 
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
+        </div>
        
     `;
     } else if (intastellarCookieLanguage === "de-DE" || intastellarCookieLanguage === "de") {
@@ -834,7 +834,7 @@ if (intastellarCookieLanguage != null) {
     ` + generateCookieButtons('Akzeptieren', 'Ablehnen', 'Einstellungen');
         moreFooter.innerHTML =
             `
-        <article class="intCookieSetting__form">
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.german.necessary.title}</span>
@@ -871,53 +871,53 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                 </section>
-            </article>
+            </div>
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.german.necessary.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.german.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                     ${listAllCookies(inta_requiredCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.german.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.german.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_functionalCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.german.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.german.statisic.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.german.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.german.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.german.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.german.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.german.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.german.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
+        </div>
     `;
     } else if (intastellarCookieLanguage === "en" || intastellarCookieLanguage === "en-GB" || intastellarCookieLanguage === "en-US") {
         settingsMessage = settingsMessagesLanguages.english;
@@ -944,7 +944,7 @@ if (intastellarCookieLanguage != null) {
 
         moreFooter.innerHTML =
             `
-        <article class="intCookieSetting__form">
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.english.necessary.title}</span>
@@ -981,53 +981,53 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                 </section>
-            </article>
+            </div>
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.english.necessary.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.english.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.english.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.english.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_functionalCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.english.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.english.statisic.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.english.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.english.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.english.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.english.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.english.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.english.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
+        </div>
     `;
     } else if (intastellarCookieLanguage == "es" || intastellarCookieLanguage == "es-ES") {
         /* Spanish */
@@ -1051,7 +1051,7 @@ if (intastellarCookieLanguage != null) {
     ` + generateCookieButtons('Aceptar', 'Rechazar', 'Configuración');
         moreFooter.innerHTML =
             `
-        <article class="intCookieSetting__form">
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSetting checkMarkContainer" disabled>
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.spanish.necessary.title}</span>
@@ -1088,51 +1088,51 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                 </section>
-            </article>
+            </div>
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 
                 <h3 class="intaExpandCookieList">
                     ${intastellarSupportedLanguages.spanish.necessary.title} <i class="intastellar__arrow"></i>
                 </h3>
                 <p>${intastellarSupportedLanguages.spanish.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)}
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.spanish.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.spanish.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_functionalCookieList)}
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.spanish.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.spanish.statisic.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)}
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.spanish.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.spanish.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)}
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.spanish.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.spanish.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.spanish.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.spanish.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
+        </div>
     `;
     } else if (intastellarCookieLanguage == "fr" || intastellarCookieLanguage == "fr-FR") {
         settingsMessage = settingsMessagesLanguages.french;
@@ -1155,7 +1155,7 @@ if (intastellarCookieLanguage != null) {
     ` + generateCookieButtons('Accepter', 'Refuser', 'Paramètres');
         moreFooter.innerHTML =
             `
-        <article class="intCookieSetting__form">
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.french.necessary.title}</span>
@@ -1192,54 +1192,54 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                 </section>
-            </article>
+            </div>
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 
                 <h3 class="intaExpandCookieList">
                     ${intastellarSupportedLanguages.french.necessary.title} <i class="intastellar__arrow"></i>
                 </h3>
                 <p>${intastellarSupportedLanguages.french.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)}
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.french.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.french.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                     ${listAllCookies(inta_functionalCookieList)
             }
-                </article>  
+                </div>  
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.french.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.french.statisic.description}</p> 
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.french.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.french.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.french.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.french.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.french.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.french.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
+        </div>
     `;
     } else if (intastellarCookieLanguage == "sv" || intastellarCookieLanguage == "sv-SE") {
         settingsMessage = settingsMessagesLanguages.swedish;
@@ -1262,7 +1262,7 @@ if (intastellarCookieLanguage != null) {
     ` + generateCookieButtons('Acceptera', 'Avvisa', 'Inställningar');
         moreFooter.innerHTML =
             `
-        <article class="intCookieSetting__form">
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.swedish.necessary.title}</span>
@@ -1299,54 +1299,54 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                 </section>
-            </article>
+            </div>
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 
                 <h3 class="intaExpandCookieList">
                     ${intastellarSupportedLanguages.swedish.necessary.title} <i class="intastellar__arrow"></i>
                 </h3>
                 <p>${intastellarSupportedLanguages.swedish.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)}
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.swedish.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.swedish.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                     ${listAllCookies(inta_functionalCookieList)
             }
-                </article>  
+                </div>  
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.swedish.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.swedish.statisic.description}</p> 
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.swedish.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.swedish.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.swedish.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.swedish.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.swedish.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.swedish.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
+        </div>
     `;
     } else if (intastellarCookieLanguage == "no" || intastellarCookieLanguage == "no-NO") {
         // Norwegian
@@ -1383,51 +1383,51 @@ if (intastellarCookieLanguage != null) {
         moreFooter.innerHTML =
             `
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.norwegian.necessary.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.norwegian.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.dutch.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.norwegian.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                     ${listAllCookies(inta_functionalCookieList)
             }
-                </article>  
+                </div>  
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.norwegian.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.norwegian.statisic.description}</p> 
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.norwegian.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.norwegian.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.norwegian.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.norwegian.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.norwegian.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.norwegian.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
-        <article class="intCookieSetting__form">
+        </div>
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.dutch.necessary.title}</span>
@@ -1464,7 +1464,7 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                 </section>
-            </article>
+            </div>
     `;
     } else if (intastellarCookieLanguage == "nl" || intastellarCookieLanguage == "nl-NL") {
         // Dutch
@@ -1489,51 +1489,51 @@ if (intastellarCookieLanguage != null) {
         moreFooter.innerHTML =
             `
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.dutch.necessary.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.dutch.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.dutch.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.dutch.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                     ${listAllCookies(inta_functionalCookieList)
             }
-                </article>  
+                </div>  
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.dutch.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.dutch.statisic.description}</p> 
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.dutch.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.dutch.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.dutch.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.dutch.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.dutch.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.dutch.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
-        <article class="intCookieSetting__form">
+        </div>
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.dutch.necessary.title}</span>
@@ -1570,7 +1570,7 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                 </section>
-            </article>
+            </div>
     `;
     } else if (intastellarCookieLanguage == "it" || intastellarCookieLanguage == "it-IT") {
         // Italian
@@ -1595,51 +1595,51 @@ if (intastellarCookieLanguage != null) {
         moreFooter.innerHTML =
             `
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.italian.necessary.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.italian.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.italian.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.italian.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                     ${listAllCookies(inta_functionalCookieList)
             }
-                </article>  
+                </div>  
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.italian.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.italian.statisic.description}</p> 
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.italian.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.italian.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.italian.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.italian.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.italian.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.italian.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
-        <article class="intCookieSetting__form">
+        </div>
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.italian.necessary.title}</span>
@@ -1676,7 +1676,7 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                 </section>
-            </article>
+            </div>
     `;
     } else if (intastellarCookieLanguage == "fi" || intastellarCookieLanguage == "fi-FI") {
         // Finish
@@ -1701,51 +1701,51 @@ if (intastellarCookieLanguage != null) {
         moreFooter.innerHTML =
             `
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.finnish.necessary.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.finnish.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.finnish.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.finnish.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                     ${listAllCookies(inta_functionalCookieList)
             }
-                </article>  
+                </div>  
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.finnish.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.finnish.statisic.description}</p> 
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.finnish.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.finnish.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.finnish.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.finnish.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.finnish.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.finnish.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
-        <article class="intCookieSetting__form">
+        </div>
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.finnish.necessary.title}</span>
@@ -1782,7 +1782,7 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                 </section>
-            </article>
+            </div>
     `;
     } else if (intastellarCookieLanguage == "ru" || intastellarCookieLanguage == "ru-RU") {
         // Russian
@@ -1807,51 +1807,51 @@ if (intastellarCookieLanguage != null) {
         moreFooter.innerHTML =
             `
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.russian.necessary.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.russian.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.russian.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.russian.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                     ${listAllCookies(inta_functionalCookieList)
             }
-                </article>  
+                </div>  
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.russian.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.russian.statisic.description}</p> 
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.russian.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.russian.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.russian.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.russian.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.russian.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.russian.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
-        <article class="intCookieSetting__form">
+        </div>
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.russian.necessary.title}</span>
@@ -1888,7 +1888,7 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                 </section>
-            </article>
+            </div>
     `;
     } else if (intastellarCookieLanguage == "pl" || intastellarCookieLanguage == "po-PL") {
         // Polish
@@ -1913,51 +1913,51 @@ if (intastellarCookieLanguage != null) {
         moreFooter.innerHTML =
             `
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.polish.necessary.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.polish.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.polish.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.polish.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                     ${listAllCookies(inta_functionalCookieList)
             }
-                </article>  
+                </div>  
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.polish.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.polish.statisic.description}</p> 
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.polish.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.polish.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.polish.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.polish.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.polish.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.polish.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
-        <article class="intCookieSetting__form">
+        </div>
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.polish.necessary.title}</span>
@@ -1994,7 +1994,7 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                 </section>
-            </article>
+            </div>
     `;
     } else if (intastellarCookieLanguage == "af" || intastellarCookieLanguage == "af-ZA") {
         // Afrikaans
@@ -2019,51 +2019,51 @@ if (intastellarCookieLanguage != null) {
         moreFooter.innerHTML =
             `
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.afrikaans.necessary.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.afrikaans.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.afrikaans.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.afrikaans.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                     ${listAllCookies(inta_functionalCookieList)
             }
-                </article>  
+                </div>  
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.afrikaans.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.afrikaans.statisic.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.afrikaans.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.afrikaans.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.afrikaans.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.afrikaans.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.afrikaans.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.afrikaans.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
-        <article class="intCookieSetting__form">
+        </div>
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.afrikaans.necessary.title}</span>
@@ -2100,7 +2100,7 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                     </section>
-            </article>
+            </div>
     `;
     } else if (intastellarCookieLanguage == "ko" || intastellarCookieLanguage == "ko-KR") {
         // Korean
@@ -2125,51 +2125,51 @@ if (intastellarCookieLanguage != null) {
         moreFooter.innerHTML =
             `
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.korean.necessary.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.korean.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.korean.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.korean.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                     ${listAllCookies(inta_functionalCookieList)
             }
-                </article>  
+                </div>  
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.korean.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.korean.statisic.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.korean.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.korean.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.korean.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.korean.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.korean.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.korean.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
-        <article class="intCookieSetting__form">
+        </div>
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.korean.necessary.title}</span>
@@ -2206,7 +2206,7 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                 </section>
-            </article>`;
+            </div>`;
 
 
     } else if (intastellarCookieLanguage == "ar" || intastellarCookieLanguage == "ar-SA") {
@@ -2232,51 +2232,51 @@ if (intastellarCookieLanguage != null) {
         moreFooter.innerHTML =
             `
         <section class="intastellar_privacyPolicy">
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.arabic.necessary.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.arabic.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.arabic.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.arabic.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                     ${listAllCookies(inta_functionalCookieList)
             }
-                </article>  
+                </div>  
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.arabic.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.arabic.statisic.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.arabic.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.arabic.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.arabic.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.arabic.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.arabic.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.arabic.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
-        <article class="intCookieSetting__form">
+        </div>
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.arabic.necessary.title}</span>
@@ -2313,7 +2313,7 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                     </section>
-            </article>
+            </div>
         </section>
     `;
     } else if (intastellarCookieLanguage == "et" || intastellarCookieLanguage == "et-EE") {
@@ -2339,51 +2339,51 @@ if (intastellarCookieLanguage != null) {
         moreFooter.innerHTML =
             `
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.estonian.necessary.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.estonian.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.estonian.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.estonian.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                     ${listAllCookies(inta_functionalCookieList)
             }
-                </article>  
+                </div>  
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.estonian.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.estonian.statisic.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.estonian.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.estonian.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.estonian.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.estonian.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.estonian.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.estonian.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
-        <article class="intCookieSetting__form">
+        </div>
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.estonian.necessary.title}</span>
@@ -2420,7 +2420,7 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                 </section>
-            </article>`;
+            </div>`;
     } else {
         /* Default */
         settingsMessage = settingsMessagesLanguages.danish;
@@ -2445,51 +2445,51 @@ if (intastellarCookieLanguage != null) {
         moreFooter.innerHTML =
             `
         <section class="intastellar_privacyPolicy"></section>
-        <article class="intReadMore">
+        <div class="intReadMore">
             <section class="required">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.necessary.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.necessary.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_requiredCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.functional.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.functional.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                     ${listAllCookies(inta_functionalCookieList)
             }
-                </article>  
+                </div>  
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.statisic.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.statisic.description}</p> 
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_statisticCookieList)
             }
-                </article>
+                </div>
             </section>
             <section>
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.marketing.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.marketing.description}</p>
-                <article class="intaCookieListOverview">
+                <div class="intaCookieListOverview">
                 ${listAllCookies(inta_marketingCookieList)
             }
-                </article>
+                </div>
             </section>
             <section id="inta-cookie-section-security" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.security.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.security.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-security"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-security"></div>
             </section>
             <section id="inta-cookie-section-unclassified" style="display:none;">
                 <h3 class="intaExpandCookieList">${intastellarSupportedLanguages.danish.unclassified.title} <i class="intastellar__arrow"></i></h3>
                 <p>${intastellarSupportedLanguages.danish.unclassified.description}</p>
-                <article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article>
+                <div class="intaCookieListOverview" id="inta-cookie-list-unclassified"></div>
             </section>
-        </article>
-        <article class="intCookieSetting__form">
+        </div>
+        <div class="intCookieSetting__form">
                 <section class="intastellarSettings__control">
                     <label class="intSettingDisabled checkMarkContainer">
                         <span class="intSettingsTitle">${intastellarSupportedLanguages.danish.necessary.title}</span>
@@ -2526,7 +2526,7 @@ if (intastellarCookieLanguage != null) {
                         </span>
                     </label>
                 </section>
-            </article>
+            </div>
     `;
     }
 }
@@ -3770,10 +3770,10 @@ function listAllCookies(cookieList) {
                             ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                    <article class="intaCookieList-cookie">
+                                    <div class="intaCookieList-cookie">
                                         <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                         <p>${cookie.purpose}</p>
-                                    </article>
+                                    </div>
                                 `
             }).join(" ")}
                         </section>
@@ -3808,10 +3808,10 @@ function listAllCookies(cookieList) {
                         ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -3846,10 +3846,10 @@ function listAllCookies(cookieList) {
                         ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -3885,10 +3885,10 @@ function listAllCookies(cookieList) {
                         ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -3926,10 +3926,10 @@ function listAllCookies(cookieList) {
                         ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                        <article class="intaCookieList-cookie">
+                                        <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>`
+                                </div>`
             }).join(" ")}
                     </section>
                 </section>
@@ -3970,10 +3970,10 @@ function listAllCookies(cookieList) {
                         ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                        <article class="intaCookieList-cookie">
+                                        <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>`
+                                </div>`
             }).join(" ")}
                     </section>
                 </section>
@@ -4014,10 +4014,10 @@ function listAllCookies(cookieList) {
                         ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                        <article class="intaCookieList-cookie">
+                                        <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>`
+                                </div>`
             }).join(" ")}
                     </section>
                 </section>
@@ -4060,10 +4060,10 @@ function listAllCookies(cookieList) {
                         ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                        <article class="intaCookieList-cookie">
+                                        <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>`
+                                </div>`
             }).join(" ")}
                     </section>
                 </section>
@@ -4105,10 +4105,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -4152,10 +4152,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -4199,10 +4199,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -4246,10 +4246,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -4293,10 +4293,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -4340,10 +4340,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -4388,10 +4388,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `;
             }).join(" ")}
                     </section>
@@ -4426,10 +4426,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>

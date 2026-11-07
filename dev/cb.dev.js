@@ -2545,7 +2545,7 @@ moreFooter.addEventListener("click", (e) => {
 
 moreContentText.setAttribute("class", "intastellarCookieConstents__content-main");;
 
-const intastellarCookieConstents__Container = document.createElement("article");
+const intastellarCookieConstents__Container = document.createElement("div");
 const intastellarCookieButtons = document.createElement("section");
 
 
@@ -3603,7 +3603,7 @@ intastellarCookieConstents__Container.appendChild(testSection);
 intastellarCookieConstents__Container.appendChild(intastellarCookieButtons);
 intastellarCookieConstents__Container.appendChild(moreFooter);
 
-const cookieSettings = document.createElement("article");
+const cookieSettings = document.createElement("div");
 const cookieSettingsContent = document.createElement("section");
 
 bannerContent.setAttribute("class", "intastellarCookie-settingsContainer");
@@ -5178,10 +5178,10 @@ function listAllCookies(cookieList) {
                             ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                    <article class="intaCookieList-cookie">
+                                    <div class="intaCookieList-cookie">
                                         <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                         <p>${cookie.purpose}</p>
-                                    </article>
+                                    </div>
                                 `
             }).join(" ")}
                         </section>
@@ -5216,10 +5216,10 @@ function listAllCookies(cookieList) {
                         ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -5254,10 +5254,10 @@ function listAllCookies(cookieList) {
                         ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -5293,10 +5293,10 @@ function listAllCookies(cookieList) {
                         ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -5334,10 +5334,10 @@ function listAllCookies(cookieList) {
                         ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                        <article class="intaCookieList-cookie">
+                                        <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>`
+                                </div>`
             }).join(" ")}
                     </section>
                 </section>
@@ -5378,10 +5378,10 @@ function listAllCookies(cookieList) {
                         ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                        <article class="intaCookieList-cookie">
+                                        <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>`
+                                </div>`
             }).join(" ")}
                     </section>
                 </section>
@@ -5422,10 +5422,10 @@ function listAllCookies(cookieList) {
                         ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                        <article class="intaCookieList-cookie">
+                                        <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>`
+                                </div>`
             }).join(" ")}
                     </section>
                 </section>
@@ -5468,10 +5468,10 @@ function listAllCookies(cookieList) {
                         ${cookie.cookies.map((cookie) => {
                 if (cookie.cookie == undefined) return;
                 return `
-                                        <article class="intaCookieList-cookie">
+                                        <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>`
+                                </div>`
             }).join(" ")}
                     </section>
                 </section>
@@ -5513,10 +5513,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -5560,10 +5560,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -5607,10 +5607,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -5654,10 +5654,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -5701,10 +5701,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -5748,10 +5748,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -5796,10 +5796,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `;
             }).join(" ")}
                     </section>
@@ -5835,10 +5835,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
@@ -5872,10 +5872,10 @@ function listAllCookies(cookieList) {
                     <section>
                         ${cookie.cookies.map((cookie) => {
                 return `
-                                <article class="intaCookieList-cookie">
+                                <div class="intaCookieList-cookie">
                                     <h4 class="intaCookieList-CookieName">${cookie.cookie}</h4>
                                     <p>${cookie.purpose}</p>
-                                </article>
+                                </div>
                             `
             }).join(" ")}
                     </section>
