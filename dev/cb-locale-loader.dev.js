@@ -138,6 +138,41 @@
         });
     };
 
+    function intaEscapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, function (ch) {
+            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch];
+        });
+    }
+
+    /*
+     * Legitimate interest services from config.js (settings.legalBasis), each with a switch to
+     * object. Empty when the site has none. Services on another basis such as contract can't be
+     * objected to, so they aren't listed here.
+     */
+    function intaLegitimateInterestSectionHtml(C) {
+        if (typeof window.intaLegalBasisServices !== "function") return "";
+        var services = window.intaLegalBasisServices().filter(function (s) { return s.basis === "legitimate_interest"; });
+        if (!services.length) return "";
+        var T = C.legitimateInterest || {
+            title: "Legitimate interest",
+            description: "These services run without your consent because we have a legitimate interest in them. They don't store or read anything on your device. You can object to each one; it then stays off from your next page view.",
+            allowedLabel: "Allowed"
+        };
+        var objections = window.intaLegalBasisObjections();
+        var rows = services.map(function (s) {
+            var name = intaEscapeHtml(s.name || s.id);
+            return '<section class="intastellarSettings__control"><label class="checkMarkContainer">'
+                + '<span class="intSettingsTitle">' + name + '</span>'
+                + '<span class="intCheckmarkSliderContainer"><input class="intCookieSetting__checkbox" type="checkbox"'
+                + ' data-inta-li="' + intaEscapeHtml(s.id) + '" aria-label="' + name + ': ' + intaEscapeHtml(T.allowedLabel) + '"'
+                + ' onchange="intaSetLegalBasisObjection(this.getAttribute(\'data-inta-li\'), !this.checked)"'
+                + (objections.indexOf(String(s.id)) === -1 ? " checked" : "")
+                + '><span class="checkmark round"></span></span></label></section>';
+        }).join("");
+        return '<section id="inta-legitimate-interest"><h3>' + intaEscapeHtml(T.title) + '</h3><p>' + intaEscapeHtml(T.description) + '</p>'
+            + rows + '</section>';
+    }
+
     window.intaBuildCmpUiFromLocale = function intaBuildCmpUiFromLocale(P) {
         if (!P || !P.categories) {
             if (typeof intastellarDevMode !== "undefined" && intastellarDevMode) {
@@ -253,6 +288,7 @@
             + '<article class="intaCookieListOverview" id="inta-cookie-list-security"></article></section>'
             + '<section id="inta-cookie-section-unclassified" style="display:none;"><h3 class="intaExpandCookieList">' + (C.unclassified ? C.unclassified.title : 'Unclassified') + ' <span class="intaCookieCount" id="inta-cookie-count-unclassified"></span> <i class="intastellar__arrow"></i></h3><p>' + (C.unclassified ? C.unclassified.description : 'Cookies that have not yet been classified into a category are listed here. We are working with the providers of these individual cookies to classify them.') + '</p>'
             + '<article class="intaCookieListOverview" id="inta-cookie-list-unclassified"></article></section>'
+            + intaLegitimateInterestSectionHtml(C)
             + "</article>";
     };
 

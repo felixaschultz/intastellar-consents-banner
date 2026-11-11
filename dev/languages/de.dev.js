@@ -24,6 +24,11 @@
     unclassified: {
         title: "Nicht klassifiziert",
         description: "Cookies, die noch keiner Kategorie zugeordnet wurden, werden hier aufgeführt. Wir arbeiten mit den Anbietern dieser einzelnen Cookies zusammen, um sie zu klassifizieren."
+    },
+    legitimateInterest: {
+        title: "Berechtigtes Interesse",
+        description: "Diese Dienste laufen ohne Ihre Einwilligung, weil wir ein berechtigtes Interesse an ihnen haben. Sie speichern und lesen nichts auf Ihrem Gerät. Sie können jedem einzeln widersprechen; er bleibt dann ab dem nächsten Seitenaufruf aus.",
+        allowedLabel: "Erlaubt"
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "linken" : "rechten";

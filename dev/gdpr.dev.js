@@ -341,7 +341,7 @@ function intaBuildNotRequiredRegexp() {
     if (sources && typeof sources === "object") {
         var key = intaNotRequiredPatternKey(intaCookieConsents);
         var source = Object.prototype.hasOwnProperty.call(sources, key) ? sources[key] : sources.default;
-        notRequired = window.notRequired = new RegExp(source, "i");
+        notRequired = window.notRequired = intaExemptLegalBasisServices(new RegExp(source, "i"));
         return notRequired;
     }
     var merge = function (first, second, third) {
@@ -380,11 +380,96 @@ function intaBuildNotRequiredRegexp() {
     } else {
         patterns = merge(allScripts[0].scripts.slice(), allScripts[1].scripts, allScripts[2].scripts);
     }
-    notRequired = window.notRequired = new RegExp(patterns.join("|"), "i");
+    notRequired = window.notRequired = intaExemptLegalBasisServices(new RegExp(patterns.join("|"), "i"));
     return notRequired;
 }
 
 window.intaBuildNotRequiredRegexp = intaBuildNotRequiredRegexp;
+
+/*
+ * Legal basis services: scripts the site runs without consent under another legal basis
+ * (legitimate interest, contract, legal obligation …), set by the platform in config.js:
+ *
+ *   settings.legalBasis.services = [{ id, name, purpose, basis, match: ["regex", …], deviceAccess }]
+ *
+ * They come with config.js, so the banner fetches nothing for them. The platform only lists
+ * services that may run before consent; the banner still refuses any marked deviceAccess,
+ * since storing or reading on the device needs consent whatever the legal basis
+ * (ePrivacy Art. 5(3)). A visitor can object to a legitimate interest service, which then
+ * stays blocked like any other script.
+ */
+var INTA_LEGAL_BASIS_OBJECTIONS_COOKIE = "inta_li_objections";
+
+function intaLegalBasisObjections() {
+    var match = /(?:^|;\s*)inta_li_objections=([^;]*)/.exec(document.cookie || "");
+    return match ? decodeURIComponent(match[1]).split(",").filter(Boolean) : [];
+}
+
+/** Every configured service the banner will let through, objected ones included. */
+function intaLegalBasisServices() {
+    var services = window.INTA && window.INTA.settings && window.INTA.settings.legalBasis && window.INTA.settings.legalBasis.services;
+    if (!Array.isArray(services)) return [];
+    return services.filter(function (s) {
+        return s && s.id && s.basis && s.basis !== "consent" && s.deviceAccess !== true
+            && Array.isArray(s.match) && s.match.length > 0;
+    });
+}
+
+/** Only a legitimate interest can be objected to; contract or legal obligation can't. */
+function intaLegalBasisObjectable(service) {
+    return service.basis === "legitimate_interest";
+}
+
+/** One RegExp for the services that may run on this visit, or null when there are none. */
+function intaLegalBasisAllowedRegexp() {
+    var objections = intaLegalBasisObjections();
+    var patterns = [];
+    intaLegalBasisServices().forEach(function (s) {
+        if (intaLegalBasisObjectable(s) && objections.indexOf(String(s.id)) !== -1) return;
+        s.match.forEach(function (p) {
+            try {
+                new RegExp(p);
+                patterns.push("(?:" + p + ")");
+            } catch (e) { /* a broken pattern must not let everything through or break blocking */ }
+        });
+    });
+    return patterns.length ? new RegExp(patterns.join("|"), "i") : null;
+}
+
+/* undefined until first needed: the script guard and request interceptors can run before notRequired is built. */
+var intaLegalBasisAllowed;
+
+/** True when a script src, inline body or request URL belongs to a service allowed on this visit. */
+function intaLegalBasisAllows(value) {
+    if (intaLegalBasisAllowed === undefined) intaLegalBasisAllowed = intaLegalBasisAllowedRegexp();
+    return Boolean(intaLegalBasisAllowed && value && intaLegalBasisAllowed.test(value));
+}
+
+/** Wraps the blocking RegExp so every existing notRequired.test() call lets legal basis services through. */
+function intaExemptLegalBasisServices(blockRegexp) {
+    intaLegalBasisAllowed = intaLegalBasisAllowedRegexp();
+    if (!intaLegalBasisAllowed) return blockRegexp;
+    blockRegexp.test = function (value) {
+        return RegExp.prototype.test.call(blockRegexp, value) && !intaLegalBasisAllows(value);
+    };
+    return blockRegexp;
+}
+
+/** Records or withdraws an objection. Scripts that already ran stay until the next page load. */
+function intaSetLegalBasisObjection(id, objected) {
+    var objections = intaLegalBasisObjections().filter(function (o) { return o !== String(id); });
+    if (objected) objections.push(String(id));
+    var root = window.INTA && window.INTA.settings && window.INTA.settings.rootDomain;
+    document.cookie = INTA_LEGAL_BASIS_OBJECTIONS_COOKIE + "=" + encodeURIComponent(objections.join(","))
+        + "; path=/; max-age=31536000; SameSite=Lax"
+        + (root ? "; domain=" + root : "")
+        + (location.protocol === "https:" ? "; Secure" : "");
+    intaBuildNotRequiredRegexp();
+}
+
+window.intaSetLegalBasisObjection = intaSetLegalBasisObjection;
+window.intaLegalBasisServices = intaLegalBasisServices;
+window.intaLegalBasisObjections = intaLegalBasisObjections;
 
 /* @uc-boot:end */
 /* ── Cookie detail list (dynamic, from API) ───────────────────────────── */
@@ -570,7 +655,7 @@ function intaIsOwnScriptUrl(url) {
 
 /** Classify a script src/inline body against the existing per-category patterns. */
 function intaClassifyScriptContent(text) {
-    if (!text) return null;
+    if (!text || intaLegalBasisAllows(text)) return null;
     let compiled = intaGetCompiledScriptPatterns();
     for (let i = 0; i < compiled.length; i++) {
         let regexes = compiled[i].regexes;
@@ -1899,6 +1984,7 @@ function optOutCCPA() {
 /* @uc-boot:start */
 function getConsentTypeForUrl(url) {
     if (!url) return 'marketing';
+    if (intaLegalBasisAllows(url)) return 'legal_basis';
     for (let i = 0; i < window.allScripts.length; i++) {
         let scriptType = window.allScripts[i].type;
         let patterns = window.allScripts[i].scripts;
@@ -2222,7 +2308,8 @@ window.sendEventToServerSideTagging = function (eventName, params, opts) {
 // Consent check helper
 /* @uc-boot:start */
 function hasConsent(type) {
-    // type: 'functional', 'statistics', 'marketing'
+    // type: 'functional', 'statistics', 'marketing', or 'legal_basis' for a service run without consent
+    if (type === 'legal_basis') return true;
     if (!window.intaCookieConsents) return false;
     if (type === 'functional') return window.intaCookieConsents.functionalCookies === 'checked';
     if (type === 'statistics' || type === 'analytics') return window.intaCookieConsents.staticsticCookies === 'checked';

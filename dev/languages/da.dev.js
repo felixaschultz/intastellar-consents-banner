@@ -24,6 +24,11 @@
     unclassified: {
         title: "Ikke-klassificerede",
         description: "Cookies, der endnu ikke er blevet kategoriseret, er angivet her. Vi arbejder sammen med udbyderne af disse enkelte cookies for at klassificere dem."
+    },
+    legitimateInterest: {
+        title: "Legitim interesse",
+        description: "Disse tjenester kører uden dit samtykke, fordi vi har en legitim interesse i dem. De gemmer og læser ikke noget på din enhed. Du kan gøre indsigelse mod hver enkelt; den er så slået fra fra næste sidevisning.",
+        allowedLabel: "Tilladt"
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "venstre" : "højre";

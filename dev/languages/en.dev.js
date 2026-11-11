@@ -24,6 +24,11 @@
     unclassified: {
         title: "Unclassified",
         description: "Cookies that have not yet been classified into a category are listed here. We are working with the providers of these individual cookies to classify them."
+    },
+    legitimateInterest: {
+        title: "Legitimate interest",
+        description: "These services run without your consent because we have a legitimate interest in them. They don't store or read anything on your device. You can object to each one; it then stays off from your next page view.",
+        allowedLabel: "Allowed"
     }
 };
     var arrangeWord = (window.INTA && window.INTA.settings && window.INTA.settings.arrange == "ltr") ? "left" : "right";
