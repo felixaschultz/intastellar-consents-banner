@@ -1754,12 +1754,6 @@ window.clarity && window.clarity('consentv2', {
     analytics_Storage: "denied"
 });
 
-window.uetq.push('consent', 'default', {
-    'ad_storage': 'denied'
-});
-
-
-
 /* @uc-boot:start */
 // HubSpot: disableHubSpotCookieBanner + the first setHubSpotCookieConsent push must run
 // synchronously here, before HubSpot's own tracking script tag evaluates — same reason as
@@ -1774,6 +1768,18 @@ if (intaCookieConsents) {
         advertisement: intaCookieConsents.advertisementCookies === "checked",
         functional: intaCookieConsents.functionalCookies === "checked",
     }]);
+}
+// Microsoft UET Consent Mode: the default must be queued before bat.js evaluates, and a
+// returning visitor's stored grant right after it, so the very first pageLoad beacon carries
+// a consent signal. This previously lived in the async uc-core half, so bat.js often sent its
+// pageLoad with no signal at all, and in split mode the stored ad grant was never pushed.
+window.uetq.push('consent', 'default', {
+    'ad_storage': 'denied'
+});
+if (intaCookieConsents?.advertisementCookies === "checked") {
+    window.uetq.push('consent', 'update', {
+        'ad_storage': 'granted'
+    });
 }
 /* @uc-boot:end */
 
@@ -5828,11 +5834,6 @@ function intaRunUcCoreIntegrations() {
             } catch (e) { /* ignore */ }
         }
         intaSetAmazonConsentSignal(true);
-/* @uc-core:skip:start */
-        window.uetq.push('consent', 'update', {
-            'ad_storage': 'granted'
-        });
-/* @uc-core:skip:end */
         window.clarity && window.clarity('consentv2', {
             ad_Storage: "granted",
             analytics_Storage: "denied"

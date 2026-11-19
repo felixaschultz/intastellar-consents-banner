@@ -839,12 +839,6 @@ window.clarity && window.clarity('consentv2', {
     analytics_Storage: "denied"
 });
 
-window.uetq.push('consent', 'default', {
-    'ad_storage': 'denied'
-});
-
-
-
 
 function gtag() {
     dataLayer.push(arguments);

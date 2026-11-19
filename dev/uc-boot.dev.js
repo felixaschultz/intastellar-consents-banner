@@ -924,6 +924,18 @@ if (intaCookieConsents) {
         functional: intaCookieConsents.functionalCookies === "checked",
     }]);
 }
+// Microsoft UET Consent Mode: the default must be queued before bat.js evaluates, and a
+// returning visitor's stored grant right after it, so the very first pageLoad beacon carries
+// a consent signal. This previously lived in the async uc-core half, so bat.js often sent its
+// pageLoad with no signal at all, and in split mode the stored ad grant was never pushed.
+window.uetq.push('consent', 'default', {
+    'ad_storage': 'denied'
+});
+if (intaCookieConsents?.advertisementCookies === "checked") {
+    window.uetq.push('consent', 'update', {
+        'ad_storage': 'granted'
+    });
+}
 function getConsentTypeForUrl(url) {
     if (!url) return 'marketing';
     if (intaLegalBasisAllows(url)) return 'legal_basis';
