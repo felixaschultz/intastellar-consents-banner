@@ -3964,18 +3964,12 @@ function intaRunUcCoreIntegrations() {
             ad_Storage: "denied",
             analytics_Storage: "granted"
         });
-        window.uetq.push('consent', 'update', {
-            'analytics_storage': 'granted'
-        });
         _paq.push(['setConsentGiven']);
     }
 
     if (hasConsent("functional")) {
         gtag('consent', 'update', {
             'functionality_storage': 'granted',
-        });
-        window.uetq.push('consent', 'update', {
-            'functionality_storage': 'granted'
         });
     }
 
